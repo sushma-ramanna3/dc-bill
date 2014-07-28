@@ -7,13 +7,13 @@ class UserTableSeeder extends Seeder
 	{
 		DB::table('users')->delete();
 		User::create(array(
-			'first_name'     => 'franchise',
-			'last_name'     => 'blore',
+			'first_name'     => 'admin',
+			'last_name'     => 'mysore',
 			//'usertype' => 'franchise',
-			'email'    => 'sushma.ramanna@finitiatives.com',
+			'email'    => 'admin@admin.com',
 			'password' => Hash::make('1234'),
-			'location' => Hash::make('Bangalore'),
-			'phone' => Hash::make('1234567890'),
+			'location' => 'Bangalore',
+			'phone' => '1234567890',
 			'created_at' => new DateTime,
 			'updated_at' => new DateTime
 		));
