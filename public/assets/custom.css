@@ -1,0 +1,112 @@
+.icon-calendar {
+	background-position: -192px -120px;
+}
+.span2{
+	margin-left: 0px;
+}
+.dp{
+	width: 295px;
+}
+.pro_info .control-label{
+	text-align: left;
+}
+.filter .col-md-3{
+	padding-right: 0px;
+}
+.dp small{
+	font-size: 7pt;
+}
+/*#coupon{
+	margin-top: -172px;
+}
+#franchise-coupon{
+	margin-top: -120px;
+}*/
+#coupon_submit, #franchise_coupon_submit{
+	font-size: 14px;
+	padding: 6px 12px;
+}
+/*#submit_userform{
+	margin-top: 115px;
+}*/
+.pro_info {
+	border: 2px solid #d0d0d0;
+	border-radius: 5px;
+	padding:5px;
+	margin-left: 14px;
+}
+/*.marg-top{
+	margin-top: 10px;
+}*/
+.none{
+	display: none;
+}
+.cust_padding{
+	padding: 5px 10px 38px 10px;
+}
+.blue{
+	color: #09c;
+}
+.print_but{
+	float: right;padding: 5px 10px;font-size: 16px;
+}
+.frcoupon{
+	display: block;
+float: left;
+}
+table td span{
+	padding:3px;
+	display: block;
+	font-size: 12px;
+}
+.bold{
+	font-weight: bold;
+}
+#product_id{
+	height: 160px;
+}
+#franchise_product_id, #classroom_product_id{
+	height: 130px;
+}
+.pro_info hr{
+	margin:0;
+}
+.order_info hr{
+	margin:7px;
+}
+.navbar-inverse .navbar-brand, .navbar-inverse .navbar-nav>li>a, .white{
+	color: #fff;
+}
+.form-horizontal .radio-inline{
+	padding-top: 0;
+}
+#userform .radio_sms label{
+	padding-left: 6px;
+	font-weight: normal;
+	color: #333;
+}
+.col-custom{
+	width: 21.55%;
+}
+#userform h5{
+	margin-bottom: 0;
+	margin-top: 5px;
+}
+#userform label, #productform label, #coupon label, #franchise-coupon label{
+	color: #09c;
+}
+#userform, #coupon, #franchise-coupon{
+	font-size: 12px;
+}
+#coupon, #franchise-coupon{
+	margin-top: 10px;
+}
+#userform .checkbox-inline{
+	color: #000;
+}
+.red hr{
+	border-top: 1px solid #EE0000;
+}
+.product_view .blue{
+	width:20%;
+}

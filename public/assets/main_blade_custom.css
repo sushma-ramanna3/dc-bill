@@ -1,0 +1,69 @@
+.marg-right{
+  margin-right: 0.5%;
+}
+#cv-filter .marg-right{
+  margin-right: 2.5%;
+  margin-bottom: 2%;
+}
+.marg-top{
+  margin-top: 1%;
+}
+.marg-top1{
+  margin-top: 2%;
+}
+.white a{
+  color: #fff;
+}
+
+.cust-col{
+  width: 85px;
+}
+.dob, .job_id{
+  width: 378px;
+}
+.marg-null{
+  margin-top:0;
+}
+.marg-bot{
+  margin-bottom:0;
+}
+.padd_null{
+  padding: 0;
+}
+.select_year{
+  width: 120px;
+}
+.work_area{
+  width: 255px;
+}
+.input-append .add-on, .input-prepend .add-on {
+  display: inline-block;
+  width: auto;
+  height: 20px;
+  min-width: 16px;
+  padding: 4px 5px;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 20px;
+  text-align: center;
+  text-shadow: 0 1px 0 #ffffff;
+  background-color: #eeeeee;
+  border: 1px solid #ccc;
+}
+
+[class^="icon-"],
+[class*=" icon-"] {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-top: 1px;
+  *margin-right: .3em;
+  line-height: 14px;
+  vertical-align: text-top;
+  background-image: url("../assets/images/glyphicons-halflings.png");
+  background-position: 14px 14px;
+  background-repeat: no-repeat;
+}
+.red{
+	color: #EE0000;
+}
