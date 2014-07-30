@@ -98,21 +98,5 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		return $franchise_list;
 	}
 
-	public static function getCouponDetails($coupon_code)
-	{
-		$coupon_row = DB::connection('mysql2')
-						->table('jos_awocoupon')
-						->select('id', 'num_of_uses', 'coupon_value_type', 'coupon_value', 'discount_type', 'function_type')
-						->where('published', 1)
-						->where('coupon_code', $coupon_code)
-						->where(function($coupon_row)
-			            {
-			                $coupon_row->orWhere('expiration', NULL)
-		                      	->orWhere('expiration', "")
-		                      	->orWhere('expiration', '>=', date('Y-m-d'));
-			            })->get();
-
-		return $coupon_row;
-	}
 
 }
