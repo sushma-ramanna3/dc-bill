@@ -15,7 +15,11 @@ class UsersController extends BaseController {
 	 */
 	public function index()
 	{
-		
+		$districts = Mstdistrict::getDistrictList();
+		$taluks = Msttaluk::getTalukList(Input::get('district_id'));
+		$hoblirsk = Msthoblirsk::getHoblirskList(Input::get('taluk_id'));
+
+		return View::make('users.index')->with('districts', $districts)->with('taluks', $taluks)->with('hoblirsk', $hoblirsk);
 	}
 
 	public function registration()

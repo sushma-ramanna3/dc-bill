@@ -55,9 +55,9 @@ return array(
 		'mysql' => array(
 			'driver'    => 'mysql',
 			'host'      => 'localhost',
-			'database'  => 'dcbill',
-			'username'  => 'root',
-			'password'  => 'root',
+			'database'  => 'ksda_dc_billingapplication',
+			'username'  => 'fliptest_flip',
+			'password'  => 'flip',//FR0aZR4y5P
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
