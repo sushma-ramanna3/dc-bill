@@ -29,9 +29,18 @@ Route::get('login', 'SessionsController@create');
 
 Route::get('logout', 'SessionsController@destroy');
 
+Route::get('/taluk.php/{district_id?}', 'UsersController@taluk');
+
+Route::get('/hobli.php/{taluk_id?}', 'UsersController@hobli');
+
+//manufacturer.php
+
 Route::resource('users', 'UsersController');
 
 Route::get('/users-list', 'BeneficiaryController@usersList');
+
+
+
 Route::post('/users-list', 'BeneficiaryController@usersList');
 
 //Ajax call for validation and fetching data
@@ -45,7 +54,7 @@ Route::get('/dcnumber-check', 'BeneficiaryController@dcNumberCheck');
 
 Route::post('/orders', 'UsersController@orders');*/
 
-Route::post('/registration', 'BeneficiaryController@registration');
+Route::post('/registration', 'UsersController@registration');
 
 Route::resource('sessions', 'SessionsController'); 
 

@@ -60,9 +60,6 @@ table td span{
 .bold{
 	font-weight: bold;
 }
-#product_id{
-	height: 160px;
-}
 #franchise_product_id, #classroom_product_id{
 	height: 130px;
 }
@@ -82,6 +79,9 @@ table td span{
 	padding-left: 6px;
 	font-weight: normal;
 	color: #333;
+}
+.col-custom1{
+	width: 20%;
 }
 .col-custom{
 	width: 21.55%;

@@ -23,9 +23,67 @@ class BeneficiaryController extends BaseController {
 
 	//listing users
 
-	public function beneficiaryList()
+	public function usersList()
 	{
+		$users = DB::table('trnbeneficiary')
+					->join('trnbeneficiaryproddetails', 'trnbeneficiary.BeneID', '=', 'trnbeneficiaryproddetails.intbeneID')
+					->select('trnbeneficiary.id', 'trnbeneficiary.first_name', 'jos_users.email', 'jos_users.createDate', 'jos_users.usertype',
+						'jos_vm_user_info.last_name', 'jos_vm_user_info.phone_2', 'jos_vm_user_info.vm_highestqualification', 
+						'jos_vm_user_info.vm_educationalinstituition','jos_vm_user_info.address_1', 'jos_vm_user_info.city', 
+						'jos_vm_user_info.state', 'jos_vm_user_info.zip', 'jos_vm_user_info.vm_workexperience', 'jos_vm_user_info.vm_smsalerts');
+
+		$franchise = '';
 		
+		if(Auth::user()->usertype == 'admin'){
+			if (Input::get('franchise_id') && array_filter(Input::get('franchise_id')) ){
+				$franchise = DB::table('users')->whereIn('id', Input::get('franchise_id'))->pluck('franchise');
+			}
+			else{ 
+				$franchise_types = User::getUserList();
+				foreach ($franchise_types as $name) {
+					$franchises[] = $name->franchise;
+				}
+
+			}
+		}  
+		else $franchise = Auth::user()->franchise;
+
+		$date_range = '';
+
+		if($franchise)
+		 	$users = $users->where('jos_users.usertype', '=', $franchise);
+		else
+			$users = $users->whereIn('jos_users.usertype', $franchises);
+		
+		if (Input::has('email')) 
+          	$users->where('jos_users.email', '=', Input::get('email'));
+          
+        if(Input::has('from_date') && Input::has('to_date')) {
+        	$date_range = 'From '.Input::get('from_date').' To '.Input::get('to_date');
+			$users->whereBetween('jos_users.createDate', array(strtotime(Input::get('from_date')), strtotime(Input::get('to_date')) ));
+        }
+
+        if (Input::get('submit') == 'download')
+        {
+        	$users = $users->orderBy('jos_users.createDate', 'asc')->get();
+          	$this->generateReport($users, $date_range);
+        }
+
+		$users = $users->orderBy('jos_users.createDate', 'desc')
+						->paginate(10);
+
+		$pagination = $users->appends(
+	        array(
+	            'email' => Input::get('email'),
+	            'franchise_id' => Input::get('franchise_id'),
+	            'from_date' => Input::get('from_date'),
+	            'to_date' => Input::get('to_date')
+	        ))->links();
+
+		$franchise_list = User::getUserList($list = 1);
+		$users = array('users' => $users, 'pagination' => $pagination, 'franchise_list' => $franchise_list);
+
+		return View::make('users.users_list')->with('users', $users);
 	}
 
 	//download user list report

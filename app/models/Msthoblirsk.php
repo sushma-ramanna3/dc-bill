@@ -11,7 +11,7 @@ class Msthoblirsk extends Eloquent {
 	public static function getHoblirskList($taluk_id = null)
 	{
 
-		$hobliList = array(NULL => '--Select hobli RSK--') + DB::table('msthoblirsk')
+		$hobliList = array(0 => '--Select hobli RSK--') + DB::table('msthoblirsk')
 							->where('intTalukID', $taluk_id)
 							->where('flgisActive', 1)
 							->orderBy('txtHobliRSK', 'ASC')->lists('txtHobliRSK', 'intHobliRSKID');

@@ -10,7 +10,7 @@ class Mstdistrict extends Eloquent {
 
 	public static function getDistrictList()
 	{
-		$districtList = array(NULL => '--Select district--') + DB::table('mstdistrict')
+		$districtList = array(0 => '--Select district--') + DB::table('mstdistrict')
 							->where('flgisActive', 1)
 							->orderBy('txtDistrictName', 'ASC')->lists('txtDistrictName', 'intDistrictID');
 		
