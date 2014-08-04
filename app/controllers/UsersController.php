@@ -114,6 +114,25 @@ class UsersController extends BaseController {
 			elseif( Input::get('first_name') && Input::get('last_name') )
 				$name = Input::get('first_name').' '.Input::get('last_name');
 
+
+		/*	$birthdate = Input::get('dob_month').'-'.Input::get('dob_day').'-'.Input::get('dob_year');
+				$birthDate = explode("-", $birthdate);
+				//get age from date or birthdate
+				 $age = (date("md", date("U", mktime(0, 0, 0, $birthDate[0], $birthDate[1], $birthDate[2]))) > date("md")
+				    ? ((date("Y") - $birthDate[2]) - 1)
+				    : (date("Y") - $birthDate[2]));
+
+		
+			if (Input::hasFile('resume'))
+			{
+			    Input::file('resume')->move( app_path().'/views/resumes/', $userid.'_'.time().'_'.Input::file('resume')->getClientOriginalName());
+				$cv_path = app_path().'/views/resumes/'.$userid.'_'.time().'_'.Input::file('resume')->getClientOriginalName();
+			}
+
+			$cv_path = isset($cv_path) ? $cv_path : '' ;
+
+	    */
+
 			$beneficiary_id = DB::table('trnbeneficiary')->insertGetId(array(
 									'txtbeneficiaryname' => $name,
 									'txtbeneAddress' => Input::get('address'),
