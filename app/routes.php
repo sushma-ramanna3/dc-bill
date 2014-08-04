@@ -33,7 +33,15 @@ Route::get('/taluk.php/{district_id?}', 'UsersController@taluk');
 
 Route::get('/hobli.php/{taluk_id?}', 'UsersController@hobli');
 
-//manufacturer.php
+Route::get('/manufacturer.php/{product_id?}', 'UsersController@manufacturer');
+
+Route::get('/model.php/{manufacturer_id?}', 'UsersController@model');
+
+Route::get('/specificaton.php/{model_id?}', 'UsersController@specificaton');
+
+Route::get('/rateShare.php/{spec_id?}', 'UsersController@rateShare');
+
+//
 
 Route::resource('users', 'UsersController');
 

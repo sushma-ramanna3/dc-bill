@@ -45,7 +45,7 @@ $(document).ready(function() {
 
    $( "#district_id" ).change(function() {
 		var val = $(this).val();
-		if(val != 0){
+		if(val != ''){
 			var url= 'taluk.php?district_id='+val;
 	    	$.getJSON(url, function(data){
 	    		console.log(data);
@@ -65,7 +65,7 @@ $(document).ready(function() {
 
     $( "#taluk_id" ).change(function() {
 		var val = $(this).val();
-		if(val != 0){
+		if(val != ''){
 			var url= 'hobli.php?taluk_id='+val;
 	    	$.getJSON(url, function(data){
 	    		console.log(data);
@@ -81,7 +81,7 @@ $(document).ready(function() {
 
 	$( "#product_id" ).change(function() {
 		var val = $(this).val();
-		if(val != 0){
+		if(val != ''){
 			var url= 'manufacturer.php?product_id='+val;
 	    	$.getJSON(url, function(data){
 	    		console.log(data);
@@ -97,8 +97,8 @@ $(document).ready(function() {
 
 	$( "#manufacturer_id" ).change(function() {
 		var val = $(this).val();
-		if(val != 0){
-			var url= 'model.php?taluk_id='+val;
+		if(val != ''){
+			var url= 'model.php?manufacturer_id='+val;
 	    	$.getJSON(url, function(data){
 	    		console.log(data);
 	    		$('#model_id').empty();
@@ -113,8 +113,8 @@ $(document).ready(function() {
 
 	$( "#model_id" ).change(function() {
 		var val = $(this).val();
-		if(val != 0){
-			var url= 'specificaton.php?taluk_id='+val;
+		if(val != ''){
+			var url= 'specificaton.php?model_id='+val;
 	    	$.getJSON(url, function(data){
 	    		console.log(data);
 	    		$('#spec_id').empty();
@@ -129,13 +129,13 @@ $(document).ready(function() {
 
 	$( "#spec_id" ).change(function() {
 		var val = $(this).val();
-		if(val != 0){
-			var url= 'rateShare.php?taluk_id='+val;
+		if(val != ''){
+			var url= 'rateShare.php?spec_id='+val;
 	    	$.getJSON(url, function(data){
 	    		console.log(data);
-	    		$('#fullRate').val();
-	    		$('#govtShare').val();
-	    		$('#farmerShare').val();
+	    		$('#fullRate').val(data.decFullRate);
+	    		$('#govtShare').val(data.decGovtShare);
+	    		$('#farmerShare').val(data.decFarmerShare);
 			});
 	    }
 	});

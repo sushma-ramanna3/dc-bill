@@ -20,10 +20,14 @@ class UsersController extends BaseController {
 
 		$intProdID = Mstproductname::getProductList();
 
+		$uom = array('' => '--Select Unit--') + DB::table('mstunitofmeasure')
+							->where('flgisActive', 1)
+							->orderBy('txtUOM', 'ASC')->lists('txtUOM', 'intUomID');
+
 		$intDocTypeID = array();
 
 		return View::make('users.index')->with('districts', $districts)->with('intProdID', $intProdID)
-		->with('intDocTypeID', $intDocTypeID);
+		->with('intDocTypeID', $intDocTypeID)->with('uom', $uom);
 
 	}
 
@@ -37,6 +41,49 @@ class UsersController extends BaseController {
 	{
 		$hoblirsk = Msthoblirsk::getHoblirskList(Input::get('taluk_id'));
 		return Response::json($hoblirsk);
+	}
+
+
+	public function manufacturer()
+	{
+		$manufacturer = array('' => '--Select manufacturer--') + DB::table('mstmanufacturer')
+							->where('flgisActive', 1)->where('intProdID', Input::get('product_id'))
+							->orderBy('txtManufacturerName', 'ASC')->lists('txtManufacturerName', 'intManuID');
+		return Response::json($manufacturer);
+	}
+
+	public function model()
+	{
+		$model = array('' => '--Select model--') + DB::table('mstmodel')
+							->where('flgisActive', 1)->where('intManuID', Input::get('manufacturer_id'))
+							->orderBy('txtModelName', 'ASC')->lists('txtModelName', 'intModelID');
+		return Response::json($model);
+	}
+
+	public function specificaton()
+	{
+		$specificaton = array('' => '--Select specificaton--') + DB::table('mstspecification')
+							->where('flgisActive', 1)->where('intModelID', Input::get('model_id'))
+							->orderBy('txtSpecification', 'ASC')->lists('txtSpecification', 'intSpecID');
+		return Response::json($specificaton);
+	}
+
+	public function rateShare()
+	{
+		$rateShare = DB::table('mstrateconfiguration')
+							->select('decFullRate', 'decFarmerShare', 'decGovtShare')
+							->where('intProdID', Input::get('product_id'))
+							->where('intManuID', Input::get('manufacturer_id'))
+							->where('intModelID', Input::get('model_id'))
+							->where('intSpecification', Input::get('spec_id'))
+							->where('flgisActive', 1)
+							->get();
+		foreach ($rateShare as $val) {
+			$decFullRate = $val->decFullRate;
+			$decFarmerShare = $val->decFarmerShare;
+			$decGovtShare = $val->decGovtShare;
+		}
+		return Response::json(array('decFullRate' => $decFullRate, 'decFarmerShare' => $decFarmerShare, 'decGovtShare' => $decGovtShare));
 	}
 
 	public function registration()

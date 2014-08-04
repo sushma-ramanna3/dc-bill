@@ -10,7 +10,7 @@ class Mstproductname extends Eloquent {
 
 	public static function getProductList()
 	{
-		$productList = array(0 => '--Select product--') + DB::table('mstproductname')
+		$productList = array('' => '--Select product--') + DB::table('mstproductname')
 							->where('flgisActive', 1)
 							->orderBy('txtProdName', 'ASC')->lists('txtProdName', 'intProdID');
 		
