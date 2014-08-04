@@ -60,34 +60,82 @@ class UsersController extends BaseController {
 		$validator = Validator::make(Input::all(), $rules);
 		
 		if ( $validator->passes() ) {
-			$age = '25';
+			if(Input::get('user_register')){
+				$age = '25';
 
-			if( Input::get('first_name') && !Input::get('last_name') )
-				$name = Input::get('first_name');
-			elseif( Input::get('first_name') && Input::get('last_name') )
-				$name = Input::get('first_name').' '.Input::get('last_name');
+				if( Input::get('first_name') && !Input::get('last_name') )
+					$name = Input::get('first_name');
+				elseif( Input::get('first_name') && Input::get('last_name') )
+					$name = Input::get('first_name').' '.Input::get('last_name');
 
-			$beneficiary_id = DB::table('trnbeneficiary')->insertGetId(array(
-									'txtbeneficiaryname' => $name,
-									'txtbeneAddress' => Input::get('address'),
-									'txtbeneState' => 'Karnataka',
-									'intbeneDistrict' => Input::get('district_id'),
-									'intbeneTaluk' => Input::get('taluk_id'),
-									'intbeneRSK' => Input::get('hoblirsk_id'),
-									'txtbeneContactNo' => Input::get('phone'),
-									'intbenePinCode' => Input::get('zip'),
-									'dtdateofBirth' => Input::get('dob'),
-									'intbeneAge' => $age,
-									'txtbeneSex' => Input::get('gender'),
-									'intbeneCategory' => Input::get('category'),
-									'created_at' => new DateTime, //dtDateofApplication
-									'updated_at' => new DateTime 
-									));
+				$beneficiary_id = DB::table('trnbeneficiary')->insertGetId(array(
+										'txtbeneficiaryname' => $name,
+										'txtbeneAddress' => Input::get('address'),
+										'txtbeneState' => 'Karnataka',
+										'intbeneDistrict' => Input::get('district_id'),
+										'intbeneTaluk' => Input::get('taluk_id'),
+										'intbeneRSK' => Input::get('hoblirsk_id'),
+										'txtbeneContactNo' => Input::get('phone'),
+										'intbenePinCode' => Input::get('zip'),
+										'dtdateofBirth' => Input::get('dob'),
+										'intbeneAge' => $age,
+										'txtbeneSex' => Input::get('gender'),
+										'intbeneCategory' => Input::get('category'),
+										'created_at' => new DateTime, //dtDateofApplication
+										'updated_at' => new DateTime 
+										));
 
-			//$save_beneficiary_details = Trnbeneficiary::create($beneficiary_details);
-			$beneficiary_name = DB::table('trnbeneficiary')->where('BeneID', $beneficiary_id)->pluck('txtbeneficiaryname');
+				//$save_beneficiary_details = Trnbeneficiary::create($beneficiary_details);
+				$beneficiary_name = DB::table('trnbeneficiary')->where('BeneID', $beneficiary_id)->pluck('txtbeneficiaryname');
 
-			return Redirect::to('users')->with('beneficiary_id', $beneficiary_id)->with('beneficiary_name', $name)->with('success', 'Beneficiary data saved successfully.');
+				return Redirect::to('users')->with('beneficiary_id', $beneficiary_id)->with('beneficiary_name', $name)
+				->with('success', 'Beneficiary data saved successfully.');
+			}
+			elseif (Input::get('beneficiary_id') && Input::get('intProdID')) {
+				DB::table('trnbeneficiaryproddetails')->insert(array(
+					'intbeneID' => Input::get('beneficiary_id'),
+					'intProdID' => Input::get('intProdID'),
+					'intManufacturerID' => 'Karnataka',
+					'intModelID' => Input::get('district_id'),
+					'intSpecID' => Input::get('taluk_id'),
+					'decFullRate' => Input::get('hoblirsk_id'),
+					'decGovtShare' => Input::get('decGovtShare'),
+					'decFarmerShare' => Input::get('decFarmerShare'),
+					'intQty' => Input::get('intQty'),
+					'intUnitofMeasure' => Input::get('intUnitofMeasure'),
+					'flgisActive' => 1,
+					'created_at' => new DateTime, 
+					'updated_at' => new DateTime 
+					));
+				return Redirect::to('users')->with('beneficiary_id', Input::get('beneficiary_id'))->with('product_id', Input::get('intProdID'))
+				->with('success', 'Product data saved successfully.');
+			}
+			elseif (Input::get('beneficiary_id') && Input::get('docTypeID')) {
+				DB::table('trnbeneficiarydocuments')->insert(array(
+					'intbeneID' => Input::get('beneficiary_id'),
+					'intDocType' => Input::get('docTypeID'),
+					'flgDocUploaded' => 1,
+					'txtDocPath' => $doc_path,
+					'flgisActive' => 1,
+					'created_at' => new DateTime, 
+					'updated_at' => new DateTime 
+					));
+				
+				return Redirect::to('users')->with('beneficiary_id', Input::get('beneficiary_id'))->with('doc_type', Input::get('docTypeID'))
+				->with('success', 'Document uploaded successfully.');
+			}
+			elseif (Input::get('beneficiary_id') && Input::get('intbeneModeofPayment')) {
+								
+				DB::table('trnbeneficiary')
+				            ->where('BeneID', trim(Input::get('beneficiary_id')))
+				            ->update(array('intbeneModeofPayment' => Input::get('payment_type'),
+				            	'txtbeneDDChequeNo' => Input::get('cheque_dd_no'),
+				            	'flgbeneisAmountRemitted' => Input::get('flgbeneisAmountRemitted'),
+				            	'intbeneAmtReceived' => Input::get('intbeneAmtReceived')
+				            ));
+				return Redirect::to('users')->with('success', 'Payment data saved successfully.');
+			}
+
 		}
 
 		return Redirect::to('users')

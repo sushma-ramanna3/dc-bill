@@ -7,6 +7,10 @@
   	
 	  	if(Session::get('beneficiary_id') && Session::get('beneficiary_name'))
 	  		$active2 = 'active';
+	  	elseif(Session::get('beneficiary_id') && Session::get('product_id'))
+	  		$active3 = 'active';
+	  	elseif(Session::get('beneficiary_id') && Session::get('doc_type'))
+	  		$active4 = 'active';
 	  	else
 	  		$active1 = 'active';
 	  	
@@ -254,7 +258,7 @@
 	        </form>
 	    </div>
 
-	    <div id="documents" class="tab-pane">   
+	    <div id="documents" class="tab-pane <?php echo $active3; ?>">   
 			<h3>Upload Documents</h3>
          	<form class="form-horizontal col-md-12" action="/registration" method="post" id="productform">
 	            <fieldset id="fieldsetappend" >
@@ -288,9 +292,9 @@
 	        </form>
 	    </div>
 
-	    <div id="payment" class="tab-pane">   
+	    <div id="payment" class="tab-pane <?php echo $active4; ?>">   
 			<h3>Payment Details</h3>
-         	<form class="form-horizontal col-md-12" action="/products" method="post" id="productform">
+         	<form class="form-horizontal col-md-12" action="/registration" method="post" id="productform">
 	            <fieldset id="fieldsetappend" >
 		            <div class="form-group">
 		              	<div class="col-md-5">
