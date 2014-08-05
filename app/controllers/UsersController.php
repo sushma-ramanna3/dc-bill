@@ -20,10 +20,14 @@ class UsersController extends BaseController {
 
 		$intProdID = Mstproductname::getProductList();
 
+		$uom = array('' => '--Select Unit--') + DB::table('mstunitofmeasure')
+							->where('flgisActive', 1)
+							->orderBy('txtUOM', 'ASC')->lists('txtUOM', 'intUomID');
+
 		$intDocTypeID = array();
 
 		return View::make('users.index')->with('districts', $districts)->with('intProdID', $intProdID)
-		->with('intDocTypeID', $intDocTypeID);
+		->with('intDocTypeID', $intDocTypeID)->with('uom', $uom);
 
 	}
 
@@ -37,6 +41,49 @@ class UsersController extends BaseController {
 	{
 		$hoblirsk = Msthoblirsk::getHoblirskList(Input::get('taluk_id'));
 		return Response::json($hoblirsk);
+	}
+
+
+	public function manufacturer()
+	{
+		$manufacturer = array('' => '--Select manufacturer--') + DB::table('mstmanufacturer')
+							->where('flgisActive', 1)->where('intProdID', Input::get('product_id'))
+							->orderBy('txtManufacturerName', 'ASC')->lists('txtManufacturerName', 'intManuID');
+		return Response::json($manufacturer);
+	}
+
+	public function model()
+	{
+		$model = array('' => '--Select model--') + DB::table('mstmodel')
+							->where('flgisActive', 1)->where('intManuID', Input::get('manufacturer_id'))
+							->orderBy('txtModelName', 'ASC')->lists('txtModelName', 'intModelID');
+		return Response::json($model);
+	}
+
+	public function specificaton()
+	{
+		$specificaton = array('' => '--Select specificaton--') + DB::table('mstspecification')
+							->where('flgisActive', 1)->where('intModelID', Input::get('model_id'))
+							->orderBy('txtSpecification', 'ASC')->lists('txtSpecification', 'intSpecID');
+		return Response::json($specificaton);
+	}
+
+	public function rateShare()
+	{
+		$rateShare = DB::table('mstrateconfiguration')
+							->select('decFullRate', 'decFarmerShare', 'decGovtShare')
+							->where('intProdID', Input::get('product_id'))
+							->where('intManuID', Input::get('manufacturer_id'))
+							->where('intModelID', Input::get('model_id'))
+							->where('intSpecification', Input::get('spec_id'))
+							->where('flgisActive', 1)
+							->get();
+		foreach ($rateShare as $val) {
+			$decFullRate = $val->decFullRate;
+			$decFarmerShare = $val->decFarmerShare;
+			$decGovtShare = $val->decGovtShare;
+		}
+		return Response::json(array('decFullRate' => $decFullRate, 'decFarmerShare' => $decFarmerShare, 'decGovtShare' => $decGovtShare));
 	}
 
 	public function registration()
@@ -60,6 +107,7 @@ class UsersController extends BaseController {
 		$validator = Validator::make(Input::all(), $rules);
 		
 		if ( $validator->passes() ) {
+
 			if(Input::get('user_register')){
 				$age = '25';
 
@@ -136,6 +184,24 @@ class UsersController extends BaseController {
 				return Redirect::to('users')->with('success', 'Payment data saved successfully.');
 			}
 
+
+		/*	$birthdate = Input::get('dob_month').'-'.Input::get('dob_day').'-'.Input::get('dob_year');
+				$birthDate = explode("-", $birthdate);
+				//get age from date or birthdate
+				 $age = (date("md", date("U", mktime(0, 0, 0, $birthDate[0], $birthDate[1], $birthDate[2]))) > date("md")
+				    ? ((date("Y") - $birthDate[2]) - 1)
+				    : (date("Y") - $birthDate[2]));
+
+		
+			if (Input::hasFile('resume'))
+			{
+			    Input::file('resume')->move( app_path().'/views/resumes/', $userid.'_'.time().'_'.Input::file('resume')->getClientOriginalName());
+				$cv_path = app_path().'/views/resumes/'.$userid.'_'.time().'_'.Input::file('resume')->getClientOriginalName();
+			}
+
+			$cv_path = isset($cv_path) ? $cv_path : '' ;
+
+	    */
 		}
 
 		return Redirect::to('users')

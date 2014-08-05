@@ -242,7 +242,7 @@
 			            <div class="form-group">
 			              <label class="col-md-5 control-label" for="last_name">Unit<span class="red font-bold"> *</span></label>  
 			              <div class="col-md-7">
-			              {{ Form::select('UOM', array('0'=>'--Select unit--'), Input::old('UOM'), array('class'=>'form-control input-md', 'required' => 'true', 'id'=>'UOM')) }}  
+			              {{ Form::select('UOM', $uom, Input::old('UOM'), array('class'=>'form-control input-md', 'required' => 'true', 'id'=>'UOM')) }}  
 			              </div>
 			            </div>
 				
