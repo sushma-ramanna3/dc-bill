@@ -39,7 +39,9 @@ Route::get('/model.php/{manufacturer_id?}', 'UsersController@model');
 
 Route::get('/specificaton.php/{model_id?}', 'UsersController@specificaton');
 
-Route::get('/rateShare.php/{spec_id?}', 'UsersController@rateShare');
+Route::get('/rateShare.php/{spec_id?}/{model_id?}/{manufacturer_id?}/{product_id?}', 'UsersController@rateShare');
+
+Route::get('/age.php/{dob?}', 'UsersController@age');
 
 //
 

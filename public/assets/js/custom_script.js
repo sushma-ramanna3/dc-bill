@@ -3,7 +3,7 @@ $(document).ready(function() {
         format: 'dd-mm-yyyy'
     });
     
-    $('#dp1, #dp2').datepicker();
+    $('#dp2').datepicker();
 
     var isIE = navigator.userAgent.indexOf(' MSIE ') > -1;
     if(isIE) {
@@ -40,16 +40,43 @@ $(document).ready(function() {
           return true;
           else
           return false;
-      }
+  	}
 
+  	/*$('#dp1')//
+	    onSelect: function(dateText, inst) { 
+	    	var val = $('#dob').val();
+	    	var url= 'age.php?dob='+val;
+	        $.getJSON(url, function(data){
+	    		console.log(data);
+				  $.each(data, function(index, text) {
+				    $('#age').val(data);
+				  });
+			});
+	    }
+	});*/
 
-   $( "#district_id" ).change(function() {
+	$('#dp1').datepicker({//.bind( "click ", function() {
+		onSelect: function(dateText, inst) { 
+	    	var val = $('#dob').val();
+	    	var url= 'age.php?dob='+val;
+	    	alert('dfkh');
+	        $.getJSON(url, function(data){
+	    		console.log(data);
+				  $.each(data, function(index, text) {
+				    $('#age').val(data);
+				  });
+			});
+    	}
+	});
+
+   	$( "#district_id" ).change(function() {
 		var val = $(this).val();
 		if(val != ''){
 			var url= 'taluk.php?district_id='+val;
 	    	$.getJSON(url, function(data){
 	    		console.log(data);
 	    		$('#taluk_id').empty();
+	    		$('#taluk_id').append('<option value="">--Select taluk--</option>');
 				  $.each(data, function(index, text) {
 			  	/*var optionExists = ($('#taluk option[value=' + index + ']').length > 0);
           		if(!optionExists)
@@ -70,6 +97,7 @@ $(document).ready(function() {
 	    	$.getJSON(url, function(data){
 	    		console.log(data);
 	    		$('#hobli').empty();
+	    		$('#hobli').append('<option value="">--Select hobli--</option>');
 				  $.each(data, function(index, text) {
 				    $('#hobli').append(
 				        $('<option></option>').val(index).html(text)
@@ -86,6 +114,7 @@ $(document).ready(function() {
 	    	$.getJSON(url, function(data){
 	    		console.log(data);
 	    		$('#manufacturer_id').empty();
+	    		$('#manufacturer_id').append('<option value="">--Select manufacturer--</option>');
 				  $.each(data, function(index, text) {
 				    $('#manufacturer_id').append(
 				        $('<option></option>').val(index).html(text)
@@ -102,6 +131,7 @@ $(document).ready(function() {
 	    	$.getJSON(url, function(data){
 	    		console.log(data);
 	    		$('#model_id').empty();
+	    		$('#model_id').append('<option value="">--Select model--</option>');
 				  $.each(data, function(index, text) {
 				    $('#model_id').append(
 				        $('<option></option>').val(index).html(text)
@@ -118,6 +148,7 @@ $(document).ready(function() {
 	    	$.getJSON(url, function(data){
 	    		console.log(data);
 	    		$('#spec_id').empty();
+	    		$('#spec_id').append('<option value="">--Select specification--</option>');
 				  $.each(data, function(index, text) {
 				    $('#spec_id').append(
 				        $('<option></option>').val(index).html(text)
@@ -130,7 +161,10 @@ $(document).ready(function() {
 	$( "#spec_id" ).change(function() {
 		var val = $(this).val();
 		if(val != ''){
-			var url= 'rateShare.php?spec_id='+val;
+			var val2 = $( "#model_id" ).val();
+			var val3 = $( "#manufacturer_id" ).val();
+			var val4 = $( "#product_id" ).val();
+			var url= 'rateShare.php?spec_id='+val+'&model_id='+val2+'&manufacturer_id='+val3+'&product_id='+val4;
 	    	$.getJSON(url, function(data){
 	    		console.log(data);
 	    		$('#fullRate').val(data.decFullRate);

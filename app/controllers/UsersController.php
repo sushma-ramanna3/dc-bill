@@ -46,7 +46,7 @@ class UsersController extends BaseController {
 
 	public function manufacturer()
 	{
-		$manufacturer = array('' => '--Select manufacturer--') + DB::table('mstmanufacturer')
+		$manufacturer =  DB::table('mstmanufacturer') //array('' => '--Select manufacturer--') +
 							->where('flgisActive', 1)->where('intProdID', Input::get('product_id'))
 							->orderBy('txtManufacturerName', 'ASC')->lists('txtManufacturerName', 'intManuID');
 		return Response::json($manufacturer);
@@ -54,7 +54,7 @@ class UsersController extends BaseController {
 
 	public function model()
 	{
-		$model = array('' => '--Select model--') + DB::table('mstmodel')
+		$model = DB::table('mstmodel')
 							->where('flgisActive', 1)->where('intManuID', Input::get('manufacturer_id'))
 							->orderBy('txtModelName', 'ASC')->lists('txtModelName', 'intModelID');
 		return Response::json($model);
@@ -62,7 +62,7 @@ class UsersController extends BaseController {
 
 	public function specificaton()
 	{
-		$specificaton = array('' => '--Select specificaton--') + DB::table('mstspecification')
+		$specificaton = DB::table('mstspecification')
 							->where('flgisActive', 1)->where('intModelID', Input::get('model_id'))
 							->orderBy('txtSpecification', 'ASC')->lists('txtSpecification', 'intSpecID');
 		return Response::json($specificaton);
@@ -78,6 +78,7 @@ class UsersController extends BaseController {
 							->where('intSpecification', Input::get('spec_id'))
 							->where('flgisActive', 1)
 							->get();
+
 		foreach ($rateShare as $val) {
 			$decFullRate = $val->decFullRate;
 			$decFarmerShare = $val->decFarmerShare;
@@ -88,28 +89,53 @@ class UsersController extends BaseController {
 
 	public function registration()
 	{
-		
-		$rules = array(
-		        'first_name' => 'required|min:3|max:80', //|alpha
-		        'address' => 'required|min:1|max:80',
-		       // 'txtbeneState' => 'required|min:10',
-		        'district_id' => 'required',
-		        'taluk_id'	=> 'required',
-		        'hoblirsk_id'	=> 'required',
-		        'phone'	=> 'required|numeric',
-		        'zip'	=> 'required|min:6',
-		        'dob' => 'required',
-		        //'intbeneAge' => 'numeric',
-		        'gender' => 'required',
-		        'category' => 'required'
-		);
+		if(Input::get('user_register')){
+			$rules = array(
+			        'first_name' => 'required|min:3|max:80', //|alpha
+			        'address' => 'required|min:1|max:80',
+			       // 'txtbeneState' => 'required|min:10',
+			        'district_id' => 'required',
+			        'taluk_id'	=> 'required',
+			        'hoblirsk_id'	=> 'required',
+			        'phone'	=> 'required|numeric',
+			        'zip'	=> 'required|min:6',
+			        'dob' => 'required',
+			        //'intbeneAge' => 'numeric',
+			        'gender' => 'required',
+			        'category' => 'required'
+			);
+		}
+		elseif(Input::get('add_product')){
+			$rules = array(
+			 	'product_id' => 'required',
+		        'manufacturer_id'	=> 'required',
+		        'model_id'	=> 'required',
+		        'spec_id'	=> 'required',
+		        'fullRate'	=> 'required',
+		        'govtShare' => 'required',
+		        'farmerShare'	=> 'required',
+		        'quantitiy' => 'required'
+	        );
+		}
+		elseif(Input::get('add_documents')){
+			$rules = array(
+			 	'photo' => 'required'
+		      
+	        );
+		}
+		elseif(Input::get('payment_detail')){
+			$rules = array(
+			 	'payment_type' => 'required',
+		        'cheque_dd_no'	=> 'required'
+	        );
+		}
 
 		$validator = Validator::make(Input::all(), $rules);
 		
 		if ( $validator->passes() ) {
 
 			if(Input::get('user_register')){
-				$age = '25';
+				$age = $this->age(Input::get('dob'), $flag=1);
 
 				if( Input::get('first_name') && !Input::get('last_name') )
 					$name = Input::get('first_name');
@@ -137,42 +163,54 @@ class UsersController extends BaseController {
 				$beneficiary_name = DB::table('trnbeneficiary')->where('BeneID', $beneficiary_id)->pluck('txtbeneficiaryname');
 
 				return Redirect::to('users')->with('beneficiary_id', $beneficiary_id)->with('beneficiary_name', $name)
+				->with('flag', 1)
 				->with('success', 'Beneficiary data saved successfully.');
 			}
-			elseif (Input::get('beneficiary_id') && Input::get('intProdID')) {
+			elseif (Input::get('beneficiary_id') && Input::get('product_id')) {
 				DB::table('trnbeneficiaryproddetails')->insert(array(
 					'intbeneID' => Input::get('beneficiary_id'),
-					'intProdID' => Input::get('intProdID'),
-					'intManufacturerID' => 'Karnataka',
-					'intModelID' => Input::get('district_id'),
-					'intSpecID' => Input::get('taluk_id'),
-					'decFullRate' => Input::get('hoblirsk_id'),
-					'decGovtShare' => Input::get('decGovtShare'),
-					'decFarmerShare' => Input::get('decFarmerShare'),
-					'intQty' => Input::get('intQty'),
-					'intUnitofMeasure' => Input::get('intUnitofMeasure'),
+					'intProdID' => Input::get('product_id'),
+					'intManufacturerID' =>Input::get('manufacturer_id'),
+					'intModelID' => Input::get('model_id'),
+					'intSpecID' => Input::get('spec_id'),
+					'decFullRate' => Input::get('fullRate'),
+					'decGovtShare' => Input::get('govtShare'),
+					'decFarmerShare' => Input::get('farmerShare'),
+					'intQty' => Input::get('quantitiy'),
+					'intUnitofMeasure' => Input::get('UOM'),
 					'flgisActive' => 1,
 					'created_at' => new DateTime, 
 					'updated_at' => new DateTime 
 					));
-				return Redirect::to('users')->with('beneficiary_id', Input::get('beneficiary_id'))->with('product_id', Input::get('intProdID'))
-				->with('beneficiary_name', Input::get('beneficiary_id'))->with('success', 'Product data saved successfully.');
+				return Redirect::to('users')->with('beneficiary_id', Input::get('beneficiary_id'))->with('product_id', Input::get('product_id'))
+				->with('flag2', 1)
+				->with('beneficiary_name', Input::get('beneficiary_name'))->with('success', 'Product data saved successfully.');
 			}
-			elseif (Input::get('beneficiary_id') && Input::get('docTypeID')) {
+			elseif (Input::get('beneficiary_id') && Input::hasFile('photo')) {
+
+				if(Input::hasFile('photo')) $docType = 1;
+				elseif(Input::hasFile('id_proof')) $docType = 2;
+
+				Input::file('photo')->move( app_path().'/views/photos/', Input::get('beneficiary_id').'_'.time().'_'.Input::file('photo')->getClientOriginalName());
+				$photo_path = app_path().'/views/photos/'.Input::get('beneficiary_id').'_'.time().'_'.Input::file('photo')->getClientOriginalName();
+
+				$photo_path = isset($photo_path) ? $photo_path : '' ;
+
 				DB::table('trnbeneficiarydocuments')->insert(array(
 					'intbeneID' => Input::get('beneficiary_id'),
-					'intDocType' => Input::get('docTypeID'),
+					'intDocType' => $docType,
 					'flgDocUploaded' => 1,
-					'txtDocPath' => $doc_path,
-					'flgisActive' => 1,
-					'created_at' => new DateTime, 
-					'updated_at' => new DateTime 
+					'txtDocPath' => $photo_path,
+					'flgisActive' => 1
+					/*'created_at' => new DateTime, 
+					'updated_at' => new DateTime */
 					));
 				
-				return Redirect::to('users')->with('beneficiary_id', Input::get('beneficiary_id'))->with('doc_type', Input::get('docTypeID'))
+				return Redirect::to('users')->with('beneficiary_id', Input::get('beneficiary_id'))->with('doc_type', $docType)
+				->with('flag3', 1)
 				->with('beneficiary_name', Input::get('beneficiary_id'))->with('success', 'Document uploaded successfully.');
 			}
-			elseif (Input::get('beneficiary_id') && Input::get('intbeneModeofPayment')) {
+			elseif (Input::get('beneficiary_id') && Input::get('payment_type')) {
 								
 				DB::table('trnbeneficiary')
 				            ->where('BeneID', trim(Input::get('beneficiary_id')))
@@ -192,15 +230,6 @@ class UsersController extends BaseController {
 				    ? ((date("Y") - $birthDate[2]) - 1)
 				    : (date("Y") - $birthDate[2]));
 
-		
-			if (Input::hasFile('resume'))
-			{
-			    Input::file('resume')->move( app_path().'/views/resumes/', $userid.'_'.time().'_'.Input::file('resume')->getClientOriginalName());
-				$cv_path = app_path().'/views/resumes/'.$userid.'_'.time().'_'.Input::file('resume')->getClientOriginalName();
-			}
-
-			$cv_path = isset($cv_path) ? $cv_path : '' ;
-
 	    */
 		}
 
@@ -210,5 +239,26 @@ class UsersController extends BaseController {
 		
 	}
 
+	public function age($dob = null, $flag = null){
+
+		if( empty($flag) )
+			$dob = Input::get('dob');
+
+		$dob = explode('-', $dob);
+
+		$birthdate = $dob[1].'-'.$dob[0].'-'.$dob[2];
+		$birthDate = explode("-", $birthdate);
+		//get age from date or birthdate
+		 $age = (date("md", date("U", mktime(0, 0, 0, $birthDate[0], $birthDate[1], $birthDate[2]))) > date("md")
+		    ? ((date("Y") - $birthDate[2]) - 1)
+		    : (date("Y") - $birthDate[2]));
+
+		if($flag){
+			return $age;
+		}
+		else{
+			return Response::json($age);
+		}
+	}
 
 }

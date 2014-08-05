@@ -6,7 +6,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>DC Billing</title>
+        <title><!-- DC Billing --></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
         <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap-responsive.min.css" />
@@ -32,7 +32,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">DC Billing</a>
+          <a class="navbar-brand" href="#"><!-- DC Billing --></a>
         </div>
          @if(Auth::check())
         <div class="navbar-collapse collapse  pull-right">
@@ -55,7 +55,7 @@
       <hr>
 
       <footer>
-        <p>&copy; Prism TechNovations Pvt. Ltd. 2014</p>
+        <p>&copy; <!-- Prism TechNovations Pvt. Ltd. 2014 --></p>
       </footer>
 
     </div> <!-- /container -->

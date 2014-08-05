@@ -5,14 +5,22 @@
   	<?php
   		$active1 = $active2 = $active3 = $active4 = '';
   	
-	  	if(Session::get('beneficiary_id') && Session::get('beneficiary_name'))
-	  		$active2 = 'active';
-	  	elseif(Session::get('beneficiary_id') && Session::get('product_id'))
+	  	if(Session::get('beneficiary_id') && Session::get('beneficiary_name') && Session::get('flag') ){
+	  		$active1 = $active3 = $active4 = '';
+	  		$active2 = 'active'; 
+	  	}
+	  	elseif(Session::get('beneficiary_id') && Session::get('product_id') && Session::get('flag2') ){
+	  		$active1 = $active2 = $active4 = '';
 	  		$active3 = 'active';
-	  	elseif(Session::get('beneficiary_id') && Session::get('doc_type'))
+	  	}
+	  	elseif(Session::get('beneficiary_id') && Session::get('doc_type') && Session::get('flag3') ){
+	  		$active1 = $active3 = $active2 = '';
 	  		$active4 = 'active';
-	  	else
+	  	}
+	  	else{
 	  		$active1 = 'active';
+	  		$active2 = $active3 = $active4 = '';
+	  	}
 	  	
   	?>
   	<ul id="tabs" class="nav nav-tabs bold" data-tabs="tabs">
@@ -21,7 +29,7 @@
   			<li><a href="{{ URL::to('franchise') }}">Products list</a></li>
   		@else
   		 	<li class="<?php echo $active1;?> tab"><a href="#users" data-toggle="tab">User Registration</a></li>
-		    <li class="<?php echo $active2;?> "><a href="#product" data-toggle="tab">Product Purchase</a></li>
+		    <li class="<?php echo $active2;?> tab"><a href="#product" data-toggle="tab">Product Purchase</a></li>
 		    <li class="<?php echo $active3;?> tab"><a href="#documents" data-toggle="tab">Upload Documents</a></li>
 		    <li class="<?php echo $active4;?> tab"><a href="#payment" data-toggle="tab">Payment Details</a></li>
 	    @endif
@@ -65,7 +73,7 @@
 		                	{{ 'Fields marked as <span class="red font-bold"> *</span> are mandatory' }}
 		              	</div>
 		            </div>
-					<input id="user_register" name="user_register" class="none" type="hidden" value="1" />
+					<input name="user_register" class="none" type="hidden" value="1" />
 
  					<div class="col-md-6">
 
@@ -118,16 +126,16 @@
 			          
 			          	<div class="form-group">
 				            <label class="col-md-5 control-label" for="twelfth">Date of Birth<span class="red font-bold"> *</span></label>  
-					        <div class=" col-md-7 input-append date pull-right" id="dp1" data-date="" data-date-format="dd-mm-yyyy">
-					            <input name="dob" class="span2" size="16" type="text" value="" readonly />
+					        <div class="col-md-7 input-append date pull-right" id="dp1" data-date="" data-date-format="dd-mm-yyyy">
+					            <input name="dob" id="dob" class="span2" size="16" type="text" value="" readonly />
 					            <label class="add-on"><i class="icon-calendar"></i></label>
 					        </div>
 			          	</div>
 
 			          	<div class="form-group sms">
-				            <label class="col-md-5 control-label" for="resume">Age</label>
+				            <label class="col-md-5 control-label" for="age">Age</label>
 				            <div class="col-md-7 radio_sms" style="font-size:12px;padding-right:0;">
-			              		<input name="age" value="" disabled="true" />
+			              		<input name="age" value="" readonly id="age"/>
 			              		<img rel="tooltip" src="/assets/images/con_info.png" title="" />
 				            </div> 
 			      		</div>
@@ -166,17 +174,17 @@
 	    </div>
 
 	    <div id="product" class="tab-pane <?php echo $active2; ?>">   
-         	<form class="form-horizontal col-md-12" action="/products" method="post" id="productform">
+         	<form class="form-horizontal col-md-12" action="/registration" method="post" id="productform">
 	            <fieldset id="fieldsetappend" >
-
+	            <input name="add_product" class="none" type="hidden" value="1" />
 		            <div class="form-group">
 		              	<div class="col-md-5">
 		                	{{ 'Fields marked as <span class="red font-bold"> *</span> are mandatory' }}
 		              	</div>
 		              	@if($active2)
 			              	<div class="col-md-12">
-			              		<input name="beneficiary_id" class="none" type="hidden" value="<?php Session::get('beneficiary_id'); ?>" />
-			              		<input name="beneficiary_name" class="none" type="hidden" value="<?php Session::get('beneficiary_name'); ?>" />
+			              		<input name="beneficiary_id" class="none" type="hidden" value="<?php echo Session::get('beneficiary_id'); ?>" />
+			              		<input name="beneficiary_name" class="none" type="hidden" value="<?php echo Session::get('beneficiary_name'); ?>" />
 			              		Beneficiary ID : {{Session::get('beneficiary_id')}} Beneficiary Name : {{Session::get('beneficiary_name')}}
 			              	</div>
 		              	@endif
@@ -260,34 +268,47 @@
 	    </div>
 
 	    <div id="documents" class="tab-pane <?php echo $active3; ?>">   
-			@if($active3)
-              	<div class="col-md-12">
-              		<input name="beneficiary_id" class="none" type="hidden" value="<?php Session::get('beneficiary_id'); ?>" />
-			        <input name="beneficiary_name" class="none" type="hidden" value="<?php Session::get('beneficiary_name'); ?>" />
-              		Beneficiary ID : {{Session::get('beneficiary_id')}} Beneficiary Name : {{Session::get('beneficiary_name')}}
-              	</div>
-          	@endif
-         	<form class="form-horizontal col-md-12" action="/registration" method="post" id="productform">
+			
+         	<form class="form-horizontal col-md-12" action="/registration" method="post" enctype="multipart/form-data" id="productform">
+         		<input name="add_documents" class="none" type="hidden" value="1" />
 	            <fieldset id="fieldsetappend" >
 		            <div class="form-group">
 		              	<div class="col-md-5">
 		                	{{ 'Fields marked as <span class="red font-bold"> *</span> are mandatory' }}
 		              	</div>
 		            </div>
-		
+					@if($active3)
+		              	<div class="col-md-12">
+		              		<input name="beneficiary_id" class="none" type="hidden" value="<?php echo Session::get('beneficiary_id'); ?>" />
+					        <input name="beneficiary_name" class="none" type="hidden" value="<?php echo Session::get('beneficiary_name'); ?>" />
+		              		Beneficiary ID : {{Session::get('beneficiary_id')}} Beneficiary Name : {{Session::get('beneficiary_name')}}
+		              	</div>
+		          	@endif
 		            <div class="col-md-6">
-			          	<div class="form-group">
+			          	<!-- <div class="form-group">
 				            <label class="col-md-5 control-label" for="">Document Type<span class="red font-bold"> *</span></label>  
 				            <div class="col-md-7">
 		              			{{ Form::select('docTypeID', $intDocTypeID, Input::old('docTypeID'), array('class'=>'form-control input-md', 'required' => 'true')) }}
 		              		</div>
-	              		</div>
-              		  	<div class="form-group">
+	              		</div> -->
+	              		<div class="form-group">
+				            <label class="col-md-4 control-label" for="photo" required="true">Upload Photo<span class="red font-bold"> *</span></label>
+				            <div class="col-md-6">
+				              {{ Form::file('photo', array('class'=>'form-control input-md', 'required' => 'true')) }}
+				            </div>
+			          	</div>
+			          	<div class="form-group">
+				            <label class="col-md-4 control-label" for="id_proof" required="true">Upload ID Proof<span class="red font-bold"> *</span></label>
+				            <div class="col-md-6">
+				              {{ Form::file('id_proof', array('class'=>'form-control input-md')) }}
+				            </div>
+			          	</div>
+              		  	<!-- <div class="form-group">
 				            <label class="col-md-5 control-label" for="">Upload Document<span class="red font-bold"> *</span></label>  
 				            <div class="col-md-7">
 				              	{{ Form::text('docPath', Input::old('docPath'), array('class'=>'form-control input-md', 'required' => 'true')) }}  
               				</div>
-		            	</div>
+		            	</div> -->
 		           	  	<div class="form-group">
 		              		<label class="col-md-3 control-label" for="submit"></label>
 			              	<div class="col-md-5">
@@ -307,11 +328,12 @@
 		                	{{ 'Fields marked as <span class="red font-bold"> *</span> are mandatory' }}
 		              	</div>
 		            </div>
+		            <input name="payment_detail" class="none" type="hidden" value="1" />
 
 		            @if($active4)
 		              	<div class="col-md-12">
-		              	<input name="beneficiary_id" class="none" type="hidden" value="<?php Session::get('beneficiary_id'); ?>" />
-			              		<input name="beneficiary_name" class="none" type="hidden" value="<?php Session::get('beneficiary_name'); ?>" />
+		              	<input name="beneficiary_id" class="none" type="hidden" value="<?php echo Session::get('beneficiary_id'); ?>" />
+	              		<input name="beneficiary_name" class="none" type="hidden" value="<?php echo Session::get('beneficiary_name'); ?>" />
 		              		Beneficiary ID : {{Session::get('beneficiary_id')}} Beneficiary Name : {{Session::get('beneficiary_name')}}
 		              	</div>
 		          	@endif
@@ -333,7 +355,7 @@
 			          	<div class="form-group">
 				            <label class="col-md-5 control-label" for="twelfth">Payment Date<span class="red font-bold"> *</span></label>  
 					        <div class=" col-md-7 input-append date pull-right" id="dp2" data-date="" data-date-format="dd-mm-yyyy">
-					            <input name="dob" class="span2" size="16" type="text" value="" readonly />
+					            <input name="date_payment" class="span2" size="16" type="text" value="" readonly />
 					            <label class="add-on"><i class="icon-calendar"></i></label>
 					        </div>
 			          	</div>
