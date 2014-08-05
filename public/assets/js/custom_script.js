@@ -42,31 +42,24 @@ $(document).ready(function() {
           return false;
   	}
 
-  	/*$('#dp1')//
+  /*	$('#dp1').datepicker({
 	    onSelect: function(dateText, inst) { 
 	    	var val = $('#dob').val();
 	    	var url= 'age.php?dob='+val;
 	        $.getJSON(url, function(data){
 	    		console.log(data);
-				  $.each(data, function(index, text) {
-				    $('#age').val(data);
-				  });
+			  $('#age').val(data)
 			});
 	    }
 	});*/
 
-	$('#dp1').datepicker({//.bind( "click ", function() {
-		onSelect: function(dateText, inst) { 
-	    	var val = $('#dob').val();
-	    	var url= 'age.php?dob='+val;
-	    	alert('dfkh');
-	        $.getJSON(url, function(data){
-	    		console.log(data);
-				  $.each(data, function(index, text) {
-				    $('#age').val(data);
-				  });
-			});
-    	}
+	$('#dob').bind( "mouseenter mouseleave blur click", function(){
+    	var val = $(this).val();
+    	var url= 'age.php?dob='+val;
+        $.getJSON(url, function(data){
+    		console.log(data);
+		    $('#age').val(data);
+		});
 	});
 
    	$( "#district_id" ).change(function() {

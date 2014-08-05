@@ -27,12 +27,13 @@ class BeneficiaryController extends BaseController {
 	{
 		$users = DB::table('trnbeneficiary')
 					->join('trnbeneficiaryproddetails', 'trnbeneficiary.BeneID', '=', 'trnbeneficiaryproddetails.intbeneID')
-					->select('trnbeneficiary.BeneID', 'trnbeneficiary.txtbeneficiaryname', 'jos_users.last_name', 'jos_users.createDate', 
-						'jos_users.usertype', 'jos_vm_user_info.last_name', 'jos_vm_user_info.phone_2', 'jos_vm_user_info.vm_highestqualification', 
-						'jos_vm_user_info.vm_educationalinstituition','jos_vm_user_info.address_1', 'jos_vm_user_info.city', 
-						'jos_vm_user_info.state', 'jos_vm_user_info.zip', 'jos_vm_user_info.vm_workexperience', 'jos_vm_user_info.vm_smsalerts');
+					->join('mstproductname', 'mstproductname.intProdID', '=', 'trnbeneficiaryproddetails.intProdID')
+					->join('mstdistrict', 'mstdistrict.intDistrictID', '=', 'trnbeneficiary.intbeneDistrict')
+					->select('trnbeneficiary.BeneID', 'trnbeneficiary.txtbeneficiaryname', 'trnbeneficiary.txtbeneAddress',
+						'trnbeneficiary.txtbeneContactNo', 'trnbeneficiary.intbeneCategory','trnbeneficiary.created_at',
+						'mstproductname.txtProdName')->get();
 
-		$date_range = '';
+		//dd($users);
 		
 		/*if (Input::has('email')) 
           	$users->where('jos_users.email', '=', Input::get('email'));
@@ -48,7 +49,7 @@ class BeneficiaryController extends BaseController {
           	$this->generateReport($users, $date_range);
         }*/
 
-		$users = $users->orderBy('jos_users.createDate', 'desc')
+		$users = $users->orderBy('trnbeneficiary.created_at', 'desc')
 						->paginate(10);
 
 		$pagination = $users->appends(

@@ -221,16 +221,7 @@ class UsersController extends BaseController {
 				            ));
 				return Redirect::to('users')->with('success', 'Payment data saved successfully.');
 			}
-
-
-		/*	$birthdate = Input::get('dob_month').'-'.Input::get('dob_day').'-'.Input::get('dob_year');
-				$birthDate = explode("-", $birthdate);
-				//get age from date or birthdate
-				 $age = (date("md", date("U", mktime(0, 0, 0, $birthDate[0], $birthDate[1], $birthDate[2]))) > date("md")
-				    ? ((date("Y") - $birthDate[2]) - 1)
-				    : (date("Y") - $birthDate[2]));
-
-	    */
+		
 		}
 
 		return Redirect::to('users')
@@ -240,7 +231,6 @@ class UsersController extends BaseController {
 	}
 
 	public function age($dob = null, $flag = null){
-
 		if( empty($flag) )
 			$dob = Input::get('dob');
 

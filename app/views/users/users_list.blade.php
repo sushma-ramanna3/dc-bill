@@ -18,12 +18,10 @@
         <div class="pull-left">
           @if(Auth::user()->usertype == 'admin') 
            <div class="col-md-2 dp">
-              <label>Franchisee</label>
-              {{ Form::select('franchise_id[]', $users['franchise_list'], Input::get('franchise_id'), array('class' => 'form-control input-md pull-right', 'style' => 'width: 65%;',)) }}
             </div>
           @endif 
           
-          <div class="form-group col-md-3 dp">
+          <!-- <div class="form-group col-md-3 dp">
             <label>From Date</label>
             <div class="input-append date pull-right" id="dp2" data-date="" data-date-format="dd-mm-yyyy">
               <input name="from_date" class="span2" size="16" type="text" value="<?php echo Input::get('from_date'); ?>" readonly />
@@ -46,7 +44,7 @@
             <a class="btn btn-danger white" type="reset" href="/users-list">Reset</a>
             {{ Form::submit('Filter', array('class' => 'btn btn-primary')) }}
             <button class="btn btn-primary" name="submit" value="download">Download</button>
-          </div>
+          </div> -->
         </div>
     </div>
   {{ Form::close() }}
@@ -60,12 +58,13 @@
         <thead>
           <tr>
             <td>Sl.No.</td>
-            <td>Full Name</td>
-            <td>Email</td>
+            <td>Beneficiary Name</td>
             <td>Phone</td>
+            <td>Category</td>
+            <td>Product Name</td>
             <td>Registered Date</td>
-            @if(Auth::user()->usertype == 'admin')
-              <td>Registered By</td>
+           <!--  @if(Auth::user()->usertype == 'admin')
+              <td>Registered By</td> -->
             @endif
           </tr>
         </thead>
@@ -76,12 +75,13 @@
             <tr>
               <td>{{ $i++ }}</td>
               <td>{{ $user->first_name.' '.$user->last_name }}</td>
-              <td>{{ $user->email }}</td>
-              <td>{{ $user->phone_2 }}</td>
-              <td>{{ date('d-M-Y h.i.s A', $user->createDate) }}</td>
-              @if(Auth::user()->usertype == 'admin')
+              <td>{{ $user->txtbeneContactNo }}</td>
+              <td>{{ $user->intbeneCategory }}</td>
+              <td>{{ $user->txtProdName }}</td>
+              <td>{{ date('d-M-Y h.i.s A', $user->created_at) }}</td>
+              <!-- @if(Auth::user()->usertype == 'admin')
                 <td>{{ $user->usertype }}</td>
-              @endif
+              @endif -->
             </tr>
           @endforeach
 

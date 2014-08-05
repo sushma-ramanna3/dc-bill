@@ -221,7 +221,7 @@
 						<div class="form-group">
 				            <label class="col-md-5 control-label" for="graduation">Full Rate<span class="red font-bold"> *</span></label>  
 				            <div class="col-md-7">
-				            	{{ Form::text('fullRate', Input::old('fullRate'), array('class'=>'form-control input-md', 'placeholder'=>'', 'required' => 'true', 'id'=>'fullRate')) }}  
+				            	{{ Form::text('fullRate', Input::old('fullRate'), array('class'=>'form-control input-md', 'placeholder'=>'', 'required' => 'true', 'id'=>'fullRate', 'readonly'=>'true')) }}  
 							</div>
 						</div>	
 		            </div>
@@ -230,13 +230,13 @@
 			          	<div class="form-group">
 				            <label class="col-md-5 control-label" for="">Government Share<span class="red font-bold"> *</span></label>  
 				            <div class="col-md-7">
-		              			{{ Form::text('govtShare', Input::old('govtShare'), array('class'=>'form-control input-md', 'required' => 'true', 'id'=>'govtShare')) }}
+		              			{{ Form::text('govtShare', Input::old('govtShare'), array('class'=>'form-control input-md', 'required' => 'true', 'id'=>'govtShare', 'readonly'=>'true')) }}
 		              		</div>
 	              		</div>
               		  	<div class="form-group">
 				            <label class="col-md-5 control-label" for="">Farmer's Share<span class="red font-bold"> *</span></label>  
 				            <div class="col-md-7">
-				              	{{ Form::text('farmerShare', Input::old('farmerShare'), array('class'=>'form-control input-md','placeholder'=>'', 'required' => 'true', 'id'=>'farmerShare')) }}  
+				              	{{ Form::text('farmerShare', Input::old('farmerShare'), array('class'=>'form-control input-md','placeholder'=>'', 'required' => 'true', 'id'=>'farmerShare', 'readonly'=>'true')) }}  
               				</div>
 		            	</div>
 
