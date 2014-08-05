@@ -108,7 +108,7 @@ class UsersController extends BaseController {
 					'updated_at' => new DateTime 
 					));
 				return Redirect::to('users')->with('beneficiary_id', Input::get('beneficiary_id'))->with('product_id', Input::get('intProdID'))
-				->with('success', 'Product data saved successfully.');
+				->with('beneficiary_name', Input::get('beneficiary_id'))->with('success', 'Product data saved successfully.');
 			}
 			elseif (Input::get('beneficiary_id') && Input::get('docTypeID')) {
 				DB::table('trnbeneficiarydocuments')->insert(array(
@@ -122,7 +122,7 @@ class UsersController extends BaseController {
 					));
 				
 				return Redirect::to('users')->with('beneficiary_id', Input::get('beneficiary_id'))->with('doc_type', Input::get('docTypeID'))
-				->with('success', 'Document uploaded successfully.');
+				->with('beneficiary_name', Input::get('beneficiary_id'))->with('success', 'Document uploaded successfully.');
 			}
 			elseif (Input::get('beneficiary_id') && Input::get('intbeneModeofPayment')) {
 								

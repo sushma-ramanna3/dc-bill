@@ -166,7 +166,6 @@
 	    </div>
 
 	    <div id="product" class="tab-pane <?php echo $active2; ?>">   
-			<h3>Add Products</h3>
          	<form class="form-horizontal col-md-12" action="/products" method="post" id="productform">
 	            <fieldset id="fieldsetappend" >
 
@@ -176,6 +175,8 @@
 		              	</div>
 		              	@if($active2)
 			              	<div class="col-md-12">
+			              		<input name="beneficiary_id" class="none" type="hidden" value="<?php Session::get('beneficiary_id'); ?>" />
+			              		<input name="beneficiary_name" class="none" type="hidden" value="<?php Session::get('beneficiary_name'); ?>" />
 			              		Beneficiary ID : {{Session::get('beneficiary_id')}} Beneficiary Name : {{Session::get('beneficiary_name')}}
 			              	</div>
 		              	@endif
@@ -259,7 +260,13 @@
 	    </div>
 
 	    <div id="documents" class="tab-pane <?php echo $active3; ?>">   
-			<h3>Upload Documents</h3>
+			@if($active3)
+              	<div class="col-md-12">
+              		<input name="beneficiary_id" class="none" type="hidden" value="<?php Session::get('beneficiary_id'); ?>" />
+			        <input name="beneficiary_name" class="none" type="hidden" value="<?php Session::get('beneficiary_name'); ?>" />
+              		Beneficiary ID : {{Session::get('beneficiary_id')}} Beneficiary Name : {{Session::get('beneficiary_name')}}
+              	</div>
+          	@endif
          	<form class="form-horizontal col-md-12" action="/registration" method="post" id="productform">
 	            <fieldset id="fieldsetappend" >
 		            <div class="form-group">
@@ -293,7 +300,6 @@
 	    </div>
 
 	    <div id="payment" class="tab-pane <?php echo $active4; ?>">   
-			<h3>Payment Details</h3>
          	<form class="form-horizontal col-md-12" action="/registration" method="post" id="productform">
 	            <fieldset id="fieldsetappend" >
 		            <div class="form-group">
@@ -301,7 +307,15 @@
 		                	{{ 'Fields marked as <span class="red font-bold"> *</span> are mandatory' }}
 		              	</div>
 		            </div>
-		
+
+		            @if($active4)
+		              	<div class="col-md-12">
+		              	<input name="beneficiary_id" class="none" type="hidden" value="<?php Session::get('beneficiary_id'); ?>" />
+			              		<input name="beneficiary_name" class="none" type="hidden" value="<?php Session::get('beneficiary_name'); ?>" />
+		              		Beneficiary ID : {{Session::get('beneficiary_id')}} Beneficiary Name : {{Session::get('beneficiary_name')}}
+		              	</div>
+		          	@endif
+					
 		            <div class="col-md-6">
 			          	<div class="form-group">
 				            <label class="col-md-5 control-label" for="">Payment Type<span class="red font-bold"> *</span></label>  
