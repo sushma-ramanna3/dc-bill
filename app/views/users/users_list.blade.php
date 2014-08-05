@@ -74,11 +74,11 @@
           @foreach($users['users'] as $key => $user)
             <tr>
               <td>{{ $i++ }}</td>
-              <td>{{ $user->first_name.' '.$user->last_name }}</td>
+              <td>{{ $user->txtbeneficiaryname }}</td>
               <td>{{ $user->txtbeneContactNo }}</td>
               <td>{{ $user->intbeneCategory }}</td>
               <td>{{ $user->txtProdName }}</td>
-              <td>{{ date('d-M-Y h.i.s A', $user->created_at) }}</td>
+              <td>{{ date('d-M-Y h.i.s', strtotime($user->created_at)) }}</td>
               <!-- @if(Auth::user()->usertype == 'admin')
                 <td>{{ $user->usertype }}</td>
               @endif -->

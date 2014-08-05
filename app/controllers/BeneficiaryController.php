@@ -31,7 +31,7 @@ class BeneficiaryController extends BaseController {
 					->join('mstdistrict', 'mstdistrict.intDistrictID', '=', 'trnbeneficiary.intbeneDistrict')
 					->select('trnbeneficiary.BeneID', 'trnbeneficiary.txtbeneficiaryname', 'trnbeneficiary.txtbeneAddress',
 						'trnbeneficiary.txtbeneContactNo', 'trnbeneficiary.intbeneCategory','trnbeneficiary.created_at',
-						'mstproductname.txtProdName')->get();
+						'mstproductname.txtProdName');
 
 		//dd($users);
 		
