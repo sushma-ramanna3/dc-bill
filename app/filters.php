@@ -102,7 +102,7 @@ Route::filter('admin', function()
 */
 DB::listen(function($sql, $bindings, $time)
 {
-   /* var_dump($sql);var_dump($bindings);*/
+  // var_dump($sql);//var_dump($bindings);
 });
 
 Route::filter('csrf', function()
@@ -112,3 +112,10 @@ Route::filter('csrf', function()
 		throw new Illuminate\Session\TokenMismatchException;
 	}
 });
+
+Route::get('/download/{pdf}', function($pdf)
+{
+	$file = app_path() . '/views/photos/'.$pdf;
+	return Response::download($file);
+});
+

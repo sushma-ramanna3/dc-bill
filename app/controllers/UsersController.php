@@ -70,19 +70,32 @@ class UsersController extends BaseController {
 
 	public function rateShare()
 	{
-		$rateShare = DB::table('mstrateconfiguration')
-							->select('decFullRate', 'decFarmerShare', 'decGovtShare')
-							->where('intProdID', Input::get('product_id'))
-							->where('intManuID', Input::get('manufacturer_id'))
-							->where('intModelID', Input::get('model_id'))
-							->where('intSpecification', Input::get('spec_id'))
-							->where('flgisActive', 1)
-							->get();
+		$rateShare = DB::table('mstrateconfiguration');
+
+		if( Input::get('category_id') == 1 ) {
+			$rateShare = $rateShare->select('decFullRate', 'decGeneralFarmerShare', 'decGeneralGovtShare');
+		}
+		else {
+			$rateShare = $rateShare->select('decFullRate', 'decScpFarmerShare', 'decScpGovtShare');
+		}
+
+		$rateShare = $rateShare->where('intProdID', Input::get('product_id'))
+					->where('intManuID', Input::get('manufacturer_id'))
+					->where('intModelID', Input::get('model_id'))
+					->where('intSpecification', Input::get('spec_id'))
+					->where('flgisActive', 1)
+					->get();
 
 		foreach ($rateShare as $val) {
 			$decFullRate = $val->decFullRate;
-			$decFarmerShare = $val->decFarmerShare;
-			$decGovtShare = $val->decGovtShare;
+			if( Input::get('category_id') == 1 ) {
+				$decFarmerShare = $val->decGeneralFarmerShare;
+				$decGovtShare = $val->decGeneralGovtShare;
+			}
+			else{
+				$decFarmerShare = $val->decScpFarmerShare;
+				$decGovtShare = $val->decScpGovtShare;
+			}
 		}
 		return Response::json(array('decFullRate' => $decFullRate, 'decFarmerShare' => $decFarmerShare, 'decGovtShare' => $decGovtShare));
 	}
@@ -93,14 +106,12 @@ class UsersController extends BaseController {
 			$rules = array(
 			        'first_name' => 'required|min:3|max:80', //|alpha
 			        'address' => 'required|min:1|max:80',
-			       // 'txtbeneState' => 'required|min:10',
 			        'district_id' => 'required',
 			        'taluk_id'	=> 'required',
 			        'hoblirsk_id'	=> 'required',
 			        'phone'	=> 'required|numeric',
 			        'zip'	=> 'required|min:6',
 			        'dob' => 'required',
-			        //'intbeneAge' => 'numeric',
 			        'gender' => 'required',
 			        'category' => 'required'
 			);
@@ -159,11 +170,10 @@ class UsersController extends BaseController {
 										'updated_at' => new DateTime 
 										));
 
-				//$save_beneficiary_details = Trnbeneficiary::create($beneficiary_details);
 				$beneficiary_name = DB::table('trnbeneficiary')->where('BeneID', $beneficiary_id)->pluck('txtbeneficiaryname');
 
-				return Redirect::to('users')->with('beneficiary_id', $beneficiary_id)->with('beneficiary_name', $name)
-				->with('flag', 1)
+				return Redirect::to('users')->with('beneficiary_id', $beneficiary_id)->with('beneficiary_name', $beneficiary_name)
+				->with('category', Input::get('category'))
 				->with('success', 'Beneficiary data saved successfully.');
 			}
 			elseif (Input::get('beneficiary_id') && Input::get('product_id')) {
@@ -182,8 +192,7 @@ class UsersController extends BaseController {
 					'created_at' => new DateTime, 
 					'updated_at' => new DateTime 
 					));
-				return Redirect::to('users')->with('beneficiary_id', Input::get('beneficiary_id'))->with('product_id', Input::get('product_id'))
-				->with('flag2', 1)
+				return Redirect::to('users')->with('beneficiary_id', Input::get('beneficiary_id'))->with('flag1', 1)
 				->with('beneficiary_name', Input::get('beneficiary_name'))->with('success', 'Product data saved successfully.');
 			}
 			elseif (Input::get('beneficiary_id') && Input::hasFile('photo')) {
@@ -206,9 +215,8 @@ class UsersController extends BaseController {
 					'updated_at' => new DateTime */
 					));
 				
-				return Redirect::to('users')->with('beneficiary_id', Input::get('beneficiary_id'))->with('doc_type', $docType)
-				->with('flag3', 1)
-				->with('beneficiary_name', Input::get('beneficiary_id'))->with('success', 'Document uploaded successfully.');
+				return Redirect::to('users')->with('beneficiary_id', Input::get('beneficiary_id'))->with('flag2', 1)
+				->with('beneficiary_name', Input::get('beneficiary_name'))->with('success', 'Document uploaded successfully.');
 			}
 			elseif (Input::get('beneficiary_id') && Input::get('payment_type')) {
 								
@@ -216,8 +224,8 @@ class UsersController extends BaseController {
 				            ->where('BeneID', trim(Input::get('beneficiary_id')))
 				            ->update(array('intbeneModeofPayment' => Input::get('payment_type'),
 				            	'txtbeneDDChequeNo' => Input::get('cheque_dd_no'),
-				            	'flgbeneisAmountRemitted' => Input::get('flgbeneisAmountRemitted'),
-				            	'intbeneAmtReceived' => Input::get('intbeneAmtReceived')
+				            	'flgbeneisAmountRemitted' => Input::get('amount_remitted'),
+				            	'intbeneAmtReceived' => Input::get('amount_recieved')
 				            ));
 				return Redirect::to('users')->with('success', 'Payment data saved successfully.');
 			}
@@ -249,6 +257,18 @@ class UsersController extends BaseController {
 		else{
 			return Response::json($age);
 		}
+	}
+
+	public function cvDownload($user_id)
+	{
+		/*if(substr($application_id, 0, 4) == 'HDFC'){
+			$application_id = explode('_', $application_id);
+			$application_id = $application_id[1];
+			$file = DB::table('hdfc_applications')->where('id', '=', $application_id)->pluck('cv_path');
+		}else{
+			$file = DB::table('applications')->where('id', '=', $application_id)->pluck('cv_path');
+		}*/
+		return Response::download($file);
 	}
 
 }

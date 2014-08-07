@@ -25,6 +25,8 @@ Route::get('/', function()
 	return View::make('hello');
 });
 
+Route::get('/photodownload/{user_id}', 'UsersController@photoDownload');
+
 Route::get('login', 'SessionsController@create');
 
 Route::get('logout', 'SessionsController@destroy');

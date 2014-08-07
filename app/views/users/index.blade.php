@@ -5,15 +5,15 @@
   	<?php
   		$active1 = $active2 = $active3 = $active4 = '';
   	
-	  	if(Session::get('beneficiary_id') && Session::get('beneficiary_name') && Session::get('flag') ){
+	  	if(Session::get('beneficiary_id') && Session::get('category') ){
 	  		$active1 = $active3 = $active4 = '';
 	  		$active2 = 'active'; 
 	  	}
-	  	elseif(Session::get('beneficiary_id') && Session::get('product_id') && Session::get('flag2') ){
+	  	elseif(Session::get('beneficiary_id') && Session::get('flag1') ){
 	  		$active1 = $active2 = $active4 = '';
 	  		$active3 = 'active';
 	  	}
-	  	elseif(Session::get('beneficiary_id') && Session::get('doc_type') && Session::get('flag3') ){
+	  	elseif(Session::get('beneficiary_id') && Session::get('flag2') ){
 	  		$active1 = $active3 = $active2 = '';
 	  		$active4 = 'active';
 	  	}
@@ -185,6 +185,7 @@
 			              	<div class="col-md-12">
 			              		<input name="beneficiary_id" class="none" type="hidden" value="<?php echo Session::get('beneficiary_id'); ?>" />
 			              		<input name="beneficiary_name" class="none" type="hidden" value="<?php echo Session::get('beneficiary_name'); ?>" />
+			              		<input name="category" id="category" class="none" type="hidden" value="<?php echo Session::get('category_id'); ?>" />
 			              		Beneficiary ID : {{Session::get('beneficiary_id')}} Beneficiary Name : {{Session::get('beneficiary_name')}}
 			              	</div>
 		              	@endif
@@ -298,7 +299,7 @@
 				            </div>
 			          	</div>
 			          	<div class="form-group">
-				            <label class="col-md-4 control-label" for="id_proof" required="true">Upload ID Proof<span class="red font-bold"> *</span></label>
+				            <label class="col-md-4 control-label" for="id_proof" required="true">Upload ID Proof</label>
 				            <div class="col-md-6">
 				              {{ Form::file('id_proof', array('class'=>'form-control input-md')) }}
 				            </div>
@@ -352,12 +353,29 @@
               				</div>
 		            	</div>
 
+		            	<div class="form-group">
+				            <label class="col-md-5 control-label" for="">Amount Recieved<span class="red font-bold"> *</span></label>  
+				            <div class="col-md-7">
+				              	{{ Form::text('amount_recieved', Input::old('amount_recieved'), array('class'=>'form-control input-md','placeholder'=>'', 'required' => 'true')) }}  
+              				</div>
+		            	</div>
+
 			          	<div class="form-group">
 				            <label class="col-md-5 control-label" for="twelfth">Payment Date<span class="red font-bold"> *</span></label>  
 					        <div class=" col-md-7 input-append date pull-right" id="dp2" data-date="" data-date-format="dd-mm-yyyy">
 					            <input name="date_payment" class="span2" size="16" type="text" value="" readonly />
 					            <label class="add-on"><i class="icon-calendar"></i></label>
 					        </div>
+			          	</div>
+
+			          	<div class="form-group">
+				            <label class="col-md-5 control-label" for="twelfth">Amount Remitted<span class="red font-bold"> *</span></label>  
+				            <div class="col-md-7">
+				            	 {{ Form::radio('amount_remitted','1','', array('id'=>'first1')) }}
+				                  {{ Form::label('1','Received', array('style' => 'font-weight:normal'))}} 
+				                  {{ Form::radio('amount_remitted','0','', array('id'=>'first2')) }}
+				                 {{ Form::label('0','Not yet', array('style' => 'font-weight:normal;')) }} 
+				            </div>
 			          	</div>
 
 		           	  	<div class="form-group">
