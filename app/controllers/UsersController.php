@@ -313,27 +313,28 @@ class UsersController extends BaseController {
 		if(Input::get('user_register')){
 			$rules = array(
 			        'first_name' => 'required|min:3|max:80', //|alpha
-			        'address' => 'required|min:1|max:80',
-			        'district_id' => 'required',
-			        'taluk_id'	=> 'required',
-			        'hoblirsk_id'	=> 'required',
-			        'phone'	=> 'required|numeric',
-			        'zip'	=> 'required|min:6',
-			        'dob' => 'required',
-			        'gender' => 'required',
-			        'category' => 'required'
+			        'txtbeneAddress' => 'required|min:1|max:80',
+			        'intbeneDistrict' => 'required',
+			        'intbeneTaluk'	=> 'required',
+			        'intbeneRSK'	=> 'required',
+			        'txtbeneContactNo'	=> 'required|numeric',
+			        'intbenePinCode'	=> 'required|min:6',
+			        'dtdateofBirth' => 'required',
+			        'txtbeneSex' => 'required',
+			        'intbeneCategory' => 'required'
 			);
 		}
 		elseif(Input::get('add_product')){
 			$rules = array(
-			 	'product_id' => 'required',
-		        'manufacturer_id'	=> 'required',
-		        'model_id'	=> 'required',
-		        'spec_id'	=> 'required',
-		        'fullRate'	=> 'required',
-		        'govtShare' => 'required',
-		        'farmerShare'	=> 'required',
-		        'quantitiy' => 'required'
+			 	'intProdID' => 'required',
+		        'intManufacturerID'	=> 'required',
+		        'intModelID'	=> 'required',
+		        'intSpecID'	=> 'required',
+		        'decFullRate'	=> 'required',
+		        'decGovtShare' => 'required',
+		        'decFarmerShare'	=> 'required',
+		        'intUnitofMeasure' => 'required',
+		        'intQty' => 'required'
 	        );
 		}
 		elseif(Input::get('add_documents')){
@@ -344,8 +345,8 @@ class UsersController extends BaseController {
 		}
 		elseif(Input::get('payment_detail')){
 			$rules = array(
-			 	'payment_type' => 'required',
-		        'cheque_dd_no'	=> 'required'
+			 	'intbeneModeofPayment' => 'required',
+		        'txtbeneDDChequeNo'	=> 'required'
 	        );
 		}
 
