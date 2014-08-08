@@ -286,12 +286,6 @@
 		              	</div>
 		          	@endif
 		            <div class="col-md-6">
-			          	<!-- <div class="form-group">
-				            <label class="col-md-5 control-label" for="">Document Type<span class="red font-bold"> *</span></label>  
-				            <div class="col-md-7">
-		              			{{ Form::select('docTypeID', $intDocTypeID, Input::old('docTypeID'), array('class'=>'form-control input-md', 'required' => 'true')) }}
-		              		</div>
-	              		</div> -->
 	              		<div class="form-group">
 				            <label class="col-md-4 control-label" for="photo" required="true">Upload Photo<span class="red font-bold"> *</span></label>
 				            <div class="col-md-6">
@@ -304,12 +298,7 @@
 				              {{ Form::file('id_proof', array('class'=>'form-control input-md')) }}
 				            </div>
 			          	</div>
-              		  	<!-- <div class="form-group">
-				            <label class="col-md-5 control-label" for="">Upload Document<span class="red font-bold"> *</span></label>  
-				            <div class="col-md-7">
-				              	{{ Form::text('docPath', Input::old('docPath'), array('class'=>'form-control input-md', 'required' => 'true')) }}  
-              				</div>
-		            	</div> -->
+              		  	
 		           	  	<div class="form-group">
 		              		<label class="col-md-3 control-label" for="submit"></label>
 			              	<div class="col-md-5">
@@ -343,7 +332,7 @@
 			          	<div class="form-group">
 				            <label class="col-md-5 control-label" for="">Payment Type<span class="red font-bold"> *</span></label>  
 				            <div class="col-md-7">
-		              			{{ Form::select('payment_type', array(''=>'--Select category--', '1'=>'Cheque', '2'=>'DD', '3'=>'Other'), Input::old('payment_type'), array('class'=>'form-control input-md', 'required' => 'true')) }}
+		              			{{ Form::select('payment_type', array(''=>'--Select payment type--', '1'=>'Cheque', '2'=>'DD', '3'=>'Other'), Input::old('payment_type'), array('class'=>'form-control input-md', 'required' => 'true')) }}
 		              		</div>
 	              		</div>
               		  	<div class="form-group">
@@ -363,7 +352,7 @@
 			          	<div class="form-group">
 				            <label class="col-md-5 control-label" for="twelfth">Payment Date<span class="red font-bold"> *</span></label>  
 					        <div class=" col-md-7 input-append date pull-right" id="dp2" data-date="" data-date-format="dd-mm-yyyy">
-					            <input name="date_payment" class="span2" size="16" type="text" value="" readonly />
+					            <input name="paymentDate" class="span2" size="16" type="text" value="" readonly />
 					            <label class="add-on"><i class="icon-calendar"></i></label>
 					        </div>
 			          	</div>
@@ -460,28 +449,6 @@
 	    </div>
 	  </div>
 	</div>
-
-	<!-- Error Modal -->
-	<div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	  <div class="modal-dialog">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-	        <h4 class="modal-title red" id="myModalLabel">Error - Franchise Coupon Code</h4>
-	      </div>
-	      <div class="modal-body">
-	        <p id="modal-text">
-	         	Coupion value sholud be greater than 0 and less than 3000!
-	        </p>
-	      </div>
-	      <div class="modal-footer">
-	        <button type="button" id="close" class="btn btn-default" data-dismiss="modal">Close</button>
-	      </div>
-	    </div>
-	  </div>
-	</div>
-
-
 
 </div>
 

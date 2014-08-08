@@ -31,11 +31,11 @@ class BeneficiaryController extends BaseController {
 					->join('trnbeneficiarydocuments', 'trnbeneficiary.BeneID', '=', 'trnbeneficiarydocuments.intbeneID')
 					->select('trnbeneficiary.BeneID', 'trnbeneficiary.txtbeneficiaryname', 'trnbeneficiary.txtbeneAddress',
 						'trnbeneficiary.txtbeneContactNo', 'trnbeneficiary.intbeneCategory','trnbeneficiary.created_at',
-						'mstproductname.txtProdName', 'trnbeneficiaryproddetails.decFullRate', 'trnbeneficiarydocuments.txtDocPath');
+						'mstproductname.txtProdName', 'trnbeneficiaryproddetails.decFullRate');
 
-		//dd($users);
-		if (Input::has('beneficiary_name')) 
-          	$users = $users->where('trnbeneficiary.txtbeneficiaryname', '=', Input::get('beneficiary_name'));
+		if (Input::has('beneficiary_name')) {
+          	$users->where('trnbeneficiary.txtbeneficiaryname', '=', Input::get('beneficiary_name'));
+		}
           
        /*if(Input::has('from_date') && Input::has('to_date')) {
         	$date_range = 'From '.Input::get('from_date').' To '.Input::get('to_date');
@@ -48,14 +48,11 @@ class BeneficiaryController extends BaseController {
           	$this->generateReport($users, $date_range);
         }*/
 
-		$users = $users->orderBy('trnbeneficiary.BeneID', 'DESC ')->paginate(10);
-						//dd(count($users));
+		$users = $users->orderBy('trnbeneficiary.BeneID', 'ASC ')->paginate(10);
+					//	dd(count($users));
 		$pagination = $users->appends(
 	        array(
 	            'beneficiary_name' => Input::get('beneficiary_name')
-	           /* 'franchise_id' => Input::get('franchise_id'),
-	            'from_date' => Input::get('from_date'),
-	            'to_date' => Input::get('to_date')*/
 	        ))->links();
 
 		$users = array('users' => $users, 'pagination' => $pagination);
@@ -149,6 +146,13 @@ class BeneficiaryController extends BaseController {
 			->withInput()
 			->withErrors($validator);
 			
+	}
+
+	public function photoDownload($user_id)
+	{
+		$file = DB::table('trnbeneficiarydocuments')->where('intbeneID', '=', $user_id)
+				->where('intDocType', '=', 1)->pluck('txtDocPath');
+		return Response::download($file);
 	}
 
 

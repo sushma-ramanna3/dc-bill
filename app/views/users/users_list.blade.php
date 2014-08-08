@@ -1,13 +1,13 @@
 @extends('layouts.main')
 @section('content')
-  <h3>Admin Dashboard</h3>
+  <h3>Dashboard</h3>
 
   <ul id="tabs" class="nav nav-tabs bold" data-tabs="tabs">
       <li class="active"><a href="#" data-toggle="tab">Users List</a></li>
       <li class="users"><a href="users">Back</a></li>
   </ul>
   
-  <h4>Order Details</h4><hr>
+  <h4>Users Details</h4><hr>
   
   <?php 
         $page = Input::get('page', 1);
@@ -64,22 +64,26 @@
             <td>Category</td>
             <td>Product Name</td>
             <td>Registered Date</td>
+            <td>Photo Link</td>
            <!--  @if(Auth::user()->usertype == 'admin')
-              <td>Registered By</td> -->
-            @endif
+              <td>Registered By</td> 
+            @endif-->
           </tr>
         </thead>
         
         <tbody>
           @foreach($users['users'] as $key => $user)
             <tr>
-              <td>{{ $i++ }}</td>
+              <td><a href='{{ URL::to('users/' . $user->BeneID . '/edit') }}'>{{ $i++ }}</a></td>
               <td>{{ $user->txtbeneficiaryname }}</td>
               <td>{{ $user->txtbeneContactNo }}</td>
-              <td>{{ $user->intbeneCategory }}</td>
+              <td>@if($user->intbeneCategory == 1) General
+                @elseif($user->intbeneCategory == 2) SC
+                @else 3
+                @endif</td>
               <td>{{ $user->txtProdName }}</td>
               <td>{{ date('d-M-Y h.i.s', strtotime($user->created_at)) }}</td>
-              <td>{{ "<a href='/photodownload/".$user->txtDocPath."'>Photo download</a>" }}</td>
+              <td>{{ "<a href='/photodownload/".$user->BeneID."'>Photo download</a>" }}</td>
               <!-- @if(Auth::user()->usertype == 'admin')
                 <td>{{ $user->usertype }}</td>
               @endif -->

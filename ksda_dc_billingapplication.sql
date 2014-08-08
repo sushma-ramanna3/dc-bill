@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Aug 05, 2014 at 02:48 PM
+-- Generation Time: Aug 08, 2014 at 05:35 PM
 -- Server version: 5.5.38-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.3
 
@@ -180,8 +180,10 @@ CREATE TABLE IF NOT EXISTS `mstrateconfiguration` (
   `intModelID` int(11) NOT NULL,
   `intSpecification` int(11) NOT NULL,
   `decFullRate` decimal(10,0) NOT NULL,
-  `decFarmerShare` decimal(10,0) NOT NULL,
-  `decGovtShare` decimal(10,0) NOT NULL,
+  `decGeneralFarmerShare` decimal(10,0) DEFAULT NULL,
+  `decGeneralGovtShare` decimal(10,0) DEFAULT NULL,
+  `decScpFarmerShare` decimal(10,0) DEFAULT NULL,
+  `decScpGovtShare` decimal(10,0) DEFAULT NULL,
   `txtRemarks` varchar(350) DEFAULT NULL,
   `flgisActive` tinyint(1) NOT NULL,
   `txtField1` varchar(50) DEFAULT NULL,
@@ -196,9 +198,9 @@ CREATE TABLE IF NOT EXISTS `mstrateconfiguration` (
 -- Dumping data for table `mstrateconfiguration`
 --
 
-INSERT INTO `mstrateconfiguration` (`intRateConfID`, `intProdID`, `intManuID`, `intModelID`, `intSpecification`, `decFullRate`, `decFarmerShare`, `decGovtShare`, `txtRemarks`, `flgisActive`, `txtField1`, `txtField2`, `txtField3`, `txtField4`, `txtField5`) VALUES
-(1, 1, 1, 1, 1, 30000, 10000, 15000, NULL, 1, NULL, NULL, NULL, NULL, NULL),
-(2, 2, 2, 2, 2, 50000, 20000, 30000, NULL, 1, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `mstrateconfiguration` (`intRateConfID`, `intProdID`, `intManuID`, `intModelID`, `intSpecification`, `decFullRate`, `decGeneralFarmerShare`, `decGeneralGovtShare`, `decScpFarmerShare`, `decScpGovtShare`, `txtRemarks`, `flgisActive`, `txtField1`, `txtField2`, `txtField3`, `txtField4`, `txtField5`) VALUES
+(1, 1, 1, 1, 1, 30000, 10000, 15000, 50000, 15000, NULL, 1, NULL, NULL, NULL, NULL, NULL),
+(2, 2, 2, 2, 2, 50000, 20000, 30000, 20000, 15000, NULL, 1, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -296,6 +298,7 @@ CREATE TABLE IF NOT EXISTS `trnbeneficiary` (
   `txtbeneDDChequeNo` varchar(30) DEFAULT NULL,
   `flgbeneisAmountRemitted` tinyint(1) DEFAULT NULL,
   `intbeneAmtReceived` decimal(10,0) DEFAULT NULL,
+  `paymentDate` timestamp NULL DEFAULT NULL,
   `txtRemarks` varchar(350) DEFAULT NULL,
   `flgisActive` tinyint(1) NOT NULL DEFAULT '1',
   `txtField1` varchar(50) DEFAULT NULL,
@@ -307,33 +310,36 @@ CREATE TABLE IF NOT EXISTS `trnbeneficiary` (
   KEY `FX_District_idx` (`intbeneDistrict`),
   KEY `FK_Taluk_idx` (`intbeneTaluk`),
   KEY `FK_RSK_idx` (`intbeneRSK`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=21 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=24 ;
 
 --
 -- Dumping data for table `trnbeneficiary`
 --
 
-INSERT INTO `trnbeneficiary` (`BeneID`, `txtbeneficiaryname`, `txtbeneAddress`, `txtbeneState`, `intbeneDistrict`, `intbeneTaluk`, `intbeneRSK`, `intbenePinCode`, `txtbeneContactNo`, `dtdateofBirth`, `intbeneAge`, `txtbeneSex`, `intbeneCategory`, `created_at`, `updated_at`, `intbeneModeofPayment`, `txtbeneDDChequeNo`, `flgbeneisAmountRemitted`, `intbeneAmtReceived`, `txtRemarks`, `flgisActive`, `txtField1`, `txtField2`, `txtField3`, `txtField4`, `txtField5`) VALUES
-(1, 'test msnabf', 'kasfkjk', 'KA', 2, 2, 2, 123123, '9325372523', '05-08-2014', 25, 'male', 1, '2014-08-03 18:05:57', '2014-08-03 18:05:57', NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
-(2, 'testjhgjdfm jsbfdj', 'mbbbdf', 'Karnataka', 1, 1, 1, 432423, '3559943534', '05-08-2014', 25, 'female', 2, '2014-08-03 19:24:57', '2014-08-03 19:24:57', NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
-(3, 'testjhgjdfm jsbfdj', 'mbbbdf', 'Karnataka', 1, 1, 1, 432423, '3559943534', '05-08-2014', 25, 'female', 2, '2014-08-03 19:26:29', '2014-08-03 19:26:29', NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
-(4, 'testjhgjdfm jsbfdj', 'mbbbdf', 'Karnataka', 1, 1, 1, 432423, '3559943534', '05-08-2014', 25, 'female', 2, '2014-08-03 19:27:27', '2014-08-03 19:27:27', NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
-(5, 'jdjkg fkj skdkjwe', 'asdvjwafk', 'Karnataka', 1, 1, 1, 234572, '3495952094', '12-08-2014', 25, 'male', 2, '2014-08-03 19:29:10', '2014-08-03 19:29:10', NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
-(6, 'dsgdsgf dsgdsg', 'xcvxvxcvxc', 'Karnataka', 1, 1, 1, 353253, '5435435435', '18-07-2012', 2, 'male', 1, '2014-08-05 07:19:27', '2014-08-05 07:19:27', NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
-(7, 'dsgdsgf dsgdsg', 'dsfdsfdsf', 'Karnataka', 2, 2, 2, 454354, '5454545433', '08-07-2014', 0, 'male', 1, '2014-08-05 07:23:41', '2014-08-05 07:23:41', NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
-(8, 'fdg fdg', '6hgdfgdfg', 'Karnataka', 1, 1, 1, 456456, '43456745', '11-08-2014', -1, 'male', 1, '2014-08-05 08:35:17', '2014-08-05 08:35:17', NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
-(9, 'dsgdsgf Name', 'yttry', 'Karnataka', 1, 1, 1, 456546, '5454545454', '30-07-2014', 0, 'female', 1, '2014-08-05 08:36:51', '2014-08-05 08:36:51', NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
-(10, 'dsgdsgf dsgdsg', 'asfsadf', 'Karnataka', 1, 1, 1, 324346, '5454545433', '12-08-2014', -1, 'female', 1, '2014-08-05 08:42:29', '2014-08-05 08:42:29', NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
-(11, 'gfdg fdg', 'dfgfdg', 'Karnataka', 1, 1, 1, 435454, '5454545454', '04-08-2014', 0, 'male', 1, '2014-08-05 08:43:52', '2014-08-05 08:43:52', NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
-(12, 'dsfds fdsf', 'dsfdsf', 'Karnataka', 1, 1, 1, 354324, '5454545433', '03-08-2014', 0, 'female', 2, '2014-08-05 08:46:15', '2014-08-05 08:46:15', NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
-(13, 'dsfdsf dsf', 'safddsf', 'Karnataka', 1, 1, 1, 570001, '5454545433', '21-08-2014', -1, 'male', 3, '2014-08-05 08:48:40', '2014-08-05 08:48:40', NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
-(14, 'dsfdsf Name', 'dsf', 'Karnataka', 1, 1, 1, 435435, '5454545454', '15-08-2014', -1, 'female', 2, '2014-08-05 08:54:16', '2014-08-05 08:54:16', NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
-(15, 'Test Name', 'asfdas', 'Karnataka', 1, 1, 1, 343243, '5454545433', '06-08-2014', -1, 'female', 2, '2014-08-05 08:56:29', '2014-08-05 08:56:29', NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
-(16, 'dsgdsgf Name', 'j;j', 'Karnataka', 1, 1, 1, 435435, '5323201021', '30-07-2014', 0, 'male', 2, '2014-08-05 08:59:08', '2014-08-05 08:59:08', NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
-(17, 'dsgdsgf hlkj', 'iou', 'Karnataka', 1, 1, 1, 324324, '2453241534', '28-07-2014', 0, 'male', 2, '2014-08-05 09:02:22', '2014-08-05 09:02:22', NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
-(18, 'dsf ljlae', 'asfd', 'Karnataka', 1, 1, 1, 343243, '5454545433', '05-08-2014', 0, 'male', 1, '2014-08-05 09:04:01', '2014-08-05 09:04:01', NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
-(19, 'dsfdsf jljl', 'dsf', 'Karnataka', 1, 1, 1, 343243, '1234561212', '06-08-2014', -1, 'female', 2, '2014-08-05 09:10:53', '2014-08-05 09:10:53', NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
-(20, 'asdfdsk kkk', 'dsfsrf', 'Karnataka', 2, 2, 2, 256356, '2453241534', '27-08-2014', -1, 'male', 1, '2014-08-05 09:15:52', '2014-08-05 09:12:08', 1, '35252525252', NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `trnbeneficiary` (`BeneID`, `txtbeneficiaryname`, `txtbeneAddress`, `txtbeneState`, `intbeneDistrict`, `intbeneTaluk`, `intbeneRSK`, `intbenePinCode`, `txtbeneContactNo`, `dtdateofBirth`, `intbeneAge`, `txtbeneSex`, `intbeneCategory`, `created_at`, `updated_at`, `intbeneModeofPayment`, `txtbeneDDChequeNo`, `flgbeneisAmountRemitted`, `intbeneAmtReceived`, `paymentDate`, `txtRemarks`, `flgisActive`, `txtField1`, `txtField2`, `txtField3`, `txtField4`, `txtField5`) VALUES
+(1, 'test msnabf', 'kasfkjk', 'KA', 2, 2, 2, 123123, '9325372523', '05-08-2014', 25, 'male', 1, '2014-08-03 18:05:57', '2014-08-03 18:05:57', NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
+(2, 'testjhgjdfm jsbfdj', 'mbbbdf', 'Karnataka', 1, 1, 1, 432423, '3559943534', '05-08-2014', 25, 'female', 2, '2014-08-03 19:24:57', '2014-08-03 19:24:57', NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
+(3, 'testjhgjdfm jsbfdj', 'mbbbdf', 'Karnataka', 1, 1, 1, 432423, '3559943534', '05-08-2014', 25, 'female', 2, '2014-08-03 19:26:29', '2014-08-03 19:26:29', NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
+(4, 'testjhgjdfm jsbfdj', 'mbbbdf', 'Karnataka', 1, 1, 1, 432423, '3559943534', '05-08-2014', 25, 'female', 2, '2014-08-03 19:27:27', '2014-08-03 19:27:27', NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
+(5, 'jdjkg fkj skdkjwe', 'asdvjwafk', 'Karnataka', 1, 1, 1, 234572, '3495952094', '12-08-2014', 25, 'male', 2, '2014-08-03 19:29:10', '2014-08-03 19:29:10', NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
+(6, 'dsgdsgf dsgdsg', 'xcvxvxcvxc', 'Karnataka', 1, 1, 1, 353253, '5435435435', '18-07-2012', 2, 'male', 1, '2014-08-05 07:19:27', '2014-08-05 07:19:27', NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
+(7, 'dsgdsgf dsgdsg', 'dsfdsfdsf', 'Karnataka', 2, 2, 2, 454354, '5454545433', '08-07-2014', 0, 'male', 1, '2014-08-05 07:23:41', '2014-08-05 07:23:41', NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
+(8, 'fdg fdg', '6hgdfgdfg', 'Karnataka', 1, 1, 1, 456456, '43456745', '11-08-2014', -1, 'male', 1, '2014-08-05 08:35:17', '2014-08-05 08:35:17', NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
+(9, 'dsgdsgf Name', 'yttry', 'Karnataka', 1, 1, 1, 456546, '5454545454', '30-07-2014', 0, 'female', 1, '2014-08-05 08:36:51', '2014-08-05 08:36:51', NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
+(10, 'dsgdsgf dsgdsg', 'asfsadf', 'Karnataka', 1, 1, 1, 324346, '5454545433', '12-08-2014', -1, 'female', 1, '2014-08-05 08:42:29', '2014-08-05 08:42:29', NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
+(11, 'gfdg fdg', 'dfgfdg', 'Karnataka', 1, 1, 1, 435454, '5454545454', '04-08-2014', 0, 'male', 1, '2014-08-05 08:43:52', '2014-08-05 08:43:52', NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
+(12, 'dsfds fdsf', 'dsfdsf', 'Karnataka', 1, 1, 1, 354324, '5454545433', '03-08-2014', 0, 'female', 2, '2014-08-05 08:46:15', '2014-08-05 08:46:15', NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
+(13, 'dsfdsf dsf', 'safddsf', 'Karnataka', 1, 1, 1, 570001, '5454545433', '21-08-2014', -1, 'male', 3, '2014-08-05 08:48:40', '2014-08-05 08:48:40', NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
+(14, 'dsfdsf Name', 'dsf', 'Karnataka', 1, 1, 1, 435435, '5454545454', '15-08-2014', -1, 'female', 2, '2014-08-05 08:54:16', '2014-08-05 08:54:16', NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
+(15, 'Test Name', 'asfdas', 'Karnataka', 1, 1, 1, 343243, '5454545433', '06-08-2014', -1, 'female', 2, '2014-08-05 08:56:29', '2014-08-05 08:56:29', NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
+(16, 'dsgdsgf Name', 'j;j', 'Karnataka', 1, 1, 1, 435435, '5323201021', '30-07-2014', 0, 'male', 2, '2014-08-05 08:59:08', '2014-08-05 08:59:08', NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
+(17, 'dsgdsgf hlkj', 'iou', 'Karnataka', 1, 1, 1, 324324, '2453241534', '28-07-2014', 0, 'male', 2, '2014-08-05 09:02:22', '2014-08-05 09:02:22', NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
+(18, 'dsf ljlae', 'asfd', 'Karnataka', 1, 1, 1, 343243, '5454545433', '05-08-2014', 0, 'male', 1, '2014-08-05 09:04:01', '2014-08-05 09:04:01', NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
+(19, 'dsfdsf jljl', 'dsf', 'Karnataka', 1, 1, 1, 343243, '1234561212', '06-08-2014', -1, 'female', 2, '2014-08-05 09:10:53', '2014-08-05 09:10:53', NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
+(20, 'asdfdsk kkk', 'dsfsrf', 'Karnataka', 2, 2, 2, 256356, '2453241534', '27-08-2014', -1, 'male', 1, '2014-08-05 09:15:52', '2014-08-05 09:12:08', 1, '35252525252', NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
+(21, 'test test', 'jf;ljs', 'Karnataka', 1, 1, 1, 435435, '8947584375', '28-10-2009', 4, 'female', 2, '2014-08-05 09:32:23', '2014-08-05 09:31:31', 1, '35252525252', NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
+(22, 'Testprrism Name', 'dstgsdfdsgf', 'Karnataka', 1, 1, 1, 256356, '5454545433', '11-08-2014', -1, 'male', 2, '2014-08-07 08:56:29', '2014-08-07 08:52:23', 1, '34324', 1, 324, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
+(23, 'warqw lwjl', 'dsfdsfd', 'Karnataka', 1, 1, 1, 231231, '3432432432', '05-12-2009', 4, 'female', 1, '2014-08-08 11:19:25', '2014-08-08 07:01:38', 1, '12121222', 1, 12500, '2014-07-31 18:30:00', NULL, 1, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -346,7 +352,7 @@ CREATE TABLE IF NOT EXISTS `trnbeneficiarydocuments` (
   `intbeneID` int(11) NOT NULL,
   `intDocType` int(11) NOT NULL,
   `flgDocUploaded` tinyint(1) NOT NULL,
-  `txtDocPath` varchar(50) NOT NULL,
+  `txtDocPath` varchar(250) NOT NULL,
   `txtRemarks` varchar(350) DEFAULT NULL,
   `flgisActive` tinyint(1) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -359,14 +365,17 @@ CREATE TABLE IF NOT EXISTS `trnbeneficiarydocuments` (
   PRIMARY KEY (`intbeneDocID`),
   KEY `FK_BeneID_idx` (`intbeneID`),
   KEY `FK_DocType_idx` (`intDocType`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
 
 --
 -- Dumping data for table `trnbeneficiarydocuments`
 --
 
 INSERT INTO `trnbeneficiarydocuments` (`intbeneDocID`, `intbeneID`, `intDocType`, `flgDocUploaded`, `txtDocPath`, `txtRemarks`, `flgisActive`, `created_at`, `updated_at`, `txtField1`, `txtField2`, `txtField3`, `txtField4`, `txtField5`) VALUES
-(3, 20, 1, 1, '/var/www/projects/dc/app/views/photos/20_140723003', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+(3, 20, 1, 1, '/var/www/projects/dc/app/views/photos/20_140723003', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(4, 21, 1, 1, '/var/www/projects/dc/app/views/photos/21_140723113', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(5, 22, 1, 1, '/var/www/projects/dc/app/views/photos/22_140740169', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(6, 23, 1, 1, '/var/www/projects/dc/app/views/photos/23_1407481312_ajax-loader.gif', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -402,7 +411,7 @@ CREATE TABLE IF NOT EXISTS `trnbeneficiaryproddetails` (
   KEY `FK_Manuf_idx` (`intManufacturerID`),
   KEY `FK_Spec_idx` (`intSpecID`),
   KEY `FK_UOM_idx` (`intUnitofMeasure`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
 
 --
 -- Dumping data for table `trnbeneficiaryproddetails`
@@ -416,7 +425,10 @@ INSERT INTO `trnbeneficiaryproddetails` (`intbeneProdID`, `intbeneID`, `intProdI
 (5, 17, 1, 1, 1, 1, 30000, 15000, 10000, 25, 1, 1, '2014-08-05 09:02:31', '2014-08-05 09:02:31', NULL, NULL, NULL, NULL, NULL, NULL),
 (6, 18, 1, 1, 1, 1, 30000, 15000, 10000, 25, 1, 1, '2014-08-05 09:04:10', '2014-08-05 09:04:10', NULL, NULL, NULL, NULL, NULL, NULL),
 (7, 19, 2, 2, 2, 2, 50000, 30000, 20000, 6, 1, 1, '2014-08-05 09:11:01', '2014-08-05 09:11:01', NULL, NULL, NULL, NULL, NULL, NULL),
-(8, 20, 1, 1, 1, 1, 30000, 15000, 10000, 25, 1, 1, '2014-08-05 09:12:15', '2014-08-05 09:12:15', NULL, NULL, NULL, NULL, NULL, NULL);
+(8, 20, 1, 1, 1, 1, 30000, 15000, 10000, 25, 1, 1, '2014-08-05 09:12:15', '2014-08-05 09:12:15', NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 21, 2, 2, 2, 2, 50000, 30000, 20000, 4535, 1, 1, '2014-08-05 09:32:11', '2014-08-05 09:32:11', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 22, 1, 1, 1, 1, 30000, 15000, 50000, 243, 1, 1, '2014-08-07 08:54:46', '2014-08-07 08:54:46', NULL, NULL, NULL, NULL, NULL, NULL),
+(11, 23, 1, 1, 1, 1, 30000, 15000, 50000, 22, 1, 1, '2014-08-08 07:01:45', '2014-08-08 07:01:45', NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -445,7 +457,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 
 INSERT INTO `users` (`id`, `first_name`, `last_name`, `usertype`, `email`, `password`, `phone`, `location`, `remember_token`, `created_at`, `updated_at`) VALUES
-(5, 'admin1', 'admin', 'admin', 'admin@abc.com', '$2y$10$qmoFnmRyLqvOQ80R0cSRz.Pf/QiyP3md2lJAY4q3QOEDnO2.u6nRK', 1234567890, 'Mysore', '47OROgathyESGcCYjWCFvBYhZyxlCTsBxtIxj15HknK7dWlG35qhk93QC17W', '2014-07-09 10:37:06', '2014-07-30 09:21:58'),
+(5, 'admin1', 'admin', 'admin', 'admin@abc.com', '$2y$10$qmoFnmRyLqvOQ80R0cSRz.Pf/QiyP3md2lJAY4q3QOEDnO2.u6nRK', 1234567890, 'Mysore', 'BqFI4ONXawVjXWpUAlFCUb6epWEtzl49OPZsYTuI3Vbe2oBwftvairvRVnfa', '2014-07-09 10:37:06', '2014-08-06 09:32:31'),
 (6, 'super', 'admin', 'kiosk', 'kiosk@abc.com', '$2y$10$qmoFnmRyLqvOQ80R0cSRz.Pf/QiyP3md2lJAY4q3QOEDnO2.u6nRK', 0, '', NULL, '0000-00-00 00:00:00', '0000-00-00 00:00:00');
 
 --

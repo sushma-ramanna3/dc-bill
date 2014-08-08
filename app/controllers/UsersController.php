@@ -20,14 +20,10 @@ class UsersController extends BaseController {
 
 		$intProdID = Mstproductname::getProductList();
 
-		$uom = array('' => '--Select Unit--') + DB::table('mstunitofmeasure')
-							->where('flgisActive', 1)
-							->orderBy('txtUOM', 'ASC')->lists('txtUOM', 'intUomID');
-
-		$intDocTypeID = array();
+		$uom = Mstunitofmeasure::getUOM();
 
 		return View::make('users.index')->with('districts', $districts)->with('intProdID', $intProdID)
-		->with('intDocTypeID', $intDocTypeID)->with('uom', $uom);
+			->with('uom', $uom);
 
 	}
 
@@ -46,25 +42,19 @@ class UsersController extends BaseController {
 
 	public function manufacturer()
 	{
-		$manufacturer =  DB::table('mstmanufacturer') //array('' => '--Select manufacturer--') +
-							->where('flgisActive', 1)->where('intProdID', Input::get('product_id'))
-							->orderBy('txtManufacturerName', 'ASC')->lists('txtManufacturerName', 'intManuID');
+		$manufacturer =  Trnbeneficiaryproddetails::getManufacturerList(Input::get('product_id'));
 		return Response::json($manufacturer);
 	}
 
 	public function model()
 	{
-		$model = DB::table('mstmodel')
-							->where('flgisActive', 1)->where('intManuID', Input::get('manufacturer_id'))
-							->orderBy('txtModelName', 'ASC')->lists('txtModelName', 'intModelID');
+		$model = Trnbeneficiaryproddetails::getModelList(Input::get('manufacturer_id'));
 		return Response::json($model);
 	}
 
 	public function specificaton()
 	{
-		$specificaton = DB::table('mstspecification')
-							->where('flgisActive', 1)->where('intModelID', Input::get('model_id'))
-							->orderBy('txtSpecification', 'ASC')->lists('txtSpecification', 'intSpecID');
+		$specificaton = Trnbeneficiaryproddetails::getSpecList(Input::get('model_id'));
 		return Response::json($specificaton);
 	}
 
@@ -197,22 +187,35 @@ class UsersController extends BaseController {
 			}
 			elseif (Input::get('beneficiary_id') && Input::hasFile('photo')) {
 
-				if(Input::hasFile('photo')) $docType = 1;
-				elseif(Input::hasFile('id_proof')) $docType = 2;
+				if(Input::hasFile('id_proof')) { 
 
-				Input::file('photo')->move( app_path().'/views/photos/', Input::get('beneficiary_id').'_'.time().'_'.Input::file('photo')->getClientOriginalName());
+					Input::file('id_proof')->move( app_path().'/views/proof/', Input::get('beneficiary_id').'_'.time().'_'.Input::file('id_proof')->getClientOriginalName());
+					$proof_path = app_path().'/views/proof/'.Input::get('beneficiary_id').'_'.time().'_'.Input::file('id_proof')->getClientOriginalName();
+					$proof_path = isset($proof_path) ? $proof_path : '' ;
+
+					DB::table('trnbeneficiarydocuments')->insert(array(
+					'intbeneID' => Input::get('beneficiary_id'),
+					'intDocType' => 2, //if the doc is id proof
+					'flgDocUploaded' => 1,
+					'txtDocPath' => $proof_path,
+					'flgisActive' => 1,
+					'created_at' => new DateTime, 
+					'updated_at' => new DateTime 
+					));
+				}
+
+				Input::file('photo')->move( app_path().'/views/photos/', Input::get('beneficiary_id').'_'.time().'_'.Input::file('photo')->getClientOriginalName());	
 				$photo_path = app_path().'/views/photos/'.Input::get('beneficiary_id').'_'.time().'_'.Input::file('photo')->getClientOriginalName();
-
 				$photo_path = isset($photo_path) ? $photo_path : '' ;
 
 				DB::table('trnbeneficiarydocuments')->insert(array(
 					'intbeneID' => Input::get('beneficiary_id'),
-					'intDocType' => $docType,
+					'intDocType' => 1, //if the doc is photo
 					'flgDocUploaded' => 1,
 					'txtDocPath' => $photo_path,
-					'flgisActive' => 1
-					/*'created_at' => new DateTime, 
-					'updated_at' => new DateTime */
+					'flgisActive' => 1,
+					'created_at' => new DateTime, 
+					'updated_at' => new DateTime 
 					));
 				
 				return Redirect::to('users')->with('beneficiary_id', Input::get('beneficiary_id'))->with('flag2', 1)
@@ -225,7 +228,8 @@ class UsersController extends BaseController {
 				            ->update(array('intbeneModeofPayment' => Input::get('payment_type'),
 				            	'txtbeneDDChequeNo' => Input::get('cheque_dd_no'),
 				            	'flgbeneisAmountRemitted' => Input::get('amount_remitted'),
-				            	'intbeneAmtReceived' => Input::get('amount_recieved')
+				            	'intbeneAmtReceived' => Input::get('amount_recieved'),
+				            	'paymentDate' => Input::get('paymentDate')
 				            ));
 				return Redirect::to('users')->with('success', 'Payment data saved successfully.');
 			}
@@ -259,16 +263,197 @@ class UsersController extends BaseController {
 		}
 	}
 
-	public function cvDownload($user_id)
+	/**
+	 * Show the form for editing the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function edit($id)
 	{
-		/*if(substr($application_id, 0, 4) == 'HDFC'){
-			$application_id = explode('_', $application_id);
-			$application_id = $application_id[1];
-			$file = DB::table('hdfc_applications')->where('id', '=', $application_id)->pluck('cv_path');
-		}else{
-			$file = DB::table('applications')->where('id', '=', $application_id)->pluck('cv_path');
-		}*/
-		return Response::download($file);
+       	$districts = Mstdistrict::getDistrictList();
+
+		$intProdID = Mstproductname::getProductList();
+
+		$uom = Mstunitofmeasure::getUOM();
+
+        $user = Trnbeneficiary::where('BeneID' , '=', $id)->first();
+
+        $taluks = Msttaluk::getTalukList($user->intbeneDistrict);
+        $hoblis = Msttaluk::getTalukList($user->intbeneTaluk);
+        $category = array(''=>'--Select category--', '1'=>'General', '2'=>'SC', '3'=>'ST');
+
+        $intManufacturerIDs = Trnbeneficiaryproddetails::getManufacturerList();
+        $intModelIDs = Trnbeneficiaryproddetails::getModelList();
+        $intSpecIDs = Trnbeneficiaryproddetails::getSpecList();
+
+        $name = explode(' ', $user->txtbeneficiaryname);
+    	
+    	$product = Trnbeneficiaryproddetails::where('intbeneID' , '=', $id)->first();
+
+    	$documents = Trnbeneficiarydocuments::where('intbeneID' , '=', $id)->first();
+    	//dd($documents->txtDocPath);
+
+		return View::make('users.edit')->with('user', $user)->with('intProdID', $intProdID)->with('hoblis', $hoblis)->with('first_name', $name[0])->with('product', $product)
+			->with('districts', $districts)->with('uom', $uom)->with('id', $id)->with('taluks', $taluks)->with('category',$category)->with('last_name', $name[1])
+			->with('intManufacturerIDs', $intManufacturerIDs)->with('intModelIDs', $intModelIDs)->with('intSpecIDs', $intSpecIDs)->with('documents', $documents);
 	}
+
+	/**
+	 * Update the specified resource in storage.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function update($id)
+	{
+		// validate
+		// read more on validation at http://laravel.com/docs/validation
+
+		if(Input::get('user_register')){
+			$rules = array(
+			        'first_name' => 'required|min:3|max:80', //|alpha
+			        'address' => 'required|min:1|max:80',
+			        'district_id' => 'required',
+			        'taluk_id'	=> 'required',
+			        'hoblirsk_id'	=> 'required',
+			        'phone'	=> 'required|numeric',
+			        'zip'	=> 'required|min:6',
+			        'dob' => 'required',
+			        'gender' => 'required',
+			        'category' => 'required'
+			);
+		}
+		elseif(Input::get('add_product')){
+			$rules = array(
+			 	'product_id' => 'required',
+		        'manufacturer_id'	=> 'required',
+		        'model_id'	=> 'required',
+		        'spec_id'	=> 'required',
+		        'fullRate'	=> 'required',
+		        'govtShare' => 'required',
+		        'farmerShare'	=> 'required',
+		        'quantitiy' => 'required'
+	        );
+		}
+		elseif(Input::get('add_documents')){
+			$rules = array(
+			 	'photo' => 'required'
+		      
+	        );
+		}
+		elseif(Input::get('payment_detail')){
+			$rules = array(
+			 	'payment_type' => 'required',
+		        'cheque_dd_no'	=> 'required'
+	        );
+		}
+
+		$validator = Validator::make(Input::all(), $rules);
+		if ($validator->fails()) {
+			return Redirect::to('users/'.$id.'/edit')
+				->withErrors($validator)
+				->withInput(Input::except('password'));
+		} 
+		else {
+			if(Input::get('user_register')){
+				$age = $this->age(Input::get('dtdateofBirth'), $flag=1);
+
+				if( Input::get('first_name') && !Input::get('last_name') )
+					$name = Input::get('first_name');
+				elseif( Input::get('first_name') && Input::get('last_name') )
+					$name = Input::get('first_name').' '.Input::get('last_name');
+
+				$user = Trnbeneficiary::where('BeneID' , '=', $id)->first();
+				$user->txtbeneficiaryname       = $name;
+				$user->txtbeneAddress      	= Input::get('txtbeneAddress');
+				$user->intbeneDistrict 		= Input::get('intbeneDistrict');
+				$user->intbeneTaluk    	= Input::get('intbeneTaluk');
+				$user->intbeneRSK    = Input::get('intbeneRSK');
+				$user->txtbeneContactNo 	= Input::get('txtbeneContactNo');
+				$user->intbenePinCode 		= Input::get('intbenePinCode');
+				$user->dtdateofBirth 	= Input::get('dtdateofBirth');
+				$user->intbeneAge 		= $age;
+				$user->txtbeneSex 		= Input::get('txtbeneSex');
+				$user->intbeneCategory 		= Input::get('intbeneCategory');
+				$user->save();
+
+				$beneficiary_name = DB::table('trnbeneficiary')->where('BeneID', $id)->pluck('txtbeneficiaryname');
+
+				return Redirect::to('users')->with('beneficiary_id', $id)->with('beneficiary_name', $beneficiary_name)
+				->with('category', Input::get('category'))
+				->with('success', 'Beneficiary data updated successfully.');
+			}
+			elseif (Input::get('beneficiary_id') && Input::get('product_id')) {
+
+				$product = Trnbeneficiaryproddetails::where('intbeneID' , '=', $id)->first();
+
+				$product->intProdID       = Input::get('intProdID');
+				$product->intManufacturerID      	= Input::get('intManufacturerID');
+				$product->intModelID 		= Input::get('intModelID');
+				$product->intSpecID    	= Input::get('intSpecID');
+				$product->decFullRate    = Input::get('decFullRate');
+				$product->decGovtShare 	= Input::get('decGovtShare');
+				$product->decFarmerShare 		= Input::get('decFarmerShare');
+				$product->intQty 	= Input::get('intQty');
+				$product->intUnitofMeasure 		= Input::get('intUnitofMeasure');
+				$product->save();
+
+				return Redirect::to('users')->with('beneficiary_id', Input::get('beneficiary_id'))->with('flag1', 1)
+				->with('beneficiary_name', Input::get('beneficiary_name'))->with('success', 'Product data updated successfully.');
+			}
+			elseif (Input::get('beneficiary_id') && Input::hasFile('photo')) {
+
+				if(Input::hasFile('id_proof')) { 
+
+					Input::file('id_proof')->move( app_path().'/views/proof/', Input::get('beneficiary_id').'_'.time().'_'.Input::file('id_proof')->getClientOriginalName());
+					$proof_path = app_path().'/views/proof/'.Input::get('beneficiary_id').'_'.time().'_'.Input::file('id_proof')->getClientOriginalName();
+					$proof_path = isset($proof_path) ? $proof_path : '' ;
+
+					DB::table('trnbeneficiarydocuments')->insert(array(
+					'intbeneID' => Input::get('beneficiary_id'),
+					'intDocType' => 2, //if the doc is id proof
+					'flgDocUploaded' => 1,
+					'txtDocPath' => $proof_path,
+					'flgisActive' => 1,
+					'created_at' => new DateTime, 
+					'updated_at' => new DateTime 
+					));
+				}
+
+				Input::file('photo')->move( app_path().'/views/photos/', Input::get('beneficiary_id').'_'.time().'_'.Input::file('photo')->getClientOriginalName());	
+				$photo_path = app_path().'/views/photos/'.Input::get('beneficiary_id').'_'.time().'_'.Input::file('photo')->getClientOriginalName();
+				$photo_path = isset($photo_path) ? $photo_path : '' ;
+
+				DB::table('trnbeneficiarydocuments')->insert(array(
+					'intbeneID' => Input::get('beneficiary_id'),
+					'intDocType' => 1, //if the doc is photo
+					'flgDocUploaded' => 1,
+					'txtDocPath' => $photo_path,
+					'flgisActive' => 1,
+					'created_at' => new DateTime, 
+					'updated_at' => new DateTime 
+					));
+				
+				return Redirect::to('users')->with('beneficiary_id', Input::get('beneficiary_id'))->with('flag2', 1)
+				->with('beneficiary_name', Input::get('beneficiary_name'))->with('success', 'Document uploaded successfully.');
+			}
+			elseif (Input::get('beneficiary_id') && Input::get('intbeneModeofPayment')) {
+								
+				DB::table('trnbeneficiary')
+				            ->where('BeneID', trim(Input::get('beneficiary_id')))
+				            ->update(array('intbeneModeofPayment' => Input::get('intbeneModeofPayment'),
+				            	'txtbeneDDChequeNo' => Input::get('txtbeneDDChequeNo'),
+				            	'flgbeneisAmountRemitted' => Input::get('flgbeneisAmountRemitted'),
+				            	'intbeneAmtReceived' => Input::get('intbeneAmtReceived'),
+				            	'paymentDate' => Input::get('paymentDate')
+				            ));
+				return Redirect::to('users')->with('success', 'Payment data updated successfully.');
+			}
+		
+		}
+
+	}
+
 
 }
