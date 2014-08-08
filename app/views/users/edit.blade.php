@@ -4,7 +4,6 @@
   	<h3>Dashboard</h3>
   	<?php
   		$active1 = $active2 = $active3 = $active4 = '';
-  	
 	  	if(Session::get('beneficiary_id') && Session::get('category') ){
 	  		$active1 = $active3 = $active4 = '';
 	  		$active2 = 'active'; 
@@ -68,7 +67,6 @@
 		    <div id="users" class="tab-pane <?php echo $active1; ?>">   
 		    	 {{ Form::model($user, array('route' => array('users.update', $id), 'method' => 'PUT', 'class' => 'form-horizontal col-md-12',
           'id' => 'userDetails' )) }}
-		    	<form class="form-horizontal col-md-12" action="/registration" method="post" id="userform">
 	            <fieldset id="fieldsetappend" >
 		            <div class="form-group">
 		              	<div class="col-md-5 marg-top">
@@ -160,7 +158,7 @@
 
 		            <div class="form-group">
 		              <label class="col-md-3 control-label" for="submit"></label>
-		              <div class="col-md-2">
+		              <div class="col-md-3">
 		                <button id="submit_userform" name="submit" class="btn btn-lg btn-success btn-block">Update & Continue</button>
 		              </div>
 		            </div>
@@ -176,14 +174,15 @@
 		              	<div class="col-md-5">
 		                	{{ 'Fields marked as <span class="red font-bold"> *</span> are mandatory' }}
 		              	</div>
-		              	@if($active2)
-			              	<div class="col-md-12">
-			              		<input name="beneficiary_id" class="none" type="hidden" value="<?php echo Session::get('beneficiary_id'); ?>" />
-			              		<input name="beneficiary_name" class="none" type="hidden" value="<?php echo Session::get('beneficiary_name'); ?>" />
-			              		<input name="category" id="category" class="none" type="hidden" value="<?php echo Session::get('category_id'); ?>" />
-			              		Beneficiary ID : {{Session::get('beneficiary_id')}} Beneficiary Name : {{Session::get('beneficiary_name')}}
-			              	</div>
-		              	@endif
+		              	<div class="col-md-12">
+			              		<?php if($id){ ?>
+									<input name="beneficiary_id" class="none" type="hidden" value="<?php echo $id; ?>" />
+			  						<b>Beneficiary ID:</b> <?php echo $id; ?> <b>Beneficiary Name:</b> <?php echo $first_name.' '.$last_name; ?><br><br>
+				        		<?php } ?>
+			              	@if($active2)
+				              	<input name="category" id="category" class="none" type="hidden" value="<?php echo Session::get('category_id'); ?>" />
+		              		@endif
+	              		</div>
 		            </div>
 		
 		            <div class="col-md-6">
@@ -255,7 +254,7 @@
 					<!-- Button -->
 		            <div class="form-group">
 		              <label class="col-md-3 control-label" for="submit"></label>
-		              <div class="col-md-2">
+		              <div class="col-md-3">
 		                <button id="submit" name="submit" class="btn btn-lg btn-success btn-block">Update & Continue</button>
 		              </div>
 		            </div>
@@ -264,7 +263,7 @@
 	    </div>
 
 	    <div id="documents" class="tab-pane <?php echo $active3; ?>">   
-			{{ Form::model($documents, array('route' => array('users.update', $id), 'method' => 'PUT', 'class' => 'form-horizontal col-md-12')) }}
+			{{ Form::model($documents, array('route' => array('users.update', $id), 'method' => 'PUT', 'class' => 'form-horizontal col-md-12', 'enctype'=>'multipart/form-data')) }}
          		<input name="add_documents" class="none" type="hidden" value="1" />
 	            <fieldset id="fieldsetappend" >
 		            <div class="form-group">
@@ -272,22 +271,19 @@
 		                	{{ 'Fields marked as <span class="red font-bold"> *</span> are mandatory' }}
 		              	</div>
 		            </div>
-					@if($active3)
-		              	<div class="col-md-12">
-		              		<input name="beneficiary_id" class="none" type="hidden" value="<?php echo Session::get('beneficiary_id'); ?>" />
-					        <input name="beneficiary_name" class="none" type="hidden" value="<?php echo Session::get('beneficiary_name'); ?>" />
-		              		Beneficiary ID : {{Session::get('beneficiary_id')}} Beneficiary Name : {{Session::get('beneficiary_name')}}
-		              	</div>
-		          	@endif
+		            <div class="col-md-12">
+							<?php if($id){ ?>
+									<input name="beneficiary_id" class="none" type="hidden" value="<?php echo $id; ?>" />
+			  						<b>Beneficiary ID:</b> <?php echo $id; ?> <b>Beneficiary Name:</b> <?php echo $first_name.' '.$last_name; ?><br><br>
+				        	<?php } ?>
+			        </div>
 		          	
 		            <div class="col-md-6">
 		            <!-- https://laracasts.com/forum/?p=707-laravel-load-images-stored-outside-public-folder/0 -->
-		            <?php $image = Image::make($documents->txtDocPath); echo $image->response();?>
-              			{{  HTML::image( $image, 'photo') }}
 	              		<div class="form-group">
 				            <label class="col-md-4 control-label" for="photo" required="true">Upload New Photo<span class="red font-bold"> *</span></label>
 				            <div class="col-md-6">
-				              {{ Form::file('photo', array('class'=>'form-control input-md')) }}
+				              {{ Form::file('photo', array('class'=>'form-control input-md', 'required' => 'true')) }}
 				            </div>
 			          	</div>
 			          	<div class="form-group">
@@ -296,12 +292,7 @@
 				              {{ Form::file('id_proof', array('class'=>'form-control input-md')) }}
 				            </div>
 			          	</div>
-              		  	<!-- <div class="form-group">
-				            <label class="col-md-5 control-label" for="">Upload Document<span class="red font-bold"> *</span></label>  
-				            <div class="col-md-7">
-				              	{{ Form::text('docPath', Input::old('docPath'), array('class'=>'form-control input-md', 'required' => 'true')) }}  
-              				</div>
-		            	</div> -->
+              		  	
 		           	  	<div class="form-group">
 		              		<label class="col-md-3 control-label" for="submit"></label>
 			              	<div class="col-md-5">
@@ -322,14 +313,12 @@
 		              	</div>
 		            </div>
 		            <input name="payment_detail" class="none" type="hidden" value="1" />
-
-		            @if($active4)
-		              	<div class="col-md-12">
-		              	<input name="beneficiary_id" class="none" type="hidden" value="<?php echo Session::get('beneficiary_id'); ?>" />
-	              		<input name="beneficiary_name" class="none" type="hidden" value="<?php echo Session::get('beneficiary_name'); ?>" />
-		              		Beneficiary ID : {{Session::get('beneficiary_id')}} Beneficiary Name : {{Session::get('beneficiary_name')}}
-		              	</div>
-		          	@endif
+		            <div class="col-md-12">
+			           	<?php if($id){ ?>
+									<input name="beneficiary_id" class="none" type="hidden" value="<?php echo $id; ?>" />
+			  						<b>Beneficiary ID:</b> <?php echo $id; ?> <b>Beneficiary Name:</b> <?php echo $first_name.' '.$last_name; ?><br><br>
+				        <?php } ?>
+			        </div>
 					
 		            <div class="col-md-6">
 			          	<div class="form-group">

@@ -3,8 +3,10 @@
  
   	<h3>Dashboard</h3>
   	<?php
-  		$active1 = $active2 = $active3 = $active4 = '';
-  	
+  		$active1 = $active2 = $active3 = $active4 = $id = '';
+  		if(Session::get('beneficiary_id')){
+  			$id = 1;
+  		}
 	  	if(Session::get('beneficiary_id') && Session::get('category') ){
 	  		$active1 = $active3 = $active4 = '';
 	  		$active2 = 'active'; 
@@ -26,7 +28,7 @@
   	<ul id="tabs" class="nav nav-tabs bold" data-tabs="tabs">
   		@if(Auth::check() && Auth::user()->usertype == 'admin')
   			<li class="active"><a href="#product" data-toggle="tab">Add Products</a></li>
-  			<li><a href="{{ URL::to('franchise') }}">Products list</a></li>
+  			<li><a href="{{ URL::to('franchise') }}">Products list</a></li>.
   		@else
   		 	<li class="<?php echo $active1;?> tab"><a href="#users" data-toggle="tab">User Registration</a></li>
 		    <li class="<?php echo $active2;?> tab"><a href="#product" data-toggle="tab">Product Purchase</a></li>
@@ -181,14 +183,16 @@
 		              	<div class="col-md-5">
 		                	{{ 'Fields marked as <span class="red font-bold"> *</span> are mandatory' }}
 		              	</div>
-		              	@if($active2)
-			              	<div class="col-md-12">
-			              		<input name="beneficiary_id" class="none" type="hidden" value="<?php echo Session::get('beneficiary_id'); ?>" />
-			              		<input name="beneficiary_name" class="none" type="hidden" value="<?php echo Session::get('beneficiary_name'); ?>" />
+		              	<div class="col-md-12">
+			              	<?php if($id){ ?>
+								<input name="beneficiary_id" class="none" type="hidden" value="<?php echo Session::get('beneficiary_id'); ?>" />
+		  						<b>Beneficiary ID:</b> <?php echo Session::get('beneficiary_id'); ?> <b>Beneficiary Name:</b> <?php echo Session::get('beneficiary_name'); ?><br>
+			              	<?php } ?>
+			              	@if($active2)
+			              		<!-- <input name="beneficiary_name" class="none" type="hidden" value="<?php //echo Session::get('beneficiary_name'); ?>" /> -->
 			              		<input name="category" id="category" class="none" type="hidden" value="<?php echo Session::get('category_id'); ?>" />
-			              		Beneficiary ID : {{Session::get('beneficiary_id')}} Beneficiary Name : {{Session::get('beneficiary_name')}}
-			              	</div>
-		              	@endif
+		              		@endif
+		              	</div>
 		            </div>
 		
 		            <div class="col-md-6">
@@ -278,13 +282,12 @@
 		                	{{ 'Fields marked as <span class="red font-bold"> *</span> are mandatory' }}
 		              	</div>
 		            </div>
-					@if($active3)
-		              	<div class="col-md-12">
-		              		<input name="beneficiary_id" class="none" type="hidden" value="<?php echo Session::get('beneficiary_id'); ?>" />
-					        <input name="beneficiary_name" class="none" type="hidden" value="<?php echo Session::get('beneficiary_name'); ?>" />
-		              		Beneficiary ID : {{Session::get('beneficiary_id')}} Beneficiary Name : {{Session::get('beneficiary_name')}}
-		              	</div>
-		          	@endif
+		            <div class="col-md-12">
+		              	<?php if($id){ ?>
+								<input name="beneficiary_id" class="none" type="hidden" value="<?php echo Session::get('beneficiary_id'); ?>" />
+		  						<b>Beneficiary ID:</b> <?php echo Session::get('beneficiary_id'); ?> <b>Beneficiary Name:</b> <?php echo Session::get('beneficiary_name'); ?><br>
+			            <?php } ?>
+				 	</div>
 		            <div class="col-md-6">
 	              		<div class="form-group">
 				            <label class="col-md-4 control-label" for="photo" required="true">Upload Photo<span class="red font-bold"> *</span></label>
@@ -319,14 +322,12 @@
 		              	</div>
 		            </div>
 		            <input name="payment_detail" class="none" type="hidden" value="1" />
-
-		            @if($active4)
-		              	<div class="col-md-12">
-		              	<input name="beneficiary_id" class="none" type="hidden" value="<?php echo Session::get('beneficiary_id'); ?>" />
-	              		<input name="beneficiary_name" class="none" type="hidden" value="<?php echo Session::get('beneficiary_name'); ?>" />
-		              		Beneficiary ID : {{Session::get('beneficiary_id')}} Beneficiary Name : {{Session::get('beneficiary_name')}}
-		              	</div>
-		          	@endif
+		            <div class="col-md-12">
+			          	<?php if($id){ ?>
+								<input name="beneficiary_id" class="none" type="hidden" value="<?php echo Session::get('beneficiary_id'); ?>" />
+		  						<b>Beneficiary ID:</b> <?php echo Session::get('beneficiary_id'); ?> <b>Beneficiary Name:</b> <?php echo Session::get('beneficiary_name'); ?><br>
+			            <?php } ?>
+	              	</div>
 					
 		            <div class="col-md-6">
 			          	<div class="form-group">

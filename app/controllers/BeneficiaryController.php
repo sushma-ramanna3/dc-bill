@@ -26,15 +26,16 @@ class BeneficiaryController extends BaseController {
 	public function usersList()
 	{
 		$users = DB::table('trnbeneficiary')
-					->join('trnbeneficiaryproddetails', 'trnbeneficiary.BeneID', '=', 'trnbeneficiaryproddetails.intbeneID')
-					->join('mstproductname', 'mstproductname.intProdID', '=', 'trnbeneficiaryproddetails.intProdID')
-					->join('trnbeneficiarydocuments', 'trnbeneficiary.BeneID', '=', 'trnbeneficiarydocuments.intbeneID')
+					->leftJoin('trnbeneficiaryproddetails', 'trnbeneficiary.BeneID', '=', 'trnbeneficiaryproddetails.intbeneID')
+					->leftJoin('mstproductname', 'mstproductname.intProdID', '=', 'trnbeneficiaryproddetails.intProdID')
+					->leftJoin('trnbeneficiarydocuments', 'trnbeneficiary.BeneID', '=', 'trnbeneficiarydocuments.intbeneID')
 					->select('trnbeneficiary.BeneID', 'trnbeneficiary.txtbeneficiaryname', 'trnbeneficiary.txtbeneAddress',
-						'trnbeneficiary.txtbeneContactNo', 'trnbeneficiary.intbeneCategory','trnbeneficiary.created_at',
-						'mstproductname.txtProdName', 'trnbeneficiaryproddetails.decFullRate');
+						'trnbeneficiary.txtbeneContactNo', 'trnbeneficiary.intbeneAmtReceived', 'trnbeneficiary.intbeneCategory','trnbeneficiary.created_at',
+						'mstproductname.txtProdName', 'trnbeneficiaryproddetails.decFullRate', 'trnbeneficiarydocuments.txtDocPath')
+					->groupBy('trnbeneficiary.BeneID');
 
 		if (Input::has('beneficiary_name')) {
-          	$users->where('trnbeneficiary.txtbeneficiaryname', '=', Input::get('beneficiary_name'));
+          	$users->where('trnbeneficiary.txtbeneficiaryname', 'LIKE', '%'.Input::get('beneficiary_name').'%');
 		}
           
        /*if(Input::has('from_date') && Input::has('to_date')) {
