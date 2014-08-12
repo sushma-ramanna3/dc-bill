@@ -255,6 +255,13 @@ class UsersController extends BaseController {
 		    ? ((date("Y") - $birthDate[2]) - 1)
 		    : (date("Y") - $birthDate[2]));
 
+		 /*$birthdate = Input::get('dob_month').'-'.Input::get('dob_day').'-'.Input::get('dob_year');
+				$birthDate = explode("-", $birthdate);
+				//get age from date or birthdate
+				 $age = (date("md", date("U", mktime(0, 0, 0, $birthDate[0], $birthDate[1], $birthDate[2]))) > date("md")
+				    ? ((date("Y") - $birthDate[2]) - 1)
+				    : (date("Y") - $birthDate[2]));*/
+
 		if($flag){
 			return $age;
 		}

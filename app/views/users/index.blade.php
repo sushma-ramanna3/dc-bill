@@ -132,6 +132,20 @@
 					        </div>
 			          	</div>
 
+			          	<!-- Select Basic -->
+				        <div class="form-group">
+				            <label class="col-md-4 control-label" for="dob">Date of Birth( dd-mm-yyyy )<span class="red font-bold"> *</span></label>
+				            <div class="col-md-2 pull-left">
+				              {{ Form::selectRange('dob_day', 1, 31, null, array('class'=>'form-control')); }}
+				            </div>
+				            <div class="col-md-2 pull-left">
+				              {{ Form::selectRange('dob_month', 1, 12, null, array('class'=>'form-control')); }}
+				            </div>
+				            <div class="col-md-2 pull-left">
+				              {{ Form::selectRange('dob_year', 1910, 2010, null, array('class'=>'form-control')); }}
+				            </div>
+				        </div>
+
 			          	<div class="form-group sms">
 				            <label class="col-md-5 control-label" for="age">Age</label>
 				            <div class="col-md-7 radio_sms" style="font-size:12px;padding-right:0;">
