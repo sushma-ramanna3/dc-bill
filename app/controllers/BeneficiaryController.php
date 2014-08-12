@@ -75,25 +75,24 @@ class BeneficiaryController extends BaseController {
 		$csv_output .= "\n";
 		
 		if(Auth::user()->usertype == 'admin') $created_by = "Registered by";
-		$csv_output .= "Serial No, User Id, First Name, Last Name, Email, Phone, Highest Qualification, Educational Institution, Work Experience, Address, SMS Alerts / Phone Calls, Registered Date, Registered Time,".$created_by."\n";
+		$csv_output .= "Serial No, Beneficiary Id, Beneficiary Name, Phone, Category, Product, Full Rate, Address, Registered Date,".$created_by."\n";
 		$arr = array();
 		$j = 0;
 		foreach ($users as $row) {
 			$j++;
-			$id =  $row->id;
-			$first_name  =  $row->first_name;
-			$last_name = $row->last_name;
-			$email = $row->email;
-			$phone = $row->phone_2;
-			$highest_qualification = $row->vm_highestqualification;
-			$educational_institution = $row->vm_educationalinstituition;
+			$id =  $row->BeneID;
+			$txtbeneficiaryname  =  $row->txtbeneficiaryname;
+			$txtbeneContactNo = $row->txtbeneContactNo;
+			$intbeneCategory = $row->intbeneCategory;
 			$work_experience = $row->vm_workexperience;
-			$address = '"'.$row->address_1.', '.$row->city.', '.$row->state.' - '.$row->zip.'"';
-			$sms = $row->vm_smsalerts;
+			$address = '"'.$row->txtbeneAddress.', '.$row->txtHobliRSK.', '.$row->txtTalukName.', '.$row->txtDistrictName.' - '.$row->intbenePinCode.'"';
+			$txtProdName = $row->txtProdName;
+			$decFullRate = $row->decFullRate;
 			$registered_date = date('d-M-Y', $row->createDate);
 			$registered_time = date('h.i.s A', $row->createDate);
-			if(Auth::user()->usertype == 'admin') $user_created_by = $row->usertype;
-			$csv_output_row1 = "$j, $id, $first_name, $last_name, $email, $phone, $highest_qualification, $educational_institution, $work_experience, $address, $sms, $registered_date, $registered_time, $user_created_by \n";
+			$registered_date = $registered_date.' '.$registered_time;
+			if(Auth::user()->usertype == 'admin') $user_created_by = $row->registeredBy;
+			$csv_output_row1 = "$j, $id, $txtbeneficiaryname, $txtbeneContactNo, $intbeneCategory, $txtProdName, $decFullRate, $address, $registered_date, $user_created_by \n";
 								
 			$csv_output .=$csv_output_row1;
 		}
