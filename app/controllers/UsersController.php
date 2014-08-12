@@ -288,14 +288,19 @@ class UsersController extends BaseController {
         $intSpecIDs = Trnbeneficiaryproddetails::getSpecList();
 
         $name = explode(' ', $user->txtbeneficiaryname);
+        $first_name = $name[0];
+        $last_name = '';
+        
+        if(sizeof($name) > 1)
+        	$last_name = $name[1];
     	
     	$product = Trnbeneficiaryproddetails::where('intbeneID' , '=', $id)->first();
 
     	$documents = Trnbeneficiarydocuments::where('intbeneID' , '=', $id)->first();
     	//dd($documents->txtDocPath);
 
-		return View::make('users.edit')->with('user', $user)->with('intProdID', $intProdID)->with('hoblis', $hoblis)->with('first_name', $name[0])->with('product', $product)
-			->with('districts', $districts)->with('uom', $uom)->with('id', $id)->with('taluks', $taluks)->with('category',$category)->with('last_name', $name[1])
+		return View::make('users.edit')->with('user', $user)->with('intProdID', $intProdID)->with('hoblis', $hoblis)->with('first_name', $first_name)->with('product', $product)
+			->with('districts', $districts)->with('uom', $uom)->with('id', $id)->with('taluks', $taluks)->with('category',$category)->with('last_name', $last_name)
 			->with('intManufacturerIDs', $intManufacturerIDs)->with('intModelIDs', $intModelIDs)->with('intSpecIDs', $intSpecIDs)->with('documents', $documents);
 	}
 
