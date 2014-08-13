@@ -81,7 +81,8 @@ table td span{
 	color: #333;
 }
 .col-custom1{
-	width: 20%;
+	width: 19.5%;
+	padding-right: 0px;
 }
 .col-custom{
 	width: 21.55%;

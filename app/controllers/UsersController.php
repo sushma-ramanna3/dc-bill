@@ -26,8 +26,17 @@ class UsersController extends BaseController {
 
 		$applicationFor = Mstproductname::getApplicationFor();
 
+		$recommendedBy = Mstproductname::getrecommendedByList();
+
+		$irrigationSources = Trnbeneficiary::getirrigationSources();
+
+		$holdings = Trnbeneficiary::getHoldings();
+
+		$items = Trnbeneficiary::getItems();
+
 		return View::make('users.index')->with('districts', $districts)->with('intProdID', $intProdID)
-			->with('uom', $uom)->with('applicationFor', $applicationFor);
+			->with('bank', $bank)->with('uom', $uom)->with('applicationFor', $applicationFor)->with('recommendedBy', $recommendedBy)
+			->with('irrigationSources', $irrigationSources)->with('holdings', $holdings)->with('items', $items);
 
 	}
 
@@ -48,7 +57,6 @@ class UsersController extends BaseController {
 		$village = Mstvillage::getVillageList(Input::get('hobli_id'));
 		return Response::json($village);
 	}
-
 
 	public function manufacturer()
 	{

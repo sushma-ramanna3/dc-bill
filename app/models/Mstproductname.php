@@ -34,6 +34,24 @@ class Mstproductname extends Eloquent {
 		
 		return $bankList;
 	}
-	
+
+	public static function getrecommendedByList()
+	{
+		$recommendedbyList = array('' => '--Select recommended by--') + DB::table('mstrecommendedby')
+							->where('flgisActive', 1)
+							->orderBy('recommendedBy', 'ASC')->lists('recommendedBy', 'id');
+		
+		return $recommendedbyList;
+	}
+
+	public static function getrecommendedFromList($recommended_by)
+	{
+		$recommendedfromList = array('' => '--Select recommended from--') + DB::table('mstrecommendedfrom')
+							->where('flgisActive', 1)
+							->where('recommendedBy', $recommended_by)
+							->orderBy('recommendedFrom', 'ASC')->lists('recommendedFrom', 'id');
+		
+		return $recommendedfromList;
+	}
 	
 }

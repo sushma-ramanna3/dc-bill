@@ -117,6 +117,23 @@ $(document).ready(function() {
 	    }
 	});
 
+  	$( "#recommended_by" ).change(function() {
+		var val = $(this).val();
+		if(val != ''){
+			var url= '/recommendedFrom.php?recommended_by='+val;
+	    	$.getJSON(url, function(data){
+	    		console.log(data);
+	    		$('#recommended_from').empty();
+	    		$('#recommended_from').append('<option value="">--Select recommended from--</option>');
+				  $.each(data, function(index, text) {
+				    $('#recommended_from').append(
+				        $('<option></option>').val(index).html(text)
+				    );
+				  });
+			});
+	    }
+	});
+
 	$( "#product_id" ).change(function() {
 		var val = $(this).val();
 		if(val != ''){

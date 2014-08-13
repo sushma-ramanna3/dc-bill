@@ -21,6 +21,11 @@ class BeneficiaryController extends BaseController {
 		
 	}
 
+	public function recommendedFrom()
+	{
+		$recommendedFrom = Mstproductname::getrecommendedFromList(Input::get('recommended_by'));
+		return Response::json($recommendedFrom);
+	}
 	//listing users
 
 	public function usersList()
@@ -41,13 +46,13 @@ class BeneficiaryController extends BaseController {
        /*if(Input::has('from_date') && Input::has('to_date')) {
         	$date_range = 'From '.Input::get('from_date').' To '.Input::get('to_date');
 			$users->whereBetween('jos_users.createDate', array(strtotime(Input::get('from_date')), strtotime(Input::get('to_date')) ));
-        }
+        }*/
 
         if (Input::get('submit') == 'download')
         {
-        	$users = $users->orderBy('jos_users.createDate', 'asc')->get();
-          	$this->generateReport($users, $date_range);
-        }*/
+        	$users = $users->orderBy('trnbeneficiary.created_at', 'asc')->get();
+          	$this->generateReport($users, $date_range = '');
+        }
 
 		$users = $users->orderBy('trnbeneficiary.BeneID', 'ASC ')->paginate(10);
 					//	dd(count($users));
@@ -84,13 +89,14 @@ class BeneficiaryController extends BaseController {
 			$txtbeneficiaryname  =  $row->txtbeneficiaryname;
 			$txtbeneContactNo = $row->txtbeneContactNo;
 			$intbeneCategory = $row->intbeneCategory;
-			$work_experience = $row->vm_workexperience;
-			$address = '"'.$row->txtbeneAddress.', '.$row->txtHobliRSK.', '.$row->txtTalukName.', '.$row->txtDistrictName.' - '.$row->intbenePinCode.'"';
+			//$work_experience = $row->vm_workexperience;
+			//$address = '"'.$row->txtbeneAddress.', '.$row->txtHobliRSK.', '.$row->txtTalukName.', '.$row->txtDistrictName.' - '.$row->intbenePinCode.'"';
+			$address = '';
 			$txtProdName = $row->txtProdName;
 			$decFullRate = $row->decFullRate;
-			$registered_date = date('d-M-Y', $row->createDate);
-			$registered_time = date('h.i.s A', $row->createDate);
-			$registered_date = $registered_date.' '.$registered_time;
+			$registered_date = $row->created_at;
+			$registered_time = ''; //date('h.i.s A', $row->created_at);
+			//$registered_date = $registered_date.' '.$registered_time;
 			if(Auth::user()->usertype == 'admin') $user_created_by = $row->registeredBy;
 			$csv_output_row1 = "$j, $id, $txtbeneficiaryname, $txtbeneContactNo, $intbeneCategory, $txtProdName, $decFullRate, $address, $registered_date, $user_created_by \n";
 								
