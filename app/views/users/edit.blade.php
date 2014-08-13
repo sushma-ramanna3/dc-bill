@@ -282,7 +282,7 @@
 		          	
 		            <div class="col-md-6">
 		            <!-- https://laracasts.com/forum/?p=707-laravel-load-images-stored-outside-public-folder/0 -->
-		            <?php $image = Image::make($documents->txtDocPath); echo $image->response();?>
+		            <?php $image = readfile($documents->txtDocPath); echo $documents->txtDocPath;?>
               			{{  HTML::image( $image, 'photo') }}
 	              		<div class="form-group">
 				            <label class="col-md-4 control-label" for="photo" required="true">Upload New Photo<span class="red font-bold"> *</span></label>

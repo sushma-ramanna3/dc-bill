@@ -154,6 +154,24 @@ class BeneficiaryController extends BaseController {
 		return Response::download($file);
 	}
 
+	public function user_file($file_name = "")
+	{
+	    if ($file_name)
+	    {
+	        // Ensure no funny business names to prevent directory transversal etc.
+	        $file_name = str_replace ('..', '', $file_name);
+	        $file_name = str_replace ('/', '', $file_name);
+
+	         // now do the logic to check user is logged in
+	        if (Auth::check())
+	        {
+	            // Serve file via readfile() - we hard code the user_ID - so they
+	            // can only get to their own images
+	            readfile('../your_app/samples/'.Auth::user()->id.'/'.$file);
+	        }
+	    }
+	}
+
 
 
 }
