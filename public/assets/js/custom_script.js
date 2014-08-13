@@ -53,9 +53,9 @@ $(document).ready(function() {
 	    }
 	});*/
 
-	$('#dob').bind( "mouseenter mouseleave blur click", function(){
-    	var val = $(this).val();
-    	var url= 'age.php?dob='+val;
+	$('#dob, #age').bind( "mouseenter mouseleave blur click", function(){
+    	var val = $('#dob').val();
+    	var url= '/age.php?dob='+val;
         $.getJSON(url, function(data){
     		console.log(data);
 		    $('#age').val(data);
@@ -65,7 +65,7 @@ $(document).ready(function() {
    	$( "#district_id" ).change(function() {
 		var val = $(this).val();
 		if(val != ''){
-			var url= 'taluk.php?district_id='+val;
+			var url= '/taluk.php?district_id='+val;
 	    	$.getJSON(url, function(data){
 	    		console.log(data);
 	    		$('#taluk_id').empty();
@@ -86,7 +86,7 @@ $(document).ready(function() {
     $( "#taluk_id" ).change(function() {
 		var val = $(this).val();
 		if(val != ''){
-			var url= 'hobli.php?taluk_id='+val;
+			var url= '/hobli.php?taluk_id='+val;
 	    	$.getJSON(url, function(data){
 	    		console.log(data);
 	    		$('#hobli').empty();
@@ -103,7 +103,7 @@ $(document).ready(function() {
 	$( "#product_id" ).change(function() {
 		var val = $(this).val();
 		if(val != ''){
-			var url= 'manufacturer.php?product_id='+val;
+			var url= '/manufacturer.php?product_id='+val;
 	    	$.getJSON(url, function(data){
 	    		console.log(data);
 	    		$('#manufacturer_id').empty();
@@ -120,7 +120,7 @@ $(document).ready(function() {
 	$( "#manufacturer_id" ).change(function() {
 		var val = $(this).val();
 		if(val != ''){
-			var url= 'model.php?manufacturer_id='+val;
+			var url= '/model.php?manufacturer_id='+val;
 	    	$.getJSON(url, function(data){
 	    		console.log(data);
 	    		$('#model_id').empty();
@@ -137,7 +137,7 @@ $(document).ready(function() {
 	$( "#model_id" ).change(function() {
 		var val = $(this).val();
 		if(val != ''){
-			var url= 'specificaton.php?model_id='+val;
+			var url= '/specificaton.php?model_id='+val;
 	    	$.getJSON(url, function(data){
 	    		console.log(data);
 	    		$('#spec_id').empty();
@@ -157,7 +157,7 @@ $(document).ready(function() {
 			var val2 = $( "#model_id" ).val();
 			var val3 = $( "#manufacturer_id" ).val();
 			var val4 = $( "#product_id" ).val();
-			var url= 'rateShare.php?spec_id='+val+'&model_id='+val2+'&manufacturer_id='+val3+'&product_id='+val4;
+			var url= '/rateShare.php?spec_id='+val+'&model_id='+val2+'&manufacturer_id='+val3+'&product_id='+val4;
 	    	$.getJSON(url, function(data){
 	    		console.log(data);
 	    		$('#fullRate').val(data.decFullRate);

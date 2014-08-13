@@ -13,7 +13,6 @@
         $page = Input::get('page', 1);
         $i = (10 * ($page -1))+1;
   ?> 
-  <?php //echo '***'.$i;?>
   {{ Form::open(array('url' => '/users-list', 'class' => 'filter')) }} 
     <div class="form-group col-md-12" style="padding: 0px;margin-bottom:10px;">
         <div class="pull-left">
@@ -38,8 +37,8 @@
             </div>
           </div>-->
 
-          <div class="col-md-2" style="width:250px;margin-bottom:10px;"><label class=" pull-left">Email</label>
-            {{ Form::text('beneficiary_name', Input::get('beneficiary_name'), array('id'=>'email-filter', 'style' => 'width: 80%;margin-left:5px;')) }}
+          <div class="col-md-2" style="width:350px;margin-bottom:10px;"><label class=" pull-left">Beneficiary Name</label>
+            {{ Form::text('beneficiary_name', Input::get('beneficiary_name'), array('id'=>'email-filter', 'style' => 'width: 60%;margin-left:5px;')) }}
           </div>
           <div class="pull-right">
             <a class="btn btn-danger white" type="reset" href="/users-list">Reset</a>
@@ -63,6 +62,7 @@
             <td>Phone</td>
             <td>Category</td>
             <td>Product Name</td>
+            <td>Amount Recieved</td>
             <td>Registered Date</td>
             <td>Photo Link</td>
            <!--  @if(Auth::user()->usertype == 'admin')
@@ -82,8 +82,14 @@
                 @else 3
                 @endif</td>
               <td>{{ $user->txtProdName }}</td>
+              <td>{{ $user->intbeneAmtReceived }}</td>
               <td>{{ date('d-M-Y h.i.s', strtotime($user->created_at)) }}</td>
-              <td>{{ "<a href='/photodownload/".$user->BeneID."'>Photo download</a>" }}</td>
+              <td>@if($user->txtDocPath)
+                {{ "<a href='/photodownload/".$user->BeneID."'>Photo download</a>" }}
+                @else
+                NA
+                @endif
+              </td>
               <!-- @if(Auth::user()->usertype == 'admin')
                 <td>{{ $user->usertype }}</td>
               @endif -->

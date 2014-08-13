@@ -56,8 +56,8 @@ return array(
 			'driver'    => 'mysql',
 			'host'      => 'localhost',
 			'database'  => 'ksda_dc_billingapplication',
-			'username'  => 'fliptest_flip',
-			'password'  => 'flip', //FR0aZR4y5P
+			'username'  => 'root',
+			'password'  => 'root', //FR0aZR4y5P
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
