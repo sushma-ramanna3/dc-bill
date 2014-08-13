@@ -16,6 +16,24 @@ class Mstproductname extends Eloquent {
 		
 		return $productList;
 	}
+
+	public static function getApplicationFor()
+	{
+		$applicationList = array('' => '--Select application for--') + DB::table('mstapplicationfor')
+							->where('flgisActive', 1)
+							->orderBy('txtApplication', 'ASC')->lists('txtApplication', 'id');
+		
+		return $applicationList;
+	}
+
+	public static function getBankList()
+	{
+		$bankList = array('' => '--Select bank--') + DB::table('mstbank')
+							->where('flgisActive', 1)
+							->orderBy('txtBankName', 'ASC')->lists('txtBankName', 'id');
+		
+		return $bankList;
+	}
 	
 	
 }

@@ -22,8 +22,12 @@ class UsersController extends BaseController {
 
 		$uom = Mstunitofmeasure::getUOM();
 
+		$bank = Mstproductname::getBankList();
+
+		$applicationFor = Mstproductname::getApplicationFor();
+
 		return View::make('users.index')->with('districts', $districts)->with('intProdID', $intProdID)
-			->with('uom', $uom);
+			->with('uom', $uom)->with('applicationFor', $applicationFor);
 
 	}
 
@@ -37,6 +41,12 @@ class UsersController extends BaseController {
 	{
 		$hoblirsk = Msthoblirsk::getHoblirskList(Input::get('taluk_id'));
 		return Response::json($hoblirsk);
+	}
+
+	public function village()
+	{
+		$village = Mstvillage::getVillageList(Input::get('hobli_id'));
+		return Response::json($village);
 	}
 
 
@@ -135,7 +145,7 @@ class UsersController extends BaseController {
 		
 		if ( $validator->passes() ) {
 
-			if(Input::get('user_register')){
+			if(Input::get('user_register')) {
 				$age = $this->age(Input::get('dob'), $flag=1);
 
 				if( Input::get('first_name') && !Input::get('last_name') )
@@ -145,11 +155,13 @@ class UsersController extends BaseController {
 
 				$beneficiary_id = DB::table('trnbeneficiary')->insertGetId(array(
 										'txtbeneficiaryname' => $name,
+										'txtbeneFatherName' => Input::get('father_name'),
 										'txtbeneAddress' => Input::get('address'),
 										'txtbeneState' => 'Karnataka',
 										'intbeneDistrict' => Input::get('district_id'),
 										'intbeneTaluk' => Input::get('taluk_id'),
 										'intbeneRSK' => Input::get('hoblirsk_id'),
+										'intbeneVillage' => Input::get('village_id'),
 										'txtbeneContactNo' => Input::get('phone'),
 										'intbenePinCode' => Input::get('zip'),
 										'dtdateofBirth' => Input::get('dob'),
@@ -163,8 +175,28 @@ class UsersController extends BaseController {
 				$beneficiary_name = DB::table('trnbeneficiary')->where('BeneID', $beneficiary_id)->pluck('txtbeneficiaryname');
 
 				return Redirect::to('users')->with('beneficiary_id', $beneficiary_id)->with('beneficiary_name', $beneficiary_name)
-				->with('category', Input::get('category'))
+				->with('category', Input::get('category'))->with('flag', 1)
 				->with('success', 'Beneficiary data saved successfully.');
+			}
+			elseif (Input::get('beneficiary_id') && Input::get('crop_id')) {
+				DB::table('trnbeneficiaryproddetails')->insert(array(
+					'intbeneID' => Input::get('beneficiary_id'),
+					'intProdID' => Input::get('product_id'),
+					'intManufacturerID' =>Input::get('manufacturer_id'),
+					'intModelID' => Input::get('model_id'),
+					'intSpecID' => Input::get('spec_id'),
+					'decFullRate' => Input::get('fullRate'),
+					'decGovtShare' => Input::get('govtShare'),
+					'decFarmerShare' => Input::get('farmerShare'),
+					'intQty' => Input::get('quantitiy'),
+					'intUnitofMeasure' => Input::get('UOM'),
+					'flgisActive' => 1,
+					'created_at' => new DateTime, 
+					'updated_at' => new DateTime 
+					));
+				return Redirect::to('users')->with('beneficiary_id', Input::get('beneficiary_id'))->with('flag3', 1)
+				->with('category', Input::get('category'))
+				->with('beneficiary_name', Input::get('beneficiary_name'))->with('success', 'Product data saved successfully.');
 			}
 			elseif (Input::get('beneficiary_id') && Input::get('product_id')) {
 				DB::table('trnbeneficiaryproddetails')->insert(array(
@@ -329,6 +361,7 @@ class UsersController extends BaseController {
 			        'intbeneDistrict' => 'required',
 			        'intbeneTaluk'	=> 'required',
 			        'intbeneRSK'	=> 'required',
+			        'intbeneVillage' => 'required',
 			        'txtbeneContactNo'	=> 'required|numeric',
 			        'intbenePinCode'	=> 'required|min:6',
 			        'dtdateofBirth' => 'required',
@@ -398,6 +431,7 @@ class UsersController extends BaseController {
 				            	'intbeneDistrict' => Input::get('intbeneDistrict'),
 				            	'intbeneTaluk' => Input::get('intbeneTaluk'),
 				            	'intbeneRSK' => Input::get('intbeneRSK'),
+				            	'intbeneVillage' => Input::get('intbeneVillage'),
 				            	'txtbeneContactNo' => Input::get('txtbeneContactNo'),
 				            	'intbenePinCode' => Input::get('intbenePinCode'),
 				            	'dtdateofBirth' => Input::get('dtdateofBirth'),

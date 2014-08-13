@@ -100,6 +100,23 @@ $(document).ready(function() {
 	    }
 	});
 
+  	$( "#hobli" ).change(function() {
+		var val = $(this).val();
+		if(val != ''){
+			var url= '/village.php?hobli_id='+val;
+	    	$.getJSON(url, function(data){
+	    		console.log(data);
+	    		$('#village_id').empty();
+	    		$('#village_id').append('<option value="">--Select village--</option>');
+				  $.each(data, function(index, text) {
+				    $('#village_id').append(
+				        $('<option></option>').val(index).html(text)
+				    );
+				  });
+			});
+	    }
+	});
+
 	$( "#product_id" ).change(function() {
 		var val = $(this).val();
 		if(val != ''){

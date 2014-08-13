@@ -3,25 +3,29 @@
  
   	<h3>Dashboard</h3>
   	<?php
-  		$active1 = $active2 = $active3 = $active4 = $id = '';
+  		$active1 = $active2 = $active3 = $active4 = $active5 = $id = '';
   		if(Session::get('beneficiary_id')){
   			$id = 1;
   		}
-	  	if(Session::get('beneficiary_id') && Session::get('category') ){
-	  		$active1 = $active3 = $active4 = '';
+	  	if(Session::get('beneficiary_id') && Session::get('flag3')){
+	  		$active1 = $active3 = $active4 = $active5 = '';
 	  		$active2 = 'active'; 
 	  	}
+	  	elseif(Session::get('beneficiary_id') && Session::get('flag')){
+	  		$active1 = $active3 = $active4 = $active2 = '';
+	  		$active5 = 'active'; 
+	  	}
 	  	elseif(Session::get('beneficiary_id') && Session::get('flag1') ){
-	  		$active1 = $active2 = $active4 = '';
+	  		$active1 = $active2 = $active4 = $active5 = '';
 	  		$active3 = 'active';
 	  	}
 	  	elseif(Session::get('beneficiary_id') && Session::get('flag2') ){
-	  		$active1 = $active3 = $active2 = '';
+	  		$active1 = $active3 = $active2 = $active5 = '';
 	  		$active4 = 'active';
 	  	}
 	  	else{
 	  		$active1 = 'active';
-	  		$active2 = $active3 = $active4 = '';
+	  		$active2 = $active3 = $active4 = $active5 = '';
 	  	}
 	  	
   	?>
@@ -31,6 +35,7 @@
   			<li><a href="{{ URL::to('franchise') }}">Products list</a></li>.
   		@else
   		 	<li class="<?php echo $active1;?> tab"><a href="#users" data-toggle="tab">User Registration</a></li>
+  		 	<li class="<?php echo $active5;?> tab"><a href="#corps" data-toggle="tab">Corps</a></li>
 		    <li class="<?php echo $active2;?> tab"><a href="#product" data-toggle="tab">Product Purchase</a></li>
 		    <li class="<?php echo $active3;?> tab"><a href="#documents" data-toggle="tab">Upload Documents</a></li>
 		    <li class="<?php echo $active4;?> tab"><a href="#payment" data-toggle="tab">Payment Details</a></li>
@@ -93,6 +98,13 @@
 			              </div>
 			            </div>
 
+			             <div class="form-group">
+			              <label class="col-md-5 control-label" for="last_name">Father Name</label>  
+			              <div class="col-md-7">
+			              {{ Form::text('father_name', Input::old('father_name'), array('class'=>'form-control input-md city','placeholder'=>'enter last name')) }}  
+			              </div>
+			            </div>
+
 			           <!--  <div class="form-group email_div">
 			              <label class="col-md-5 control-label" for="email">Email ID<span class="red font-bold"> *</span></label>  
 			              <div class="col-md-7">
@@ -120,14 +132,14 @@
 				            <label class="col-md-5 control-label" for="twelfth">Gender<span class="red font-bold"> *</span></label>  
 				            <div class="col-md-7">
 				            	 {{ Form::radio('gender','male','', array('id'=>'first1')) }}
-				                  {{ Form::label('male','Male', array('style' => 'font-weight:normal'))}} 
+				                  {{ Form::label('male','Male', array('style' => 'font-weight:normal', 'required' => 'true'))}} 
 				                  {{ Form::radio('gender','female','', array('id'=>'first2')) }}
-				                 {{ Form::label('female','Female', array('style' => 'font-weight:normal;')) }} 
+				                 {{ Form::label('female','Female', array('style' => 'font-weight:normal;', 'required' => 'true')) }} 
 				            </div>
 			          	</div>
 			          
 			          	<div class="form-group">
-				            <label class="col-md-5 control-label" for="twelfth">Date of Birth<span class="red font-bold"> *</span></label>  
+				            <label class="col-md-5 control-label" for="twelfth">Date of Birth</label>  
 					        <div class="col-md-7 input-append date pull-right" id="dp1" data-date="" data-date-format="dd-mm-yyyy">
 					            <input name="dob" id="dob" class="span2" size="16" type="text" value="" readonly />
 					            <label class="add-on"><i class="icon-calendar"></i></label>
@@ -161,6 +173,12 @@
 				          		{{ Form::select('category', array(''=>'--Select category--', '1'=>'General', '2'=>'SC', '3'=>'ST'), Input::old('intbeneCategory'), array('class' => 'form-control input-md', 'required' => 'true')) }}    
 				            </div>
 			          	</div>
+			          	<div class="form-group">
+				            <label class="col-md-5 control-label" for="twelfth">Application For<span class="red font-bold"> *</span></label>  
+				            <div class="col-md-7">
+				          		{{ Form::select('application_for', $applicationFor, Input::old('application_for'), array('class' => 'form-control input-md', 'required' => 'true')) }}    
+				            </div>
+			          	</div>
 					</div>
 					
 		          	<div class="form-group col-md-12" style="width:99%;margin-right:27px;">
@@ -173,6 +191,9 @@
 			            </div>
 			            <div class="col-md-3 col-custom1">
 			              {{ Form::select('hoblirsk_id', array('0'=>'--Select hobli RSK--'), Input::old('hoblirsk_id'), array('class' => 'form-control input-md state', 'required' => 'true', 'id'=>'hobli')) }}  
+			            </div>
+			            <div class="col-md-3 col-custom1">
+			              {{ Form::select('village_id', array('0'=>'--Select village--'), Input::old('village_id'), array('class' => 'form-control input-md state', 'required' => 'true', 'id'=>'village_id')) }}  
 			            </div>
 			            <div class="col-md-2">
 			              {{ Form::text('zip', Input::old('zip'), array('class'=>'form-control input-md','placeholder'=>'zip', 'maxlength'=>'6', 'minlength'=>'6', 'id' => 'zip', 'required' => 'true')) }}      
@@ -356,6 +377,20 @@
 				              	{{ Form::text('cheque_dd_no', Input::old('cheque_dd_no'), array('class'=>'form-control input-md','placeholder'=>'', 'required' => 'true')) }}  
               				</div>
 		            	</div>
+
+		            	<div class="form-group">
+				            <label class="col-md-5 control-label" for="">Account No<span class="red font-bold"> *</span></label>  
+				            <div class="col-md-7">
+				              	{{ Form::text('account_number', Input::old('account_number'), array('class'=>'form-control input-md','placeholder'=>'', 'required' => 'true')) }}  
+              				</div>
+		            	</div>
+
+	            		<div class="form-group">
+				            <label class="col-md-5 control-label" for="twelfth">Bank<span class="red font-bold"> *</span></label>  
+				            <div class="col-md-7">
+				          		{{ Form::select('bank', $bank, Input::old('bank'), array('class' => 'form-control input-md', 'required' => 'true')) }}    
+				            </div>
+			          	</div>
 
 		            	<div class="form-group">
 				            <label class="col-md-5 control-label" for="">Amount Recieved<span class="red font-bold"> *</span></label>  

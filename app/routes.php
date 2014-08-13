@@ -35,6 +35,8 @@ Route::get('/taluk.php/{district_id?}', 'UsersController@taluk');
 
 Route::get('/hobli.php/{taluk_id?}', 'UsersController@hobli');
 
+Route::get('/village.php/{village_id?}', 'UsersController@village');
+
 Route::get('/manufacturer.php/{product_id?}', 'UsersController@manufacturer');
 
 Route::get('/model.php/{manufacturer_id?}', 'UsersController@model');
