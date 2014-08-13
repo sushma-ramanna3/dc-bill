@@ -295,14 +295,19 @@ class UsersController extends BaseController {
         $intSpecIDs = Trnbeneficiaryproddetails::getSpecList();
 
         $name = explode(' ', $user->txtbeneficiaryname);
+        $first_name = $name[0];
+        $last_name = '';
+        
+        if(sizeof($name) > 1)
+        	$last_name = $name[1];
     	
     	$product = Trnbeneficiaryproddetails::where('intbeneID' , '=', $id)->first();
 
     	$documents = Trnbeneficiarydocuments::where('intbeneID' , '=', $id)->first();
     	//dd($documents->txtDocPath);
 
-		return View::make('users.edit')->with('user', $user)->with('intProdID', $intProdID)->with('hoblis', $hoblis)->with('first_name', $name[0])->with('product', $product)
-			->with('districts', $districts)->with('uom', $uom)->with('id', $id)->with('taluks', $taluks)->with('category',$category)->with('last_name', $name[1])
+		return View::make('users.edit')->with('user', $user)->with('intProdID', $intProdID)->with('hoblis', $hoblis)->with('first_name', $first_name)->with('product', $product)
+			->with('districts', $districts)->with('uom', $uom)->with('id', $id)->with('taluks', $taluks)->with('category',$category)->with('last_name', $last_name)
 			->with('intManufacturerIDs', $intManufacturerIDs)->with('intModelIDs', $intModelIDs)->with('intSpecIDs', $intSpecIDs)->with('documents', $documents);
 	}
 
@@ -372,7 +377,7 @@ class UsersController extends BaseController {
 				elseif( Input::get('first_name') && Input::get('last_name') )
 					$name = Input::get('first_name').' '.Input::get('last_name');
 
-				$user = Trnbeneficiary::where('BeneID' , '=', $id)->first();
+				/*$user = Trnbeneficiary::where('BeneID' , '=', $id)->first();
 				$user->txtbeneficiaryname       = $name;
 				$user->txtbeneAddress      	= Input::get('txtbeneAddress');
 				$user->intbeneDistrict 		= Input::get('intbeneDistrict');
@@ -384,42 +389,70 @@ class UsersController extends BaseController {
 				$user->intbeneAge 		= $age;
 				$user->txtbeneSex 		= Input::get('txtbeneSex');
 				$user->intbeneCategory 		= Input::get('intbeneCategory');
-				$user->save();
+				$user->save();*/
+
+				DB::table('trnbeneficiary')
+				            ->where('BeneID', trim($id))
+				            ->update(array('txtbeneficiaryname' => $name,
+				            	'txtbeneAddress' => Input::get('txtbeneAddress'),
+				            	'intbeneDistrict' => Input::get('intbeneDistrict'),
+				            	'intbeneTaluk' => Input::get('intbeneTaluk'),
+				            	'intbeneRSK' => Input::get('intbeneRSK'),
+				            	'txtbeneContactNo' => Input::get('txtbeneContactNo'),
+				            	'intbenePinCode' => Input::get('intbenePinCode'),
+				            	'dtdateofBirth' => Input::get('dtdateofBirth'),
+				            	'intbeneAge' => $age,
+				            	'txtbeneSex' => Input::get('txtbeneSex'),
+				            	'intbeneCategory' => Input::get('intbeneCategory')
+				            ));
 
 				$beneficiary_name = DB::table('trnbeneficiary')->where('BeneID', $id)->pluck('txtbeneficiaryname');
 
-				return Redirect::to('users')->with('beneficiary_id', $id)->with('beneficiary_name', $beneficiary_name)
-				->with('category', Input::get('category'))
+				return Redirect::to('users/'.$id.'/edit')->with('beneficiary_id', $id)->with('beneficiary_name', $beneficiary_name)
+				->with('category', Input::get('intbeneCategory'))
 				->with('success', 'Beneficiary data updated successfully.');
 			}
-			elseif (Input::get('beneficiary_id') && Input::get('product_id')) {
-
+			elseif (Input::get('beneficiary_id') && Input::get('intProdID')) {
+				/*dd('here');
 				$product = Trnbeneficiaryproddetails::where('intbeneID' , '=', $id)->first();
 
 				$product->intProdID       = Input::get('intProdID');
-				$product->intManufacturerID      	= Input::get('intManufacturerID');
+				$product->intManufacturerID = Input::get('intManufacturerID');
 				$product->intModelID 		= Input::get('intModelID');
 				$product->intSpecID    	= Input::get('intSpecID');
 				$product->decFullRate    = Input::get('decFullRate');
 				$product->decGovtShare 	= Input::get('decGovtShare');
-				$product->decFarmerShare 		= Input::get('decFarmerShare');
+				$product->decFarmerShare 	= Input::get('decFarmerShare');
 				$product->intQty 	= Input::get('intQty');
 				$product->intUnitofMeasure 		= Input::get('intUnitofMeasure');
-				$product->save();
+				$product->save();*/
+				DB::table('trnbeneficiaryproddetails')
+				            ->where('intbeneID', trim($id))
+				            ->update(array(
+				            	'intProdID' => Input::get('intProdID'),
+				            	'intManufacturerID' => Input::get('intManufacturerID'),
+				            	'intModelID' => Input::get('intModelID'),
+				            	'intSpecID' => Input::get('intSpecID'),
+				            	'decFullRate' => Input::get('decFullRate'),
+				            	'decGovtShare' => Input::get('decGovtShare'),
+				            	'decFarmerShare' => Input::get('decFarmerShare'),
+				            	'intQty' => Input::get('intQty'),
+				            	'intUnitofMeasure' => Input::get('intUnitofMeasure')
+				            ));
 
-				return Redirect::to('users')->with('beneficiary_id', Input::get('beneficiary_id'))->with('flag1', 1)
-				->with('beneficiary_name', Input::get('beneficiary_name'))->with('success', 'Product data updated successfully.');
+				return Redirect::to('users/'.$id.'/edit')->with('beneficiary_id', $id)->with('flag1', 1)
+				->with('success', 'Product data updated successfully.');
 			}
 			elseif (Input::get('beneficiary_id') && Input::hasFile('photo')) {
 
 				if(Input::hasFile('id_proof')) { 
 
-					Input::file('id_proof')->move( app_path().'/views/proof/', Input::get('beneficiary_id').'_'.time().'_'.Input::file('id_proof')->getClientOriginalName());
-					$proof_path = app_path().'/views/proof/'.Input::get('beneficiary_id').'_'.time().'_'.Input::file('id_proof')->getClientOriginalName();
+					Input::file('id_proof')->move( app_path().'/views/proof/', $id.'_'.time().'_'.Input::file('id_proof')->getClientOriginalName());
+					$proof_path = app_path().'/views/proof/'.$id.'_'.time().'_'.Input::file('id_proof')->getClientOriginalName();
 					$proof_path = isset($proof_path) ? $proof_path : '' ;
 
 					DB::table('trnbeneficiarydocuments')->insert(array(
-					'intbeneID' => Input::get('beneficiary_id'),
+					'intbeneID' => $id,
 					'intDocType' => 2, //if the doc is id proof
 					'flgDocUploaded' => 1,
 					'txtDocPath' => $proof_path,
@@ -429,12 +462,12 @@ class UsersController extends BaseController {
 					));
 				}
 
-				Input::file('photo')->move( app_path().'/views/photos/', Input::get('beneficiary_id').'_'.time().'_'.Input::file('photo')->getClientOriginalName());	
-				$photo_path = app_path().'/views/photos/'.Input::get('beneficiary_id').'_'.time().'_'.Input::file('photo')->getClientOriginalName();
+				Input::file('photo')->move( app_path().'/views/photos/', $id.'_'.time().'_'.Input::file('photo')->getClientOriginalName());	
+				$photo_path = app_path().'/views/photos/'.$id.'_'.time().'_'.Input::file('photo')->getClientOriginalName();
 				$photo_path = isset($photo_path) ? $photo_path : '' ;
 
 				DB::table('trnbeneficiarydocuments')->insert(array(
-					'intbeneID' => Input::get('beneficiary_id'),
+					'intbeneID' => $id,
 					'intDocType' => 1, //if the doc is photo
 					'flgDocUploaded' => 1,
 					'txtDocPath' => $photo_path,
@@ -443,13 +476,13 @@ class UsersController extends BaseController {
 					'updated_at' => new DateTime 
 					));
 				
-				return Redirect::to('users')->with('beneficiary_id', Input::get('beneficiary_id'))->with('flag2', 1)
+				return Redirect::to('users/'.$id.'/edit')->with('beneficiary_id', $id)->with('flag2', 1)
 				->with('beneficiary_name', Input::get('beneficiary_name'))->with('success', 'Document uploaded successfully.');
 			}
 			elseif (Input::get('beneficiary_id') && Input::get('intbeneModeofPayment')) {
 								
 				DB::table('trnbeneficiary')
-				            ->where('BeneID', trim(Input::get('beneficiary_id')))
+				            ->where('BeneID', trim($id))
 				            ->update(array('intbeneModeofPayment' => Input::get('intbeneModeofPayment'),
 				            	'txtbeneDDChequeNo' => Input::get('txtbeneDDChequeNo'),
 				            	'flgbeneisAmountRemitted' => Input::get('flgbeneisAmountRemitted'),
