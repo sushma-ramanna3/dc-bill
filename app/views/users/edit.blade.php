@@ -34,7 +34,7 @@
   			<li><a href="{{ URL::to('franchise') }}">Products list</a></li>
   		@else
   		 	<li class="<?php echo $active1;?> tab"><a href="#users" data-toggle="tab">User Registration</a></li>
-  		 	<li class="<?php echo $active5;?> tab"><a href="#corps" data-toggle="tab">Corps</a></li>
+  		 	<li class="<?php echo $active5;?> tab"><a href="#crops" data-toggle="tab">Crops</a></li>
 		    <li class="<?php echo $active2;?> tab"><a href="#product" data-toggle="tab">Product Purchase</a></li>
 		    <li class="<?php echo $active3;?> tab"><a href="#documents" data-toggle="tab">Upload Documents</a></li>
 		    <li class="<?php echo $active4;?> tab"><a href="#payment" data-toggle="tab">Payment Details</a></li>
@@ -72,8 +72,7 @@
   	<div id="my-tab-content" class="tab-content">
 		@if(Auth::check() && Auth::user()->usertype != 'admin')
 		    <div id="users" class="tab-pane <?php echo $active1; ?>">   
-		    	 {{ Form::model($user, array('route' => array('users.update', $id), 'method' => 'PUT', 'class' => 'form-horizontal col-md-12',
-          'id' => 'userDetails' )) }}
+		    	 {{ Form::model($user, array('route' => array('users.update', $id), 'method' => 'PUT', 'class' => 'form-horizontal col-md-12','id' => 'userDetails' )) }}
 	            <fieldset id="fieldsetappend" >
 		            <div class="form-group">
 		              	<div class="col-md-5 marg-top">
@@ -95,6 +94,13 @@
 			              <label class="col-md-5 control-label" for="last_name">Last Name</label>  
 			              <div class="col-md-7">
 			              {{ Form::text('last_name', $last_name, array('class'=>'form-control input-md', 'id' => 'last_name')) }}  
+			              </div>
+			            </div>
+
+			             <div class="form-group">
+			              <label class="col-md-5 control-label" for="last_name">Father Name</label>  
+			              <div class="col-md-7">
+			              {{ Form::text('txtbeneFatherName', Input::old('txtbeneFatherName'), array('class'=>'form-control input-md city')) }}  
 			              </div>
 			            </div>
 			
@@ -145,6 +151,12 @@
 				          		{{ Form::select('intbeneCategory', $category, Input::old('intbeneCategory'), array('class' => 'form-control input-md', 'required' => 'true')) }}    
 				            </div>
 			          	</div>
+		          		<div class="form-group">
+				            <label class="col-md-5 control-label" for="twelfth">Application For<span class="red font-bold"> *</span></label>  
+				            <div class="col-md-7">
+				          		{{ Form::select('applicationfor', $applicationFor, Input::old('applicationfor'), array('class' => 'form-control input-md', 'required' => 'true')) }}    
+				            </div>
+			          	</div>
 					</div>
 					
 		          	<div class="form-group col-md-12" style="width:99%;margin-right:27px;">
@@ -158,10 +170,19 @@
 			            <div class="col-md-3 col-custom1">
 			              {{ Form::select('intbeneRSK', $hoblis, Input::old('intbeneRSK'), array('class' => 'form-control input-md state', 'required' => 'true', 'id'=>'hobli')) }}  
 			            </div>
-			            <div class="col-md-2">
-			              {{ Form::text('intbenePinCode', Input::old('intbenePinCode'), array('class'=>'form-control input-md','placeholder'=>'zip', 'maxlength'=>'6', 'minlength'=>'6', 'id' => 'zip', 'required' => 'true')) }}      
+			            <div class="col-md-2 col-custom1">
+			              {{ Form::select('intbeneVillage', $villages, Input::old('intbeneVillage'), array('class' => 'form-control input-md state', 'required' => 'true', 'id'=>'village_id')) }}  
 			            </div>
 		          	</div>
+
+		          	<div class="col-md-6">
+		          		<div class="form-group">
+				            <label class="col-md-5 control-label" for="twelfth">Pincode<span class="red font-bold"> *</span> </label>  
+				            <div class="col-md-7">
+				          		{{ Form::text('intbenePinCode', Input::old('intbenePinCode'), array('class'=>'form-control input-md','placeholder'=>'zip', 'maxlength'=>'6', 'minlength'=>'6', 'id' => 'zip', 'required' => 'true')) }}      
+				            </div>
+		          		</div>
+	          		</div>
 
 		            <div class="form-group">
 		              <label class="col-md-3 control-label" for="submit"></label>
@@ -174,8 +195,8 @@
 	    </div>
 
 
-	    <div id="corps" class="tab-pane <?php echo $active5; ?>">   
-         	<form class="form-horizontal col-md-12" action="/registration" method="post">
+	    <div id="crops" class="tab-pane <?php echo $active5; ?>">   
+         	 {{ Form::model($crop, array('route' => array('users.update', $id), 'method' => 'PUT', 'class' => 'form-horizontal col-md-12' )) }}
          		<fieldset id="fieldsetappend">
          		  <input name="corps" class="none" type="hidden" value="1" />
          	 		<div class="form-group">
@@ -184,7 +205,7 @@
 		              	</div>
 		              	<div class="col-md-12">
 			              	<?php if($id){ ?>
-								<input name="beneficiary_id" class="none" type="hidden" value="<?php echo Session::get('beneficiary_id'); ?>" />
+								<input name="beneficiary_id" class="none" type="hidden" value="<?php echo $id; ?>" />
 								<input name="seniorMemberID" class="none" type="hidden" value="<?php echo Session::get('seniorMemberID'); ?>" />
 		  						<b>Beneficiary Member ID:</b> <?php echo Session::get('seniorMemberID'); ?> <b>Beneficiary Name:</b> <?php echo Session::get('beneficiary_name'); ?><br>
 			              	<?php } ?>
@@ -237,7 +258,7 @@
 	            			</div>
             			</div>
 	      		</fieldset>
-	        </form>
+	        {{ Form::close() }}
         </div>
 
 	    <div id="product" class="tab-pane <?php echo $active2; ?>">   
@@ -251,7 +272,8 @@
 		              	<div class="col-md-12">
 			              		<?php if($id){ ?>
 									<input name="beneficiary_id" class="none" type="hidden" value="<?php echo $id; ?>" />
-			  						<b>Beneficiary ID:</b> <?php echo $id; ?> <b>Beneficiary Name:</b> <?php echo $first_name.' '.$last_name; ?><br><br>
+									<input name="seniorMemberID" class="none" type="hidden" value="<?php echo Session::get('seniorMemberID'); ?>" />
+		  							<b>Beneficiary Member ID:</b> <?php echo Session::get('seniorMemberID'); ?> <b>Beneficiary Name:</b> <?php echo Session::get('beneficiary_name'); ?><br><br>
 				        		<?php } ?>
 			              	@if($active2)
 				              	<input name="category" id="category" class="none" type="hidden" value="<?php echo Session::get('category_id'); ?>" />
@@ -348,13 +370,14 @@
 		            <div class="col-md-12">
 							<?php if($id){ ?>
 									<input name="beneficiary_id" class="none" type="hidden" value="<?php echo $id; ?>" />
-			  						<b>Beneficiary ID:</b> <?php echo $id; ?> <b>Beneficiary Name:</b> <?php echo $first_name.' '.$last_name; ?><br><br>
+									<input name="seniorMemberID" class="none" type="hidden" value="<?php echo Session::get('seniorMemberID'); ?>" />
+		  							<b>Beneficiary Member ID:</b> <?php echo Session::get('seniorMemberID'); ?> <b>Beneficiary Name:</b> <?php echo Session::get('beneficiary_name'); ?><br><br>
 				        	<?php } ?>
 			        </div>
 		          	
 		            <div class="col-md-6">
 		            <!-- https://laracasts.com/forum/?p=707-laravel-load-images-stored-outside-public-folder/0 -->
-		            <?php $image = readfile($documents->txtDocPath); echo $documents->txtDocPath;?>
+		            <?php //$image = readfile($documents->txtDocPath); echo $documents->txtDocPath;?>
               			{{  HTML::image( $image, 'photo') }}
 
 	              		<div class="form-group">
@@ -364,9 +387,23 @@
 				            </div>
 			          	</div>
 			          	<div class="form-group">
-				            <label class="col-md-4 control-label" for="id_proof" required="true">Upload ID Proof</label>
+				            <label class="col-md-4 control-label" for="rtc">RTC</label>
 				            <div class="col-md-6">
-				              {{ Form::file('id_proof', array('class'=>'form-control input-md')) }}
+				              {{ Form::file('rtc', array('class'=>'form-control input-md', 'required' => 'true')) }}
+				            </div>
+			          	</div>
+
+			          	<div class="form-group">
+				            <label class="col-md-4 control-label" for="bank_passbook_copy" required="true">Bank Passbook Copy</label>
+				            <div class="col-md-6">
+				              {{ Form::file('bank_passbook_copy', array('class'=>'form-control input-md', 'required' => 'true')) }}
+				            </div>
+			          	</div>
+
+			          	<div class="form-group">
+				            <label class="col-md-4 control-label" for="cash_certifcate" required="true">Cash Certifcate</label>
+				            <div class="col-md-6">
+				              {{ Form::file('cash_certifcate', array('class'=>'form-control input-md', 'required' => 'true')) }}
 				            </div>
 			          	</div>
               		  	
@@ -393,7 +430,8 @@
 		            <div class="col-md-12">
 			           	<?php if($id){ ?>
 									<input name="beneficiary_id" class="none" type="hidden" value="<?php echo $id; ?>" />
-			  						<b>Beneficiary ID:</b> <?php echo $id; ?> <b>Beneficiary Name:</b> <?php echo $first_name.' '.$last_name; ?><br><br>
+									<input name="seniorMemberID" class="none" type="hidden" value="<?php echo Session::get('seniorMemberID'); ?>" />
+		  							<b>Beneficiary Member ID:</b> <?php echo Session::get('seniorMemberID'); ?> <b>Beneficiary Name:</b> <?php echo Session::get('beneficiary_name'); ?><br><br>
 				        <?php } ?>
 			        </div>
 					
@@ -410,6 +448,19 @@
 				              	{{ Form::text('txtbeneDDChequeNo', Input::old('txtbeneDDChequeNo'), array('class'=>'form-control input-md','placeholder'=>'', 'required' => 'true')) }}  
               				</div>
 		            	</div>
+		            	<div class="form-group">
+				            <label class="col-md-5 control-label" for="">Account No<span class="red font-bold"> *</span></label>  
+				            <div class="col-md-7">
+				              	{{ Form::text('accountNo', Input::old('accountNo'), array('class'=>'form-control input-md','placeholder'=>'', 'required' => 'true')) }}  
+              				</div>
+		            	</div>
+
+	            		<div class="form-group">
+				            <label class="col-md-5 control-label" for="twelfth">Bank<span class="red font-bold"> *</span></label>  
+				            <div class="col-md-7">
+				          		{{ Form::select('bankID', $bank, Input::old('bankID'), array('class' => 'form-control input-md', 'required' => 'true')) }}    
+				            </div>
+			          	</div>
 
 		            	<div class="form-group">
 				            <label class="col-md-5 control-label" for="">Amount Recieved<span class="red font-bold"> *</span></label>  
@@ -418,11 +469,31 @@
               				</div>
 		            	</div>
 
+		            	<div class="form-group">
+		              		<label class="col-md-3 control-label" for="submit"></label>
+			              	<div class="col-md-3">
+		                		<button id="submit" name="submit" class="btn btn-lg btn-success btn-block">Save</button>
+		              		</div>
+			            </div>
+		            </div>
+		            <div class="col-md-6">
+		            	<div class="form-group">
+				            <label class="col-md-5 control-label" for="twelfth">Recommended By<span class="red font-bold"> *</span></label>  
+				            <div class="col-md-7">
+				          		{{ Form::select('recommendedBy', $recommendedBy, Input::old('recommendedBy'), array('class' => 'form-control input-md', 'required' => 'true', 'id' => 'recommended_by')) }}    
+				            </div>
+			          	</div>
+
+			          	<div class="form-group">
+				            <label class="col-md-5 control-label" for="twelfth">Recommended From<span class="red font-bold"> *</span></label>  
+				            <div class="col-md-7">
+				          		{{ Form::select('recommendedFrom', array('0'=>'--Select recommended from--'), Input::old('recommendedFrom'), array('class' => 'form-control input-md', 'required' => 'true', 'id' => 'recommended_from')) }}    
+				            </div>
+			          	</div>
 			          	<div class="form-group">
 				            <label class="col-md-5 control-label" for="twelfth">Payment Date<span class="red font-bold"> *</span></label>  
 					        <div class=" col-md-7 input-append date pull-right" id="dp2" data-date="" data-date-format="dd-mm-yyyy">
 					        {{ Form::text('paymentDate', Input::old('paymentDate'), array('class' => 'span2', 'size'=>'16', 'readonly' => 'true') ) }}
-					            <!-- <input name="date_payment" class="span2" size="16" type="text" value="" readonly /> -->
 					            <label class="add-on"><i class="icon-calendar"></i></label>
 					        </div>
 			          	</div>
@@ -437,12 +508,7 @@
 				            </div>
 			          	</div>
 
-		           	  	<div class="form-group">
-		              		<label class="col-md-3 control-label" for="submit"></label>
-			              	<div class="col-md-3">
-		                		<button id="submit" name="submit" class="btn btn-lg btn-success btn-block">Save</button>
-		              		</div>
-			            </div>
+		           	  	
 		            </div>
 	      		</fieldset>
 	        {{  Form::close() }}

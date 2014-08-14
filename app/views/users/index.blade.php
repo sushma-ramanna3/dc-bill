@@ -97,10 +97,10 @@
 			              </div>
 			            </div>
 
-			             <div class="form-group">
+			            <div class="form-group">
 			              <label class="col-md-5 control-label" for="last_name">Father Name</label>  
 			              <div class="col-md-7">
-			              {{ Form::text('father_name', Input::old('father_name'), array('class'=>'form-control input-md city','placeholder'=>'enter last name')) }}  
+			              {{ Form::text('father_name', Input::old('father_name'), array('class'=>'form-control input-md city','placeholder'=>'enter father name')) }}  
 			              </div>
 			            </div>
 
@@ -200,12 +200,13 @@
 		          	</div>
 
 		          	<div class="col-md-6">
-		          	<div class="form-group">
-				            <label class="col-md-5 control-label" for="twelfth">Zip<span class="red font-bold"> *</span> </label>  
+		          		<div class="form-group">
+				            <label class="col-md-5 control-label" for="twelfth">Pincode<span class="red font-bold"> *</span> </label>  
 				            <div class="col-md-7">
 				          		{{ Form::text('zip', Input::old('zip'), array('class'=>'form-control input-md','placeholder'=>'zip', 'maxlength'=>'6', 'minlength'=>'6', 'id' => 'zip', 'required' => 'true')) }}  
 				            </div>
-			          	</div></div>
+		          		</div>
+	          		</div>
 
 		            <div class="form-group col-md-12">
 		              <label class="col-md-3 control-label" for="submit"></label>
@@ -497,14 +498,14 @@
 		            </div>
 		            <div class="col-md-6">
 		            	<div class="form-group">
-				            <label class="col-md-5 control-label" for="twelfth">Bank<span class="red font-bold"> *</span></label>  
+				            <label class="col-md-5 control-label" for="twelfth">Recommended By<span class="red font-bold"> *</span></label>  
 				            <div class="col-md-7">
 				          		{{ Form::select('recommendedBy', $recommendedBy, Input::old('recommendedBy'), array('class' => 'form-control input-md', 'required' => 'true', 'id' => 'recommended_by')) }}    
 				            </div>
 			          	</div>
 
 			          	<div class="form-group">
-				            <label class="col-md-5 control-label" for="twelfth">Bank<span class="red font-bold"> *</span></label>  
+				            <label class="col-md-5 control-label" for="twelfth">Recommended From<span class="red font-bold"> *</span></label>  
 				            <div class="col-md-7">
 				          		{{ Form::select('recommendedFrom', array('0'=>'--Select recommended from--'), Input::old('recommendedFrom'), array('class' => 'form-control input-md', 'required' => 'true', 'id' => 'recommended_from')) }}    
 				            </div>
