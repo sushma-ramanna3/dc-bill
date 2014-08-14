@@ -53,7 +53,7 @@ $(document).ready(function() {
 	    }
 	});*/
 
-	$('#dob, #age').bind( "mouseenter mouseleave blur click", function(){
+	$('#dob, #age').bind( "mouseleave blur click", function(){
     	var val = $('#dob').val();
     	var url= '/age.php?dob='+val;
         $.getJSON(url, function(data){

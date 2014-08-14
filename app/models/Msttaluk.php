@@ -8,11 +8,11 @@ class Msttaluk extends Eloquent {
 
 	protected $table = 'msttaluk';
 
-	public static function getVillageList($hobli_id = null)
+	public static function getTalukList($district_id = null)
 	{
 
 		$talukList = DB::table('msttaluk') 
-							->where('intHobliID', $hobli_id)
+							->where('intDistrictID', $district_id)
 							->where('flgisActive', 1)
 							->orderBy('txtTalukName', 'ASC')->lists('txtTalukName', 'intTalukID');
 		

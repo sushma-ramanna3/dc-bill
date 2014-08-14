@@ -148,6 +148,15 @@ class UsersController extends BaseController {
 		        'cheque_dd_no'	=> 'required'
 	        );
 		}
+		elseif(Input::get('corps')){
+			$rules = array(
+			 	'area' => 'required',
+		        'survey_no'	=> 'required',
+		        'holding_id' => 'required',
+		        'item_id'	=> 'required',
+		        'irrigation_id' => 'required'
+	        );
+		}
 
 		$validator = Validator::make(Input::all(), $rules);
 		
@@ -180,98 +189,101 @@ class UsersController extends BaseController {
 										'updated_at' => new DateTime 
 										));
 
+				$rsk = DB::table('msthoblirsk')->where('intHobliRSKID', Input::get('hoblirsk_id'))->pluck('txtHobliRSK');
+				$seniorMemberID = strtoupper(substr(md5($beneficiary_id), 0, 6)).$rsk;
+
+				DB::table('trnbeneficiary')
+				            ->where( 'BeneID', $beneficiary_id )
+				            ->update( array('seniorMemberID' => $seniorMemberID) );
+
 				$beneficiary_name = DB::table('trnbeneficiary')->where('BeneID', $beneficiary_id)->pluck('txtbeneficiaryname');
 
-				return Redirect::to('users')->with('beneficiary_id', $beneficiary_id)->with('beneficiary_name', $beneficiary_name)
-				->with('category', Input::get('category'))->with('flag', 1)
+				return Redirect::to('users')->with('beneficiary_id', $beneficiary_id)->with('seniorMemberID', $seniorMemberID)
+				->with('category', Input::get('category'))->with('flag', 1)->with('beneficiary_name', $beneficiary_name)
 				->with('success', 'Beneficiary data saved successfully.');
 			}
-			elseif (Input::get('beneficiary_id') && Input::get('crop_id')) {
-				DB::table('trnbeneficiaryproddetails')->insert(array(
-					'intbeneID' => Input::get('beneficiary_id'),
-					'intProdID' => Input::get('product_id'),
-					'intManufacturerID' =>Input::get('manufacturer_id'),
-					'intModelID' => Input::get('model_id'),
-					'intSpecID' => Input::get('spec_id'),
-					'decFullRate' => Input::get('fullRate'),
-					'decGovtShare' => Input::get('govtShare'),
-					'decFarmerShare' => Input::get('farmerShare'),
-					'intQty' => Input::get('quantitiy'),
-					'intUnitofMeasure' => Input::get('UOM'),
-					'flgisActive' => 1,
-					'created_at' => new DateTime, 
-					'updated_at' => new DateTime 
-					));
-				return Redirect::to('users')->with('beneficiary_id', Input::get('beneficiary_id'))->with('flag3', 1)
-				->with('category', Input::get('category'))
-				->with('beneficiary_name', Input::get('beneficiary_name'))->with('success', 'Product data saved successfully.');
-			}
-			elseif (Input::get('beneficiary_id') && Input::get('product_id')) {
-				DB::table('trnbeneficiaryproddetails')->insert(array(
-					'intbeneID' => Input::get('beneficiary_id'),
-					'intProdID' => Input::get('product_id'),
-					'intManufacturerID' =>Input::get('manufacturer_id'),
-					'intModelID' => Input::get('model_id'),
-					'intSpecID' => Input::get('spec_id'),
-					'decFullRate' => Input::get('fullRate'),
-					'decGovtShare' => Input::get('govtShare'),
-					'decFarmerShare' => Input::get('farmerShare'),
-					'intQty' => Input::get('quantitiy'),
-					'intUnitofMeasure' => Input::get('UOM'),
-					'flgisActive' => 1,
-					'created_at' => new DateTime, 
-					'updated_at' => new DateTime 
-					));
-				return Redirect::to('users')->with('beneficiary_id', Input::get('beneficiary_id'))->with('flag1', 1)
-				->with('beneficiary_name', Input::get('beneficiary_name'))->with('success', 'Product data saved successfully.');
-			}
-			elseif (Input::get('beneficiary_id') && Input::hasFile('photo')) {
+			else{
+				if (Input::get('beneficiary_id') && Input::get('area')) {
+					$input = Input::all();
+					DB::table('trnbeneficiarycropdetails')->insert(array(
+						'intbeneID' => Input::get('beneficiary_id'),
+						'area' => Input::get('area'),
+						'survey_no' => trim( Input::get('survey_no') ),
+						'holding_id' => implode(',', $input['holding_id']),
+						'irrigation_id' => implode(',', $input['irrigation_id'] ),
+						'item_id' => implode(',', $input['item_id'] ),
+						'flgisActive' => 1,
+						'created_at' => new DateTime, 
+						'updated_at' => new DateTime 
+						));
+					return Redirect::to('users')->with('beneficiary_id', Input::get('beneficiary_id'))->with('flag3', 1)
+					->with('category', Input::get('category'))->with('seniorMemberID',Input::get('seniorMemberID'))
+					->with('beneficiary_name', Input::get('beneficiary_name'))->with('success', 'Crop details saved successfully.');
+				}
+				elseif (Input::get('beneficiary_id') && Input::get('product_id')) {
+					DB::table('trnbeneficiaryproddetails')->insert(array(
+						'intbeneID' => Input::get('beneficiary_id'),
+						'intProdID' => Input::get('product_id'),
+						'intManufacturerID' =>Input::get('manufacturer_id'),
+						'intModelID' => Input::get('model_id'),
+						'intSpecID' => Input::get('spec_id'),
+						'decFullRate' => Input::get('fullRate'),
+						'decGovtShare' => Input::get('govtShare'),
+						'decFarmerShare' => Input::get('farmerShare'),
+						'intQty' => Input::get('quantitiy'),
+						'intUnitofMeasure' => Input::get('UOM'),
+						'flgisActive' => 1,
+						'created_at' => new DateTime, 
+						'updated_at' => new DateTime 
+						));
+					return Redirect::to('users')->with('beneficiary_id', Input::get('beneficiary_id'))->with('flag1', 1)->with('seniorMemberID',Input::get('seniorMemberID'))
+					->with('beneficiary_name', Input::get('beneficiary_name'))->with('success', 'Product data saved successfully.');
+				}
+				elseif (Input::get('beneficiary_id') && Input::hasFile('photo')) {
 
-				if(Input::hasFile('id_proof')) { 
+					if(Input::hasFile('rtc')) { 
+						$this->insertDocuments( Input::get('beneficiary_id'), 'rtc', Input::file('rtc') );
+					}
+					if(Input::hasFile('bank_passbook_copy')) { 
+						$this->insertDocuments( Input::get('beneficiary_id'), 'bank_passbook', Input::file('bank_passbook_copy') );
+					}
+					if(Input::hasFile('cash_certifcate')) { 
+						$this->insertDocuments( Input::get('beneficiary_id'), 'cash_certifcate', Input::file('cash_certifcate') );
+					}
+					$this->insertDocuments( Input::get('beneficiary_id'), 'photo', Input::file('photo') );
 
-					Input::file('id_proof')->move( app_path().'/views/proof/', Input::get('beneficiary_id').'_'.time().'_'.Input::file('id_proof')->getClientOriginalName());
-					$proof_path = app_path().'/views/proof/'.Input::get('beneficiary_id').'_'.time().'_'.Input::file('id_proof')->getClientOriginalName();
-					$proof_path = isset($proof_path) ? $proof_path : '' ;
+					/*Input::file('photo')->move( app_path().'/views/documents/photos/', Input::get('beneficiary_id').'_'.time().'_'.Input::file('photo')->getClientOriginalName());	
+					$photo_path = app_path().'/views/documents/photos/'.Input::get('beneficiary_id').'_'.time().'_'.Input::file('photo')->getClientOriginalName();
+					$photo_path = isset($photo_path) ? $photo_path : '' ;
 
 					DB::table('trnbeneficiarydocuments')->insert(array(
-					'intbeneID' => Input::get('beneficiary_id'),
-					'intDocType' => 2, //if the doc is id proof
-					'flgDocUploaded' => 1,
-					'txtDocPath' => $proof_path,
-					'flgisActive' => 1,
-					'created_at' => new DateTime, 
-					'updated_at' => new DateTime 
-					));
+						'intbeneID' => Input::get('beneficiary_id'),
+						'intDocType' => 1, //if the doc is photo
+						'flgDocUploaded' => 1,
+						'txtDocPath' => $photo_path,
+						'flgisActive' => 1,
+						'created_at' => new DateTime, 
+						'updated_at' => new DateTime 
+						));*/
+
+					return Redirect::to('users')->with('beneficiary_id', Input::get('beneficiary_id'))->with('flag2', 1)->with('seniorMemberID',Input::get('seniorMemberID'))
+					->with('beneficiary_name', Input::get('beneficiary_name'))->with('success', 'Document uploaded successfully.');
 				}
-
-				Input::file('photo')->move( app_path().'/views/photos/', Input::get('beneficiary_id').'_'.time().'_'.Input::file('photo')->getClientOriginalName());	
-				$photo_path = app_path().'/views/photos/'.Input::get('beneficiary_id').'_'.time().'_'.Input::file('photo')->getClientOriginalName();
-				$photo_path = isset($photo_path) ? $photo_path : '' ;
-
-				DB::table('trnbeneficiarydocuments')->insert(array(
-					'intbeneID' => Input::get('beneficiary_id'),
-					'intDocType' => 1, //if the doc is photo
-					'flgDocUploaded' => 1,
-					'txtDocPath' => $photo_path,
-					'flgisActive' => 1,
-					'created_at' => new DateTime, 
-					'updated_at' => new DateTime 
-					));
-				
-				return Redirect::to('users')->with('beneficiary_id', Input::get('beneficiary_id'))->with('flag2', 1)
-				->with('beneficiary_name', Input::get('beneficiary_name'))->with('success', 'Document uploaded successfully.');
-			}
-			elseif (Input::get('beneficiary_id') && Input::get('payment_type')) {
-								
-				DB::table('trnbeneficiary')
-				            ->where('BeneID', trim(Input::get('beneficiary_id')))
-				            ->update(array('intbeneModeofPayment' => Input::get('payment_type'),
-				            	'txtbeneDDChequeNo' => Input::get('cheque_dd_no'),
-				            	'flgbeneisAmountRemitted' => Input::get('amount_remitted'),
-				            	'intbeneAmtReceived' => Input::get('amount_recieved'),
-				            	'paymentDate' => Input::get('paymentDate')
-				            ));
-				return Redirect::to('users')->with('success', 'Payment data saved successfully.');
+				elseif (Input::get('beneficiary_id') && Input::get('payment_type')) {
+									
+					DB::table('trnbeneficiary')
+					            ->where('BeneID', trim(Input::get('beneficiary_id')))
+					            ->update(array('intbeneModeofPayment' => Input::get('payment_type'),
+					            	'txtbeneDDChequeNo' => Input::get('cheque_dd_no'),
+					            	'flgbeneisAmountRemitted' => Input::get('amount_remitted'),
+					            	'intbeneAmtReceived' => Input::get('amount_recieved'),
+					            	'paymentDate' => Input::get('paymentDate')
+					            ));
+					return Redirect::to('users')->with('success', 'Payment data saved successfully.');
+				}
+				/*DB::table('trnbeneficiary')
+				            ->where( 'BeneID', $beneficiary_id )
+				            ->update( array('seniorMemberID' => Input::get('seniorMemberID')) );*/
 			}
 		
 		}
@@ -280,6 +292,24 @@ class UsersController extends BaseController {
 			->withInput()
 			->withErrors($validator);
 		
+	}
+
+	public function insertDocuments($beneficiary_id, $path, $inputFile) {
+
+		Input::file('rtc')->move( app_path().'/views/documents/'.$path.'/', $beneficiary_id.'_'.time().'_'.$inputFile->getClientOriginalName());
+		$doc_path = app_path().'/views/documents/'.$path.'/'.$beneficiary_id.'_'.time().'_'.$inputFile->getClientOriginalName();
+		$doc_path = isset($doc_path) ? $doc_path : '' ;
+
+		DB::table('trnbeneficiarydocuments')->insert(array(
+			'intbeneID' => Input::get('beneficiary_id'),
+			'intDocType' => 2, //if the doc is id proof
+			'flgDocUploaded' => 1,
+			'txtDocPath' => $doc_path,
+			'flgisActive' => 1,
+			'created_at' => new DateTime, 
+			'updated_at' => new DateTime 
+		));
+
 	}
 
 	public function age($dob = null, $flag = null){
@@ -487,17 +517,17 @@ class UsersController extends BaseController {
 			}
 			elseif (Input::get('beneficiary_id') && Input::hasFile('photo')) {
 
-				if(Input::hasFile('id_proof')) { 
+				if(Input::hasFile('rtc')) { 
 
-					Input::file('id_proof')->move( app_path().'/views/proof/', $id.'_'.time().'_'.Input::file('id_proof')->getClientOriginalName());
-					$proof_path = app_path().'/views/proof/'.$id.'_'.time().'_'.Input::file('id_proof')->getClientOriginalName();
-					$proof_path = isset($proof_path) ? $proof_path : '' ;
+					Input::file('rtc')->move( app_path().'/views/rtc/', $id.'_'.time().'_'.Input::file('rtc')->getClientOriginalName());
+					$rtc_path = app_path().'/views/rtc/'.$id.'_'.time().'_'.Input::file('rtc')->getClientOriginalName();
+					$rtc_path = isset($rtc_path) ? $rtc_path : '' ;
 
 					DB::table('trnbeneficiarydocuments')->insert(array(
 					'intbeneID' => $id,
 					'intDocType' => 2, //if the doc is id proof
 					'flgDocUploaded' => 1,
-					'txtDocPath' => $proof_path,
+					'txtDocPath' => $rtc_path,
 					'flgisActive' => 1,
 					'created_at' => new DateTime, 
 					'updated_at' => new DateTime 

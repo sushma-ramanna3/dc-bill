@@ -2,25 +2,31 @@
 @section('content')
  
   	<h3>Dashboard</h3>
-  	<?php
-  		$active1 = $active2 = $active3 = $active4 = '';
-	  	if(Session::get('beneficiary_id') && Session::get('category') ){
-	  		$active1 = $active3 = $active4 = '';
+  		<?php
+  		$active1 = $active2 = $active3 = $active4 = $active5 = $id = '';
+  		if(Session::get('beneficiary_id')){
+  			$id = 1;
+  		}
+	  	if(Session::get('beneficiary_id') && Session::get('flag3')){
+	  		$active1 = $active3 = $active4 = $active5 = '';
 	  		$active2 = 'active'; 
 	  	}
+	  	elseif(Session::get('beneficiary_id') && Session::get('flag')){
+	  		$active1 = $active3 = $active4 = $active2 = '';
+	  		$active5 = 'active'; 
+	  	}
 	  	elseif(Session::get('beneficiary_id') && Session::get('flag1') ){
-	  		$active1 = $active2 = $active4 = '';
+	  		$active1 = $active2 = $active4 = $active5 = '';
 	  		$active3 = 'active';
 	  	}
 	  	elseif(Session::get('beneficiary_id') && Session::get('flag2') ){
-	  		$active1 = $active3 = $active2 = '';
+	  		$active1 = $active3 = $active2 = $active5 = '';
 	  		$active4 = 'active';
 	  	}
 	  	else{
 	  		$active1 = 'active';
-	  		$active2 = $active3 = $active4 = '';
+	  		$active2 = $active3 = $active4 = $active5 = '';
 	  	}
-	  	
   	?>
   	<ul id="tabs" class="nav nav-tabs bold" data-tabs="tabs">
   		@if(Auth::check() && Auth::user()->usertype == 'admin')
@@ -28,6 +34,7 @@
   			<li><a href="{{ URL::to('franchise') }}">Products list</a></li>
   		@else
   		 	<li class="<?php echo $active1;?> tab"><a href="#users" data-toggle="tab">User Registration</a></li>
+  		 	<li class="<?php echo $active5;?> tab"><a href="#corps" data-toggle="tab">Corps</a></li>
 		    <li class="<?php echo $active2;?> tab"><a href="#product" data-toggle="tab">Product Purchase</a></li>
 		    <li class="<?php echo $active3;?> tab"><a href="#documents" data-toggle="tab">Upload Documents</a></li>
 		    <li class="<?php echo $active4;?> tab"><a href="#payment" data-toggle="tab">Payment Details</a></li>
@@ -165,6 +172,73 @@
 	      		</fieldset>
 	          {{ Form::close() }}
 	    </div>
+
+
+	    <div id="corps" class="tab-pane <?php echo $active5; ?>">   
+         	<form class="form-horizontal col-md-12" action="/registration" method="post">
+         		<fieldset id="fieldsetappend">
+         		  <input name="corps" class="none" type="hidden" value="1" />
+         	 		<div class="form-group">
+		              	<div class="col-md-5">
+		                	{{ 'Fields marked as <span class="red font-bold"> *</span> are mandatory' }}
+		              	</div>
+		              	<div class="col-md-12">
+			              	<?php if($id){ ?>
+								<input name="beneficiary_id" class="none" type="hidden" value="<?php echo Session::get('beneficiary_id'); ?>" />
+								<input name="seniorMemberID" class="none" type="hidden" value="<?php echo Session::get('seniorMemberID'); ?>" />
+		  						<b>Beneficiary Member ID:</b> <?php echo Session::get('seniorMemberID'); ?> <b>Beneficiary Name:</b> <?php echo Session::get('beneficiary_name'); ?><br>
+			              	<?php } ?>
+			              	@if($active2)
+			              		<input name="category" id="category" class="none" type="hidden" value="<?php echo Session::get('category_id'); ?>" />
+		              		@endif
+		              	</div>
+		            </div>
+		
+		            <div class="col-md-6">
+			          	<div class="form-group">
+				            <label class="col-md-5 control-label" for="">Area<span class="red font-bold"> *</span></label>  
+				            <div class="col-md-7">
+		              			{{ Form::text('area', Input::old('area'), array('class'=>'form-control input-md', 'required' => 'true')) }}
+		              		</div>
+	              		</div>
+              		  	<div class="form-group">
+				            <label class="col-md-5 control-label" for="">Survey No<span class="red font-bold"> *</span></label>  
+				            <div class="col-md-7">
+				              	{{ Form::text('survey_no', Input::old('survey_no'), array('class'=>'form-control input-md', 'required' => 'true')) }}  
+              				</div>
+		            	</div>
+
+			            <div class="form-group">
+			              <label class="col-md-5 control-label" for="first_name">Holdings<span class="red font-bold"> *</span> </label>  
+			              <div class="col-md-7">
+			              {{ Form::select('holding_id[]', $holdings, Input::old('holding_id'), array('class'=>'form-control input-md', 'required' => 'true', 'multiple' => 'true')) }}
+			              </div>
+			            </div>
+
+			            <div class="form-group">
+			              <label class="col-md-5 control-label" for="last_name">Items<span class="red font-bold"> *</span></label>  
+			              <div class="col-md-7">
+			              {{ Form::select('item_id[]', $items, Input::old('item_id'), array('class'=>'form-control input-md', 'required' => 'true', 'multiple' => 'true')) }}  
+			              </div>
+			            </div>
+
+			            <div class="form-group">
+			              <label class="col-md-5 control-label" for="last_name">Irrigation Source<span class="red font-bold"> *</span></label>  
+			              <div class="col-md-7">
+			              {{ Form::select('irrigation_id[]', $irrigationSources, Input::old('irrigation_id'), array('class'=>'form-control input-md', 'required' => 'true', 'multiple' => 'true')) }}  
+			              </div>
+			            </div>
+
+		                <div class="form-group">
+			                <label class="col-md-5 control-label" for="submit"></label>
+			                <div class="col-md-7">
+			                	<button id="submit" name="submit" class="btn btn-lg btn-success btn-block">Save & Continue</button>
+			              		</div>
+	            			</div>
+            			</div>
+	      		</fieldset>
+	        </form>
+        </div>
 
 	    <div id="product" class="tab-pane <?php echo $active2; ?>">   
          	 {{ Form::model($product, array('route' => array('users.update', $id), 'method' => 'PUT', 'class' => 'form-horizontal col-md-12' )) }}

@@ -27,7 +27,6 @@
 	  		$active1 = 'active';
 	  		$active2 = $active3 = $active4 = $active5 = '';
 	  	}
-	  	
   	?>
   	<ul id="tabs" class="nav nav-tabs bold" data-tabs="tabs">
   		@if(Auth::check() && Auth::user()->usertype == 'admin')
@@ -221,6 +220,7 @@
 	    <div id="corps" class="tab-pane <?php echo $active5; ?>">   
          	<form class="form-horizontal col-md-12" action="/registration" method="post">
          		<fieldset id="fieldsetappend">
+         		  <input name="corps" class="none" type="hidden" value="1" />
          	 		<div class="form-group">
 		              	<div class="col-md-5">
 		                	{{ 'Fields marked as <span class="red font-bold"> *</span> are mandatory' }}
@@ -228,7 +228,8 @@
 		              	<div class="col-md-12">
 			              	<?php if($id){ ?>
 								<input name="beneficiary_id" class="none" type="hidden" value="<?php echo Session::get('beneficiary_id'); ?>" />
-		  						<b>Beneficiary ID:</b> <?php echo Session::get('beneficiary_id'); ?> <b>Beneficiary Name:</b> <?php echo Session::get('beneficiary_name'); ?><br>
+								<input name="seniorMemberID" class="none" type="hidden" value="<?php echo Session::get('seniorMemberID'); ?>" />
+		  						<b>Beneficiary Member ID:</b> <?php echo Session::get('seniorMemberID'); ?> <b>Beneficiary Name:</b> <?php echo Session::get('beneficiary_name'); ?><br>
 			              	<?php } ?>
 			              	@if($active2)
 			              		<input name="category" id="category" class="none" type="hidden" value="<?php echo Session::get('category_id'); ?>" />
@@ -253,21 +254,21 @@
 			            <div class="form-group">
 			              <label class="col-md-5 control-label" for="first_name">Holdings<span class="red font-bold"> *</span> </label>  
 			              <div class="col-md-7">
-			              {{ Form::select('holding_id', $holdings, Input::old('holding_id'), array('class'=>'form-control input-md', 'required' => 'true', 'multiple' => 'true')) }}
+			              {{ Form::select('holding_id[]', $holdings, Input::old('holding_id'), array('class'=>'form-control input-md', 'required' => 'true', 'multiple' => 'true')) }}
 			              </div>
 			            </div>
 
 			            <div class="form-group">
 			              <label class="col-md-5 control-label" for="last_name">Items<span class="red font-bold"> *</span></label>  
 			              <div class="col-md-7">
-			              {{ Form::select('item_id', $items, Input::old('item_id'), array('class'=>'form-control input-md', 'required' => 'true', 'multiple' => 'true')) }}  
+			              {{ Form::select('item_id[]', $items, Input::old('item_id'), array('class'=>'form-control input-md', 'required' => 'true', 'multiple' => 'true')) }}  
 			              </div>
 			            </div>
 
 			            <div class="form-group">
 			              <label class="col-md-5 control-label" for="last_name">Irrigation Source<span class="red font-bold"> *</span></label>  
 			              <div class="col-md-7">
-			              {{ Form::select('irrigation_id', $irrigationSources, Input::old('irrigation_id'), array('class'=>'form-control input-md', 'required' => 'true', 'multiple' => 'true')) }}  
+			              {{ Form::select('irrigation_id[]', $irrigationSources, Input::old('irrigation_id'), array('class'=>'form-control input-md', 'required' => 'true', 'multiple' => 'true')) }}  
 			              </div>
 			            </div>
 
@@ -293,7 +294,8 @@
 		              	<div class="col-md-12">
 			              	<?php if($id){ ?>
 								<input name="beneficiary_id" class="none" type="hidden" value="<?php echo Session::get('beneficiary_id'); ?>" />
-		  						<b>Beneficiary ID:</b> <?php echo Session::get('beneficiary_id'); ?> <b>Beneficiary Name:</b> <?php echo Session::get('beneficiary_name'); ?><br>
+								<input name="seniorMemberID" class="none" type="hidden" value="<?php echo Session::get('seniorMemberID'); ?>" />
+		  						<b>Beneficiary Member ID:</b> <?php echo Session::get('seniorMemberID'); ?>  <b>Beneficiary Name:</b> <?php echo Session::get('beneficiary_name'); ?><br>
 			              	<?php } ?>
 			              	@if($active2)
 			              		<!-- <input name="beneficiary_name" class="none" type="hidden" value="<?php //echo Session::get('beneficiary_name'); ?>" /> -->
@@ -392,7 +394,8 @@
 		            <div class="col-md-12">
 		              	<?php if($id){ ?>
 								<input name="beneficiary_id" class="none" type="hidden" value="<?php echo Session::get('beneficiary_id'); ?>" />
-		  						<b>Beneficiary ID:</b> <?php echo Session::get('beneficiary_id'); ?> <b>Beneficiary Name:</b> <?php echo Session::get('beneficiary_name'); ?><br>
+								<input name="seniorMemberID" class="none" type="hidden" value="<?php echo Session::get('seniorMemberID'); ?>" />
+		  						<b>Beneficiary Member ID:</b> <?php echo Session::get('seniorMemberID'); ?>  <b>Beneficiary Name:</b> <?php echo Session::get('beneficiary_name'); ?><br>
 			            <?php } ?>
 				 	</div>
 		            <div class="col-md-6">
@@ -403,21 +406,21 @@
 				            </div>
 			          	</div>
 			          	<div class="form-group">
-				            <label class="col-md-4 control-label" for="id_proof">RTC</label>
+				            <label class="col-md-4 control-label" for="rtc">RTC</label>
 				            <div class="col-md-6">
 				              {{ Form::file('rtc', array('class'=>'form-control input-md', 'required' => 'true')) }}
 				            </div>
 			          	</div>
 
 			          	<div class="form-group">
-				            <label class="col-md-4 control-label" for="id_proof" required="true">Bank Passbook Copy</label>
+				            <label class="col-md-4 control-label" for="bank_passbook_copy" required="true">Bank Passbook Copy</label>
 				            <div class="col-md-6">
 				              {{ Form::file('bank_passbook_copy', array('class'=>'form-control input-md', 'required' => 'true')) }}
 				            </div>
 			          	</div>
 
 			          	<div class="form-group">
-				            <label class="col-md-4 control-label" for="id_proof" required="true">Cash Certifcate</label>
+				            <label class="col-md-4 control-label" for="cash_certifcate" required="true">Cash Certifcate</label>
 				            <div class="col-md-6">
 				              {{ Form::file('cash_certifcate', array('class'=>'form-control input-md', 'required' => 'true')) }}
 				            </div>
@@ -446,7 +449,7 @@
 		            <div class="col-md-12">
 			          	<?php if($id){ ?>
 								<input name="beneficiary_id" class="none" type="hidden" value="<?php echo Session::get('beneficiary_id'); ?>" />
-		  						<b>Beneficiary ID:</b> <?php echo Session::get('beneficiary_id'); ?> <b>Beneficiary Name:</b> <?php echo Session::get('beneficiary_name'); ?><br>
+		  						<b>Beneficiary Member ID:</b> <?php echo Session::get('seniorMemberID'); ?> <b>Beneficiary Name:</b> <?php echo Session::get('beneficiary_name'); ?><br>
 			            <?php } ?>
 	              	</div>
 					
@@ -467,7 +470,7 @@
 		            	<div class="form-group">
 				            <label class="col-md-5 control-label" for="">Account No<span class="red font-bold"> *</span></label>  
 				            <div class="col-md-7">
-				              	{{ Form::text('account_number', Input::old('account_number'), array('class'=>'form-control input-md','placeholder'=>'', 'required' => 'true')) }}  
+				              	{{ Form::text('account_number', Input::old('account_number'), array('class'=>'form-control input-md integer_field','placeholder'=>'', 'required' => 'true')) }}  
               				</div>
 		            	</div>
 
