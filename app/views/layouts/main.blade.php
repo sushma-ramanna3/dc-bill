@@ -43,8 +43,8 @@
         @endif
       </div>
     </div>
-    <br><br><br>
-    <div class="container">
+   
+    <div class="container container_mid">
       @if(Session::get('flash_message'))
         <div class="alert alert-success ">
           {{ Session::get('flash_message') }}

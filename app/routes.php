@@ -49,8 +49,6 @@ Route::get('/rateShare.php/{spec_id?}/{model_id?}/{manufacturer_id?}/{product_id
 
 Route::get('/age.php/{dob?}', 'UsersController@age');
 
-//
-
 Route::resource('users', 'UsersController');
 
 Route::get('/users-list', 'BeneficiaryController@usersList');
@@ -66,9 +64,7 @@ Route::get('/dcnumber-check', 'BeneficiaryController@dcNumberCheck');
 
 //END
 
-/*Route::get('/orders/{id?}', 'UsersController@orders');
-
-Route::post('/orders', 'UsersController@orders');*/
+Route::get('/beneficiary/{id?}', 'BeneficiaryController@beneficiaryInfo');
 
 Route::post('/registration', 'UsersController@registration');
 

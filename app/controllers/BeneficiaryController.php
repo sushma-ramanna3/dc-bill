@@ -43,10 +43,10 @@ class BeneficiaryController extends BaseController {
           	$users->where('trnbeneficiary.txtbeneficiaryname', 'LIKE', '%'.Input::get('beneficiary_name').'%');
 		}
           
-       /*if(Input::has('from_date') && Input::has('to_date')) {
+        if(Input::has('from_date') && Input::has('to_date')) {
         	$date_range = 'From '.Input::get('from_date').' To '.Input::get('to_date');
-			$users->whereBetween('jos_users.createDate', array(strtotime(Input::get('from_date')), strtotime(Input::get('to_date')) ));
-        }*/
+			$users->whereBetween('trnbeneficiary.created_at', array(strtotime(Input::get('from_date')), strtotime(Input::get('to_date')) ));
+        }
 
         if (Input::get('submit') == 'download')
         {
@@ -58,7 +58,9 @@ class BeneficiaryController extends BaseController {
 					//	dd(count($users));
 		$pagination = $users->appends(
 	        array(
-	            'beneficiary_name' => Input::get('beneficiary_name')
+	            'beneficiary_name' => Input::get('beneficiary_name'),
+	            'from_date' => Input::get('from_date'),
+	            'to_date' => Input::get('to_date')
 	        ))->links();
 
 		$users = array('users' => $users, 'pagination' => $pagination);
@@ -113,7 +115,26 @@ class BeneficiaryController extends BaseController {
 		exit;
 	}
 
-	//Creation of  franchise products by admin
+
+	public function beneficiaryInfo(){
+		$user = DB::table('trnbeneficiary')
+					->leftJoin('msttaluk', 'trnbeneficiary.intbeneTaluk', '=', 'msttaluk.intTalukID')
+					->leftJoin('mstdistrict', 'trnbeneficiary.intbeneDistrict', '=', 'mstdistrict.intDistrictID')
+					->leftJoin('msthoblirsk', 'trnbeneficiary.intbeneRSK', '=', 'msthoblirsk.intHobliRSKID')
+					->leftJoin('mstvillage', 'trnbeneficiary.intbeneVillage', '=', 'mstvillage.intVillageID')
+					->leftJoin('trnbeneficiaryproddetails', 'trnbeneficiary.BeneID', '=', 'trnbeneficiaryproddetails.intbeneID')
+					->leftJoin('mstproductname', 'mstproductname.intProdID', '=', 'trnbeneficiaryproddetails.intProdID')
+					->leftJoin('trnbeneficiarydocuments', 'trnbeneficiary.BeneID', '=', 'trnbeneficiarydocuments.intbeneID')
+					->select('msttaluk.txtTalukName', 'mstdistrict.txtDistrictName', 'mstvillage.txtVillageName', 'msthoblirsk.txtHobliRSK', 'trnbeneficiary.BeneID', 
+						'trnbeneficiary.txtbeneficiaryname', 'trnbeneficiary.txtbeneAddress',
+						'trnbeneficiary.txtbeneContactNo', 'trnbeneficiary.intbeneAmtReceived', 'trnbeneficiary.intbeneCategory','trnbeneficiary.created_at',
+						'mstproductname.txtProdName', 'trnbeneficiaryproddetails.decFullRate', 'trnbeneficiarydocuments.txtDocPath')
+					->where('trnbeneficiary.BeneID', Input::get('id'))
+					->where('trnbeneficiarydocuments.intDocType', 1)
+					->get();
+
+		return View::make('beneficiary.index')->with('user', $user);
+	}
 
 	public function products()
 	{

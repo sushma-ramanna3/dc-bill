@@ -5,7 +5,7 @@
 	margin-left: 0px;
 }
 .dp{
-	width: 295px;
+	width: 278px;
 }
 .pro_info .control-label{
 	text-align: left;
@@ -23,6 +23,12 @@
 #coupon_submit, #franchise_coupon_submit{
 	font-size: 14px;
 	padding: 6px 12px;
+}
+.pagination{
+	margin-top: 0px;
+}
+.container_mid{
+	margin-top: 40px;
 }
 /*#submit_userform{
 	margin-top: 115px;

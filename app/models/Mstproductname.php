@@ -44,9 +44,9 @@ class Mstproductname extends Eloquent {
 		return $recommendedbyList;
 	}
 
-	public static function getrecommendedFromList($recommended_by)
+	public static function getrecommendedFromList($recommended_by = null)
 	{
-		$recommendedfromList = array('' => '--Select recommended from--') + DB::table('mstrecommendedfrom')
+		$recommendedfromList = DB::table('mstrecommendedfrom')
 							->where('flgisActive', 1)
 							->where('recommendedBy', $recommended_by)
 							->orderBy('recommendedFrom', 'ASC')->lists('recommendedFrom', 'id');

@@ -21,10 +21,10 @@
             </div>
           @endif  -->
           
-          <!-- <div class="form-group col-md-3 dp">
+          <div class="form-group col-md-3 dp">
             <label>From Date</label>
             <div class="input-append date pull-right" id="dp2" data-date="" data-date-format="dd-mm-yyyy">
-              <input name="from_date" class="span2" size="16" type="text" value="<?php //echo Input::get('from_date'); ?>" readonly />
+              <input name="from_date" class="span2" size="16" type="text" value="<?php echo Input::get('from_date'); ?>" readonly />
               <label class="add-on"><i class="icon-calendar"></i></label>
             </div>
           </div>
@@ -32,13 +32,13 @@
           <div class="form-group col-md-3 dp">
             <label class=" pull-left">To Date</label>
             <div class="input-append date" id="dp1" data-date="" data-date-format="dd-mm-yyyy">
-              <input name="to_date" class="span2" size="16" type="text" value="<?php //echo Input::get('to_date'); ?>" readonly />
+              <input name="to_date" class="span2" size="16" type="text" value="<?php echo Input::get('to_date'); ?>" readonly />
               <label class="add-on"><i class="icon-calendar"></i></label>
             </div>
-          </div>-->
+          </div>
 
-          <div class="col-md-2" style="width:350px;margin-bottom:10px;"><label class=" pull-left">Beneficiary Name</label>
-            {{ Form::text('beneficiary_name', Input::get('beneficiary_name'), array('id'=>'email-filter', 'style' => 'width: 60%;margin-left:5px;')) }}
+          <div class="col-md-2" style="width:347px;margin-bottom:10px;"><label class=" pull-left">Beneficiary Name</label>
+            {{ Form::text('beneficiary_name', Input::get('beneficiary_name'), array('style' => 'width: 60%;margin-left:5px;')) }}
           </div>
           <div class="pull-right">
             <a class="btn btn-danger white" type="reset" href="/users-list">Reset</a>
@@ -65,6 +65,7 @@
             <td>Amount Recieved</td>
             <td>Registered Date</td>
             <td>Photo Link</td>
+            <td>Application</td>
            <!--  @if(Auth::user()->usertype == 'admin')
               <td>Registered By</td> 
             @endif-->
@@ -90,6 +91,7 @@
                 NA
                 @endif
               </td>
+              <td>{{ "<a href=\"/beneficiary?id=". $user->BeneID ."\" target=\"_blank\"><span class=\"glyphicon glyphicon-print\"></span></a>" }}</td>
               <!-- @if(Auth::user()->usertype == 'admin')
                 <td>{{ $user->usertype }}</td>
               @endif -->

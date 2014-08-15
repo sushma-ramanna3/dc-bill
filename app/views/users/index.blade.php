@@ -163,7 +163,7 @@
 				            <label class="col-md-5 control-label" for="age">Age</label>
 				            <div class="col-md-7 radio_sms" style="font-size:12px;padding-right:0;">
 			              		<input name="age" value="" readonly id="age"/>
-			              		<img rel="tooltip" src="/assets/images/con_info.png" title="" />
+			              		
 				            </div> 
 			      		</div>
 		      			<div class="form-group">
@@ -230,57 +230,62 @@
 			              	<?php if($id){ ?>
 								<input name="beneficiary_id" class="none" type="hidden" value="<?php echo Session::get('beneficiary_id'); ?>" />
 								<input name="seniorMemberID" class="none" type="hidden" value="<?php echo Session::get('seniorMemberID'); ?>" />
+								<input name="beneficiary_name" class="none" type="hidden" value="<?php echo Session::get('beneficiary_name'); ?>" />
 		  						<b>Beneficiary Member ID:</b> <?php echo Session::get('seniorMemberID'); ?> <b>Beneficiary Name:</b> <?php echo Session::get('beneficiary_name'); ?><br>
 			              	<?php } ?>
-			              	@if($active2)
 			              		<input name="category" id="category" class="none" type="hidden" value="<?php echo Session::get('category_id'); ?>" />
-		              		@endif
+
 		              	</div>
 		            </div>
 		
 		            <div class="col-md-6">
 			          	<div class="form-group">
-				            <label class="col-md-5 control-label" for="">Area<span class="red font-bold"> *</span></label>  
+				            <label class="col-md-4 control-label" for="">Area<span class="red font-bold"> *</span></label>  
 				            <div class="col-md-7">
 		              			{{ Form::text('area', Input::old('area'), array('class'=>'form-control input-md', 'required' => 'true')) }}
 		              		</div>
 	              		</div>
-              		  	<div class="form-group">
-				            <label class="col-md-5 control-label" for="">Survey No<span class="red font-bold"> *</span></label>  
-				            <div class="col-md-7">
-				              	{{ Form::text('survey_no', Input::old('survey_no'), array('class'=>'form-control input-md', 'required' => 'true')) }}  
-              				</div>
-		            	</div>
-
-			            <div class="form-group">
-			              <label class="col-md-5 control-label" for="first_name">Holdings<span class="red font-bold"> *</span> </label>  
+              		    <div class="form-group">
+			              <label class="col-md-4 control-label" for="first_name">Holdings<span class="red font-bold"> *</span> </label>  
 			              <div class="col-md-7">
-			              {{ Form::select('holding_id[]', $holdings, Input::old('holding_id'), array('class'=>'form-control input-md', 'required' => 'true', 'multiple' => 'true')) }}
+			              	{{ Form::select('holding_id[]', $holdings, Input::old('holding_id'), array('class'=>'form-control input-md', 'required' => 'true', 'multiple' => 'true')) }}
 			              </div>
+			              <img rel="tooltip" src="/assets/images/con_info.png" title="Multiselect: use CTRL-Key and Mouse" />
 			            </div>
-
 			            <div class="form-group">
-			              <label class="col-md-5 control-label" for="last_name">Items<span class="red font-bold"> *</span></label>  
-			              <div class="col-md-7">
-			              {{ Form::select('item_id[]', $items, Input::old('item_id'), array('class'=>'form-control input-md', 'required' => 'true', 'multiple' => 'true')) }}  
-			              </div>
-			            </div>
-
-			            <div class="form-group">
-			              <label class="col-md-5 control-label" for="last_name">Irrigation Source<span class="red font-bold"> *</span></label>  
-			              <div class="col-md-7">
-			              {{ Form::select('irrigation_id[]', $irrigationSources, Input::old('irrigation_id'), array('class'=>'form-control input-md', 'required' => 'true', 'multiple' => 'true')) }}  
-			              </div>
+		              		<label class="col-md-4 control-label" for="last_name">Irrigation Source<span class="red font-bold"> *</span></label>  
+			              	<div class="col-md-7">
+			              		{{ Form::select('irrigation_id[]', $irrigationSources, Input::old('irrigation_id'), array('class'=>'form-control input-md', 'required' => 'true', 'multiple' => 'true')) }}  
+			              	</div>
+			               <img rel="tooltip" src="/assets/images/con_info.png" title="Multiselect: use CTRL-Key and Mouse" />
 			            </div>
 
 		                <div class="form-group">
 			                <label class="col-md-5 control-label" for="submit"></label>
 			                <div class="col-md-7">
 			                	<button id="submit" name="submit" class="btn btn-lg btn-success btn-block">Save & Continue</button>
-			              		</div>
-	            			</div>
-            			</div>
-	      		</fieldset>
+			              	</div>
+	            		</div>
+            		</div>
+            		<div class="col-md-6">
+			          
+              		  	<div class="form-group">
+				            <label class="col-md-4 control-label" for="">Survey No<span class="red font-bold"> *</span></label>  
+				            <div class="col-md-7">
+				              	{{ Form::text('survey_no', Input::old('survey_no'), array('class'=>'form-control input-md', 'required' => 'true')) }}  
+              				</div>
+		            	</div>
+
+			            <div class="form-group">
+			              <label class="col-md-4 control-label" for="last_name">Items<span class="red font-bold"> *</span></label>  
+			              <div class="col-md-7">
+			              {{ Form::select('item_id[]', $items, Input::old('item_id'), array('class'=>'form-control input-md', 'required' => 'true', 'multiple' => 'true')) }}  
+
+			              </div>
+			              <img rel="tooltip" src="/assets/images/con_info.png" title="Multiselect: use CTRL-Key and Mouse" />
+			            </div>
+	            	</div>
+			    </fieldset>
 	        </form>
         </div>
 
@@ -299,7 +304,7 @@
 		  						<b>Beneficiary Member ID:</b> <?php echo Session::get('seniorMemberID'); ?>  <b>Beneficiary Name:</b> <?php echo Session::get('beneficiary_name'); ?><br>
 			              	<?php } ?>
 			              	@if($active2)
-			              		<!-- <input name="beneficiary_name" class="none" type="hidden" value="<?php //echo Session::get('beneficiary_name'); ?>" /> -->
+			              		<input name="beneficiary_name" class="none" type="hidden" value="<?php echo Session::get('beneficiary_name'); ?>" /> 
 			              		<input name="category" id="category" class="none" type="hidden" value="<?php echo Session::get('category_id'); ?>" />
 		              		@endif
 		              	</div>
@@ -396,6 +401,7 @@
 		              	<?php if($id){ ?>
 								<input name="beneficiary_id" class="none" type="hidden" value="<?php echo Session::get('beneficiary_id'); ?>" />
 								<input name="seniorMemberID" class="none" type="hidden" value="<?php echo Session::get('seniorMemberID'); ?>" />
+								<input name="beneficiary_name" class="none" type="hidden" value="<?php echo Session::get('beneficiary_name'); ?>" />
 		  						<b>Beneficiary Member ID:</b> <?php echo Session::get('seniorMemberID'); ?>  <b>Beneficiary Name:</b> <?php echo Session::get('beneficiary_name'); ?><br>
 			            <?php } ?>
 				 	</div>

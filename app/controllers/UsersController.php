@@ -191,7 +191,7 @@ class UsersController extends BaseController {
 										));
 
 				$rsk = DB::table('msthoblirsk')->where('intHobliRSKID', Input::get('hoblirsk_id'))->pluck('txtHobliRSK');
-				$seniorMemberID = strtoupper(substr(md5($beneficiary_id), 0, 6)).$rsk;
+				$seniorMemberID = strtoupper(substr(md5($beneficiary_id), 0, 6).$rsk);
 
 				DB::table('trnbeneficiary')
 				            ->where( 'BeneID', $beneficiary_id )
@@ -243,15 +243,15 @@ class UsersController extends BaseController {
 				elseif (Input::get('beneficiary_id') && Input::hasFile('photo')) {
 
 					if(Input::hasFile('rtc')) { 
-						$this->insertDocuments( Input::get('beneficiary_id'), 'rtc', Input::file('rtc') );
+						$this->insertDocuments( Input::get('beneficiary_id'), 'rtc', Input::file('rtc'), $docType = 2);
 					}
 					if(Input::hasFile('bank_passbook_copy')) { 
-						$this->insertDocuments( Input::get('beneficiary_id'), 'bank_passbook', Input::file('bank_passbook_copy') );
+						$this->insertDocuments( Input::get('beneficiary_id'), 'bank_passbook', Input::file('bank_passbook_copy'), $docType = 3);
 					}
 					if(Input::hasFile('cash_certifcate')) { 
-						$this->insertDocuments( Input::get('beneficiary_id'), 'cash_certifcate', Input::file('cash_certifcate') );
+						$this->insertDocuments( Input::get('beneficiary_id'), 'cash_certifcate', Input::file('cash_certifcate'), $docType = 4 );
 					}
-					$this->insertDocuments( Input::get('beneficiary_id'), 'photo', Input::file('photo') );
+					$this->insertDocuments( Input::get('beneficiary_id'), 'photos', Input::file('photo'), $docType = 1);
 
 					/*Input::file('photo')->move( app_path().'/views/documents/photos/', Input::get('beneficiary_id').'_'.time().'_'.Input::file('photo')->getClientOriginalName());	
 					$photo_path = app_path().'/views/documents/photos/'.Input::get('beneficiary_id').'_'.time().'_'.Input::file('photo')->getClientOriginalName();
@@ -288,8 +288,10 @@ class UsersController extends BaseController {
 				}
 				/*DB::table('trnbeneficiary')
 				            ->where( 'BeneID', $beneficiary_id )
-				            ->update( array('seniorMemberID' => Input::get('seniorMemberID')) );*/
+				            ->update( array('seniorMemberID' => Input::get('seniorMemberID')) );*/;
 			}
+
+			return Redirect::to('users')->with('warning', 'Please provide all required fields');
 		
 		}
 
@@ -299,15 +301,15 @@ class UsersController extends BaseController {
 		
 	}
 
-	public function insertDocuments($beneficiary_id, $path, $inputFile) {
+	public function insertDocuments($beneficiary_id, $path, $inputFile, $docType) {
 
-		Input::file('rtc')->move( app_path().'/views/documents/'.$path.'/', $beneficiary_id.'_'.time().'_'.$inputFile->getClientOriginalName());
+		$inputFile->move( app_path().'/views/documents/'.$path.'/', $beneficiary_id.'_'.time().'_'.$inputFile->getClientOriginalName() );
 		$doc_path = app_path().'/views/documents/'.$path.'/'.$beneficiary_id.'_'.time().'_'.$inputFile->getClientOriginalName();
 		$doc_path = isset($doc_path) ? $doc_path : '' ;
 
 		DB::table('trnbeneficiarydocuments')->insert(array(
 			'intbeneID' => Input::get('beneficiary_id'),
-			'intDocType' => 2, //if the doc is id proof
+			'intDocType' => $docType,
 			'flgDocUploaded' => 1,
 			'txtDocPath' => $doc_path,
 			'flgisActive' => 1,
@@ -375,9 +377,11 @@ class UsersController extends BaseController {
 
         $taluks = Msttaluk::getTalukList($user->intbeneDistrict);
         $hoblis = Msttaluk::getTalukList($user->intbeneTaluk);
+        $villages = Mstvillage::getVillageList($user->intbeneVillage);
+
+        $recommendedFrom = Mstproductname::getrecommendedFromList($user->recommendedBy);
+
         $category = array(''=>'--Select category--', '1'=>'General', '2'=>'SC', '3'=>'ST');
-
-
 
         $intManufacturerIDs = Trnbeneficiaryproddetails::getManufacturerList();
         $intModelIDs = Trnbeneficiaryproddetails::getModelList();
@@ -397,9 +401,13 @@ class UsersController extends BaseController {
     	$documents = Trnbeneficiarydocuments::where('intbeneID' , '=', $id)->first();
     	//dd($documents->txtDocPath);
 
+    	$details = array('applicationFor' => $applicationFor, 'villages' => $villages, 'holdings' => $holdings, 'recommendedFrom' => $recommendedFrom,
+    		'items' => $items, 'irrigationSources' => $irrigationSources, 'bank' => $bank, 'recommendedBy' => $recommendedBy, 'seniorMemberID' => $user->seniorMemberID);
+
 		return View::make('users.edit')->with('user', $user)->with('intProdID', $intProdID)->with('hoblis', $hoblis)->with('first_name', $first_name)->with('product', $product)
 			->with('districts', $districts)->with('uom', $uom)->with('id', $id)->with('taluks', $taluks)->with('category',$category)->with('last_name', $last_name)
-			->with('crop', $crop)->with('intManufacturerIDs', $intManufacturerIDs)->with('intModelIDs', $intModelIDs)->with('intSpecIDs', $intSpecIDs)->with('documents', $documents);
+			->with('crop', $crop)->with('intManufacturerIDs', $intManufacturerIDs)->with('intModelIDs', $intModelIDs)->with('intSpecIDs', $intSpecIDs)->with('documents', $documents)
+			->with('details', $details);
 	}
 
 	/**
@@ -412,7 +420,6 @@ class UsersController extends BaseController {
 	{
 		// validate
 		// read more on validation at http://laravel.com/docs/validation
-
 		if(Input::get('user_register')){
 			$rules = array(
 			        'first_name' => 'required|min:3|max:80', //|alpha
@@ -506,26 +513,27 @@ class UsersController extends BaseController {
 				            	'intbeneAge' => $age,
 				            	'txtbeneSex' => Input::get('txtbeneSex'),
 				            	'intbeneCategory' => Input::get('intbeneCategory'),
-				            	'applicationfor' => Input::get('applicationfor')
+				            	'applicationfor' => Input::get('applicationfor'),
+				            	'seniorMemberID' => Input::get('seniorMemberID')
 				            ));
 
 				$beneficiary_name = DB::table('trnbeneficiary')->where('BeneID', $id)->pluck('txtbeneficiaryname');
 
 				return Redirect::to('users/'.$id.'/edit')->with('beneficiary_id', $id)->with('beneficiary_name', $beneficiary_name)
-				->with('category', Input::get('intbeneCategory'))->with('flag', 1)
+				->with('category', Input::get('intbeneCategory'))->with('flag', 1)->with('seniorMemberID',Input::get('seniorMemberID'))
 				->with('success', 'Beneficiary data updated successfully.');
 			}
 			else{
 				if (Input::get('beneficiary_id') && Input::get('area')) {
 					$input = Input::all();
-					DB::table('trnbeneficiarycropdetails') ->where('BeneID', trim($id))->update(array(
+					DB::table('trnbeneficiarycropdetails') ->where('intbeneID', trim($id))->update(array(
 						'area' => Input::get('area'),
 						'survey_no' => trim( Input::get('survey_no') ),
 						'holding_id' => implode(',', $input['holding_id']),
 						'irrigation_id' => implode(',', $input['irrigation_id'] ),
 						'item_id' => implode(',', $input['item_id'] )
 						));
-					return Redirect::to('users')->with('beneficiary_id', $id)->with('flag3', 1)
+					return Redirect::to('users/'.$id.'/edit')->with('beneficiary_id', $id)->with('flag3', 1)
 					->with('category', Input::get('category'))->with('seniorMemberID',Input::get('seniorMemberID'))
 					->with('beneficiary_name', Input::get('beneficiary_name'))->with('success', 'Crop details updated successfully.');
 				}
@@ -563,15 +571,15 @@ class UsersController extends BaseController {
 				elseif (Input::get('beneficiary_id') && Input::hasFile('photo')) {
 
 					if(Input::hasFile('rtc')) { 
-						$this->insertDocuments( Input::get('beneficiary_id'), 'rtc', Input::file('rtc') );
+						$this->insertDocuments( Input::get('beneficiary_id'), 'rtc', Input::file('rtc'), $docType = 2);
 					}
 					if(Input::hasFile('bank_passbook_copy')) { 
-						$this->insertDocuments( Input::get('beneficiary_id'), 'bank_passbook', Input::file('bank_passbook_copy') );
+						$this->insertDocuments( Input::get('beneficiary_id'), 'bank_passbook', Input::file('bank_passbook_copy'), $docType = 3 );
 					}
 					if(Input::hasFile('cash_certifcate')) { 
-						$this->insertDocuments( Input::get('beneficiary_id'), 'cash_certifcate', Input::file('cash_certifcate') );
+						$this->insertDocuments( Input::get('beneficiary_id'), 'cash_certifcate', Input::file('cash_certifcate'), $docType = 4 );
 					}
-					$this->insertDocuments( Input::get('beneficiary_id'), 'photo', Input::file('photo') );
+					$this->insertDocuments( Input::get('beneficiary_id'), 'photos', Input::file('photo'), $docType = 1 );
 									
 					return Redirect::to('users/'.$id.'/edit')->with('beneficiary_id', $id)->with('flag2', 1)
 					->with('beneficiary_name', Input::get('beneficiary_name'))->with('success', 'Documents uploaded successfully.');
@@ -584,7 +592,7 @@ class UsersController extends BaseController {
 					            ->update(array('intbeneModeofPayment' => Input::get('intbeneModeofPayment'),
 					            	'txtbeneDDChequeNo' => Input::get('txtbeneDDChequeNo'),
 					            	'accountNo' => Input::get('accountNo'),
-					            	'bankID' => Input::get('bank'),
+					            	'bankID' => Input::get('bankID'),
 					            	'recommendedBy' => Input::get('recommendedBy'),
 					            	'recommendedFrom' => Input::get('recommendedFrom'),
 					            	'flgbeneisAmountRemitted' => Input::get('flgbeneisAmountRemitted'),
