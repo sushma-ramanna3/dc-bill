@@ -80,7 +80,7 @@
               <td>{{ $user->txtbeneContactNo }}</td>
               <td>@if($user->intbeneCategory == 1) General
                 @elseif($user->intbeneCategory == 2) SC
-                @else 3
+                @else ST
                 @endif</td>
               <td>{{ $user->txtProdName }}</td>
               <td>{{ $user->intbeneAmtReceived }}</td>

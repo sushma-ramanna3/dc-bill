@@ -120,6 +120,7 @@ return array(
 		'Illuminate\View\ViewServiceProvider',
 		'Illuminate\Workbench\WorkbenchServiceProvider',
 		'Intervention\Image\ImageServiceProvider',
+		'Anouar\Fpdf\FpdfServiceProvider',
 
 	),
 
@@ -187,6 +188,7 @@ return array(
 		'Validator'       => 'Illuminate\Support\Facades\Validator',
 		'View'            => 'Illuminate\Support\Facades\View',
 		'Image' 		  => 'Intervention\Image\Facades\Image',
+		'Fpdf'   		  => 'Anouar\Fpdf\Facades\Fpdf',
 
 	),
 

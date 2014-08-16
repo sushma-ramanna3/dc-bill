@@ -390,19 +390,23 @@ class UsersController extends BaseController {
         $name = explode(' ', $user->txtbeneficiaryname);
         $first_name = $name[0];
         $last_name = '';
-        
+        	
+
         if(sizeof($name) > 1)
         	$last_name = $name[1];
     	
     	$product = Trnbeneficiaryproddetails::where('intbeneID' , '=', $id)->first();
 
     	$crop = Trnbeneficiarycropdetails::where('intbeneID' , '=', $id)->first();
+    	$holding_ids = explode(',', $crop->holding_id);
+    	$irrigation_ids = explode(',', $crop->irrigation_id);
+    	$item_ids = explode(',', $crop->item_id);
 
     	$documents = Trnbeneficiarydocuments::where('intbeneID' , '=', $id)->first();
-    	//dd($documents->txtDocPath);
+    	dd($documents->txtDocPath);
 
-    	$details = array('applicationFor' => $applicationFor, 'villages' => $villages, 'holdings' => $holdings, 'recommendedFrom' => $recommendedFrom,
-    		'items' => $items, 'irrigationSources' => $irrigationSources, 'bank' => $bank, 'recommendedBy' => $recommendedBy, 'seniorMemberID' => $user->seniorMemberID);
+    	$details = array('applicationFor' => $applicationFor, 'villages' => $villages, 'holdings' => $holdings, 'irrigation_ids' => $irrigation_ids, 'recommendedFrom' => $recommendedFrom, 'holding_ids' => $holding_ids,
+    		'items' => $items, 'irrigationSources' => $irrigationSources, 'bank' => $bank, 'recommendedBy' => $recommendedBy, 'item_ids' => $item_ids, 'seniorMemberID' => $user->seniorMemberID);
 
 		return View::make('users.edit')->with('user', $user)->with('intProdID', $intProdID)->with('hoblis', $hoblis)->with('first_name', $first_name)->with('product', $product)
 			->with('districts', $districts)->with('uom', $uom)->with('id', $id)->with('taluks', $taluks)->with('category',$category)->with('last_name', $last_name)

@@ -72,5 +72,25 @@ Route::resource('sessions', 'SessionsController');
 
 Route::get('login-details-mail', 'HomeController@loginDetailsMail');
 
+Route::get('pdf', function(){
+
+        Fpdf::AddPage();
+        Fpdf::SetFont('Arial','B',16);
+        Fpdf::Cell(40,10,'Hello World!');
+        Fpdf::Output();
+        exit;
+
+});
+/*https://gist.github.com/Sentences/3945396*/
+Route::get('images/(:any?)', function($image = null)
+        {
+        	$image = '34_1408115056_Screenshot from 2014-08-05 20:57:52.png';
+            $path = path('storage').'tempimg/' . $image;
+            if (file_exists($path)) {
+                return Response1::inline($path);
+            }
+            return Response1::error(404);
+});
+
 
 

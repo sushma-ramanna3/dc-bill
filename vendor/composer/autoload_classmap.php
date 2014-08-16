@@ -6,6 +6,9 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Anouar\\Fpdf\\Facades\\Fpdf' => $vendorDir . '/anouar/fpdf/src/Anouar/Fpdf/Facades/Fpdf.php',
+    'Anouar\\Fpdf\\Fpdf' => $vendorDir . '/anouar/fpdf/src/Anouar/Fpdf/Fpdf.php',
+    'Anouar\\Fpdf\\FpdfServiceProvider' => $vendorDir . '/anouar/fpdf/src/Anouar/Fpdf/FpdfServiceProvider.php',
     'BaseController' => $baseDir . '/app/controllers/BaseController.php',
     'BeneficiaryController' => $baseDir . '/app/controllers/BeneficiaryController.php',
     'Boris\\Boris' => $vendorDir . '/d11wtq/boris/lib/Boris/Boris.php',
@@ -595,6 +598,7 @@ return array(
     'Mstproductname' => $baseDir . '/app/models/Mstproductname.php',
     'Msttaluk' => $baseDir . '/app/models/Msttaluk.php',
     'Mstunitofmeasure' => $baseDir . '/app/models/Mstunitofmeasure.php',
+    'Mstvillage' => $baseDir . '/app/models/Mstvillage.php',
     'Net_SCP' => $vendorDir . '/phpseclib/phpseclib/phpseclib/Net/SCP.php',
     'Net_SFTP' => $vendorDir . '/phpseclib/phpseclib/phpseclib/Net/SFTP.php',
     'Net_SFTP_Stream' => $vendorDir . '/phpseclib/phpseclib/phpseclib/Net/SFTP/Stream.php',
@@ -1644,6 +1648,7 @@ return array(
     'System_SSH_Agent_Identity' => $vendorDir . '/phpseclib/phpseclib/phpseclib/System/SSH/Agent.php',
     'TestCase' => $baseDir . '/app/tests/TestCase.php',
     'Trnbeneficiary' => $baseDir . '/app/models/Trnbeneficiary.php',
+    'Trnbeneficiarycropdetails' => $baseDir . '/app/models/Trnbeneficiarycropdetails.php',
     'Trnbeneficiarydocuments' => $baseDir . '/app/models/Trnbeneficiarydocuments.php',
     'Trnbeneficiaryproddetails' => $baseDir . '/app/models/Trnbeneficiaryproddetails.php',
     'User' => $baseDir . '/app/models/User.php',

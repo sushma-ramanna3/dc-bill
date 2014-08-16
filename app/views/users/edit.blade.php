@@ -245,13 +245,13 @@
               		    <div class="form-group">
 			              <label class="col-md-5 control-label" for="first_name">Holdings<span class="red font-bold"> *</span> </label>  
 			              <div class="col-md-7">
-			              {{ Form::select('holding_id[]', $details['holdings'], Input::old('holding_id'), array('class'=>'form-control input-md', 'required' => 'true', 'multiple' => 'true')) }}
+			              {{ Form::select('holding_id[]', $details['holdings'], $details['holding_ids'], array('class'=>'form-control input-md', 'required' => 'true', 'multiple' => 'true')) }}
 			              </div>
 			            </div>
 			            <div class="form-group">
 			              <label class="col-md-5 control-label" for="last_name">Irrigation Source<span class="red font-bold"> *</span></label>  
 			              <div class="col-md-7">
-			              {{ Form::select('irrigation_id[]', $details['irrigationSources'], Input::old('irrigation_id'), array('class'=>'form-control input-md', 'required' => 'true', 'multiple' => 'true')) }}  
+			              {{ Form::select('irrigation_id[]', $details['irrigationSources'], $details['irrigation_ids'], array('class'=>'form-control input-md', 'required' => 'true', 'multiple' => 'true')) }}  
 			              </div>
 			            </div>
 
@@ -274,7 +274,7 @@
 			            <div class="form-group">
 			              <label class="col-md-5 control-label" for="last_name">Items<span class="red font-bold"> *</span></label>  
 			              <div class="col-md-7">
-			              {{ Form::select('item_id[]', $details['items'], Input::old('item_id'), array('class'=>'form-control input-md', 'required' => 'true', 'multiple' => 'true')) }}  
+			              {{ Form::select('item_id[]', $details['items'], $details['item_ids'], array('class'=>'form-control input-md', 'required' => 'true', 'multiple' => 'true')) }}  
 			              </div>
 			            </div>
 	            	</div>
@@ -396,7 +396,7 @@
 		  							<b>Beneficiary Member ID:</b> {{$seniorMemberID}} <b>Beneficiary Name:</b> {{$name}}<br><br>
 				        	<?php } ?>
 			        </div>
-		          	
+		          	{{ HTML::image($txtDocPath, 'a picture') }}
 		            <div class="col-md-6">
 
 	              		<div class="form-group">

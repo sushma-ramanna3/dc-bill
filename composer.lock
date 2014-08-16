@@ -4,8 +4,45 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5a95cfa37342494966eefc626e2d643b",
+    "hash": "73eb071e56f4715dabec189dce0ffb61",
     "packages": [
+        {
+            "name": "anouar/fpdf",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:xroot/laravel-fpdf.git",
+                "reference": "master"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/xroot/laravel-fpdf/zipball/81a572c4d8c7971e51bdaadecf76d586c915a077",
+                "reference": "81a572c4d8c7971e51bdaadecf76d586c915a077",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "~4.0",
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Anouar\\Fpdf": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Anouar",
+                    "email": "dtekind@gmail.com"
+                }
+            ],
+            "description": "Fpdf allows to generate PDF files",
+            "time": "2014-07-09 19:20:46"
+        },
         {
             "name": "classpreloader/classpreloader",
             "version": "1.0.2",
@@ -140,22 +177,20 @@
         },
         {
             "name": "intervention/image",
-            "version": "2.0.6",
+            "version": "2.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Intervention/image.git",
-                "reference": "fb679336b3e7af812d058bd250588ffff9608cc3"
+                "reference": "2fb5e286e4210cd55151e8e8d2ce0ac2bd20fec2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Intervention/image/zipball/fb679336b3e7af812d058bd250588ffff9608cc3",
-                "reference": "fb679336b3e7af812d058bd250588ffff9608cc3",
+                "url": "https://api.github.com/repos/Intervention/image/zipball/2fb5e286e4210cd55151e8e8d2ce0ac2bd20fec2",
+                "reference": "2fb5e286e4210cd55151e8e8d2ce0ac2bd20fec2",
                 "shasum": ""
             },
             "require": {
                 "ext-fileinfo": "*",
-                "illuminate/config": "4.*",
-                "illuminate/support": "4.*",
                 "php": ">=5.3.0"
             },
             "require-dev": {
@@ -194,7 +229,7 @@
                 "thumbnail",
                 "watermark"
             ],
-            "time": "2014-07-27 20:53:47"
+            "time": "2014-08-06 18:37:17"
         },
         {
             "name": "ircmaxell/password-compat",
@@ -1706,9 +1741,9 @@
 
     ],
     "minimum-stability": "stable",
-    "stability-flags": [
-
-    ],
+    "stability-flags": {
+        "anouar/fpdf": 20
+    },
     "prefer-stable": false,
     "platform": [
 

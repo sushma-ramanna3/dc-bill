@@ -118,6 +118,7 @@ class BeneficiaryController extends BaseController {
 
 	public function beneficiaryInfo(){
 		$user = DB::table('trnbeneficiary')
+					->leftJoin('trnbeneficiarycropdetails', 'trnbeneficiary.BeneID', '=', 'trnbeneficiarycropdetails.intbeneID')
 					->leftJoin('msttaluk', 'trnbeneficiary.intbeneTaluk', '=', 'msttaluk.intTalukID')
 					->leftJoin('mstdistrict', 'trnbeneficiary.intbeneDistrict', '=', 'mstdistrict.intDistrictID')
 					->leftJoin('msthoblirsk', 'trnbeneficiary.intbeneRSK', '=', 'msthoblirsk.intHobliRSKID')
@@ -125,7 +126,7 @@ class BeneficiaryController extends BaseController {
 					->leftJoin('trnbeneficiaryproddetails', 'trnbeneficiary.BeneID', '=', 'trnbeneficiaryproddetails.intbeneID')
 					->leftJoin('mstproductname', 'mstproductname.intProdID', '=', 'trnbeneficiaryproddetails.intProdID')
 					->leftJoin('trnbeneficiarydocuments', 'trnbeneficiary.BeneID', '=', 'trnbeneficiarydocuments.intbeneID')
-					->select('msttaluk.txtTalukName', 'mstdistrict.txtDistrictName', 'mstvillage.txtVillageName', 'msthoblirsk.txtHobliRSK', 'trnbeneficiary.BeneID', 
+					->select('trnbeneficiarycropdetails.survey_no', 'msttaluk.txtTalukName', 'mstdistrict.txtDistrictName', 'mstvillage.txtVillageName', 'msthoblirsk.txtHobliRSK', 'trnbeneficiary.BeneID', 
 						'trnbeneficiary.txtbeneficiaryname', 'trnbeneficiary.txtbeneAddress',
 						'trnbeneficiary.txtbeneContactNo', 'trnbeneficiary.intbeneAmtReceived', 'trnbeneficiary.intbeneCategory','trnbeneficiary.created_at',
 						'mstproductname.txtProdName', 'trnbeneficiaryproddetails.decFullRate', 'trnbeneficiarydocuments.txtDocPath')
