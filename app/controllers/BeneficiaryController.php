@@ -33,10 +33,10 @@ class BeneficiaryController extends BaseController {
 		$users = DB::table('trnbeneficiary')
 					->leftJoin('trnbeneficiaryproddetails', 'trnbeneficiary.BeneID', '=', 'trnbeneficiaryproddetails.intbeneID')
 					->leftJoin('mstproductname', 'mstproductname.intProdID', '=', 'trnbeneficiaryproddetails.intProdID')
-					->leftJoin('trnbeneficiarydocuments', 'trnbeneficiary.BeneID', '=', 'trnbeneficiarydocuments.intbeneID')
-					->select('trnbeneficiary.BeneID', 'trnbeneficiary.txtbeneficiaryname', 'trnbeneficiary.txtbeneAddress',
+					->select('trnbeneficiary.BeneID', 'trnbeneficiary.txtbeneficiaryname', 'trnbeneficiary.txtbeneAddress','trnbeneficiary.intbeneRSK','trnbeneficiary.intbeneTaluk',
+						'trnbeneficiary.intbeneVillage', 'trnbeneficiary.intbeneDistrict', 'trnbeneficiary.intbenePinCode', 
 						'trnbeneficiary.txtbeneContactNo', 'trnbeneficiary.intbeneAmtReceived', 'trnbeneficiary.intbeneCategory','trnbeneficiary.created_at',
-						'mstproductname.txtProdName', 'trnbeneficiaryproddetails.decFullRate', 'trnbeneficiarydocuments.txtDocPath')
+						'mstproductname.txtProdName', 'trnbeneficiaryproddetails.decFullRate')
 					->groupBy('trnbeneficiary.BeneID');
 
 		if (Input::has('beneficiary_name')) {
@@ -45,7 +45,7 @@ class BeneficiaryController extends BaseController {
           
         if(Input::has('from_date') && Input::has('to_date')) {
         	$date_range = 'From '.Input::get('from_date').' To '.Input::get('to_date');
-			$users->whereBetween('trnbeneficiary.created_at', array(strtotime(Input::get('from_date')), strtotime(Input::get('to_date')) ));
+			$users->whereBetween('trnbeneficiary.created_at', array(Input::get('from_date'), Input::get('to_date') ) );
         }
 
         if (Input::get('submit') == 'download')
@@ -89,11 +89,22 @@ class BeneficiaryController extends BaseController {
 			$j++;
 			$id =  $row->BeneID;
 			$txtbeneficiaryname  =  $row->txtbeneficiaryname;
+
+			if($row->intbeneCategory == 1)
+				$intbeneCategory = 'General';
+			elseif ($row->intbeneCategory == 2) 
+				$intbeneCategory = 'SC';
+			elseif ($row->intbeneCategory == 3) 
+				$intbeneCategory = 'ST';
+
 			$txtbeneContactNo = $row->txtbeneContactNo;
-			$intbeneCategory = $row->intbeneCategory;
 			//$work_experience = $row->vm_workexperience;
-			//$address = '"'.$row->txtbeneAddress.', '.$row->txtHobliRSK.', '.$row->txtTalukName.', '.$row->txtDistrictName.' - '.$row->intbenePinCode.'"';
-			$address = '';
+			$village = DB::table('mstvillage')->where('intVillageID', '=', $row->intbeneVillage)->pluck('txtVillageName');
+			$hobli = DB::table('msthoblirsk')->where('intHobliRSKID', '=', $row->intbeneRSK)->pluck('txtHobliRSK');
+			$taluk = DB::table('msttaluk')->where('intTalukID', '=', $row->intbeneTaluk)->pluck('txtTalukName');
+			$district = DB::table('mstdistrict')->where('intDistrictID', '=', $row->intbeneDistrict)->pluck('txtDistrictName');
+
+			$address = '"'.$row->txtbeneAddress.' '.$village.', '.$hobli.', '.$taluk.', '.$district.' - '.$row->intbenePinCode.'"';
 			$txtProdName = $row->txtProdName;
 			$decFullRate = $row->decFullRate;
 			$registered_date = $row->created_at;
@@ -125,13 +136,13 @@ class BeneficiaryController extends BaseController {
 					->leftJoin('mstvillage', 'trnbeneficiary.intbeneVillage', '=', 'mstvillage.intVillageID')
 					->leftJoin('trnbeneficiaryproddetails', 'trnbeneficiary.BeneID', '=', 'trnbeneficiaryproddetails.intbeneID')
 					->leftJoin('mstproductname', 'mstproductname.intProdID', '=', 'trnbeneficiaryproddetails.intProdID')
-					->leftJoin('trnbeneficiarydocuments', 'trnbeneficiary.BeneID', '=', 'trnbeneficiarydocuments.intbeneID')
-					->select('trnbeneficiarycropdetails.survey_no', 'msttaluk.txtTalukName', 'mstdistrict.txtDistrictName', 'mstvillage.txtVillageName', 'msthoblirsk.txtHobliRSK', 'trnbeneficiary.BeneID', 
+					//->leftJoin('trnbeneficiarydocuments', 'trnbeneficiary.BeneID', '=', 'trnbeneficiarydocuments.intbeneID')
+					->select('trnbeneficiary.intbenePinCode', 'trnbeneficiarycropdetails.survey_no', 'msttaluk.txtTalukName', 'mstdistrict.txtDistrictName', 'mstvillage.txtVillageName', 'msthoblirsk.txtHobliRSK', 'trnbeneficiary.BeneID', 
 						'trnbeneficiary.txtbeneficiaryname', 'trnbeneficiary.txtbeneAddress',
 						'trnbeneficiary.txtbeneContactNo', 'trnbeneficiary.intbeneAmtReceived', 'trnbeneficiary.intbeneCategory','trnbeneficiary.created_at',
-						'mstproductname.txtProdName', 'trnbeneficiaryproddetails.decFullRate', 'trnbeneficiarydocuments.txtDocPath')
+						'mstproductname.txtProdName', 'trnbeneficiaryproddetails.decFullRate')
 					->where('trnbeneficiary.BeneID', Input::get('id'))
-					->where('trnbeneficiarydocuments.intDocType', 1)
+					//->whereIn('trnbeneficiarydocuments.intDocType', array(1,2,3,4))
 					->get();
 
 		return View::make('beneficiary.index')->with('user', $user);
@@ -180,7 +191,7 @@ class BeneficiaryController extends BaseController {
 	{
 		$file = DB::table('trnbeneficiarydocuments')->where('intbeneID', '=', $user_id)
 				->where('intDocType', '=', 1)->pluck('txtDocPath');
-		return Response::download($file);
+		return Response::download( public_path().$file);
 	}
 
 	public function user_file($file_name = "")

@@ -1,9 +1,12 @@
 $(document).ready(function() {
-	 $('#dp1, #dp2').datepicker({
+	 $('#dp1').datepicker({
         format: 'dd-mm-yyyy'
     });
+	 $('#dp3, #dp2').datepicker({
+        format: 'yyyy-mm-dd'
+    });
     
-    $('#dp2').datepicker();
+    //$('#dp2').datepicker();
 
     var isIE = navigator.userAgent.indexOf(' MSIE ') > -1;
     if(isIE) {

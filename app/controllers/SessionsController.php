@@ -31,7 +31,7 @@ class SessionsController extends BaseController {
 		$attempt = Auth::attempt($credentials);
 	
 	    if ($attempt) {
-	        return Redirect::intended('/users')->with('flash_message', 'You have logged in !');
+	        return Redirect::intended('/users');//->with('flash_message', 'You have logged in !');
 
 	    } else {
 	        return Redirect::back()->with('flash_message', 'Invalid Credentials')->withInput();

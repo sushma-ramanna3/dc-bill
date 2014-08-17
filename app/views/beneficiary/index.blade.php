@@ -1,14 +1,14 @@
 @extends('layouts.main')
 @section('content')
 <style>
-  .navbar-fixed-top, footer{
+  .navbar-fixed-top, footer, .hr{
     display: none;
   }
   .container_mid{
     margin-top: 8px;
   }
 </style>
-<div class="container" style="width:1100px;height:600px">
+<div class="container" style="width:210mm;height:297mm;">
    <div class="col-md-3 pull-right">
       <a href="javascript:window.print()" class="btn btn-lg btn-warning print_but">Print</a>
     </div>
@@ -16,25 +16,30 @@
     <table class="table table-striped table-bordered">
       <thead>
         <tr>
-          <td colspan="3">11111</td>
+          @foreach($user as $key => $value)
+          <?php $cash_certificate = DB::table('trnbeneficiarydocuments')->where('intbeneID', $value->BeneID)
+                            ->where('intDocType', 1)->pluck('txtDocPath'); 
+            ?>
+             <td colspan="3" id="tab-padding">
+              <span class="pull-left table-title">ಕೃಷಿ ಇಲಾಖೆಯ ವಿವಿಧ ಯೋಜನೆಗಳಡಿ ಸಹಾಯ ಧನ ಪಡೆಯಲು ರೈತರು ಸಲ್ಲಿಸಬೇಕಾದ ಅರ್ಜಿ</span>
+              {{ HTML::image($cash_certificate, 'a photo', array('class'=>'img-responsive pull-right', 'id'=>'tab_photo')) }}</td>
         </tr>
         <tr class="bold">
-          <td width="5%" align="center">SL No</td>
-          <td width="40%" align="center">Amsha</td>
-          <td width="45%" align="center">Details</td>
+          <td width="5%" align="center" style="padding-left:0px;padding-right:0px;">ಕ್ರ. ಸಂ</td>
+          <td width="40%" align="center">ಅಂಶ</td>
+          <td width="45%" align="center">ವಿವರ</td>
         </tr>
       </thead>
       <tbody>
-        @foreach($user as $key => $value)
           <tr>
             <td>1.</td>
-            <td class="bold">Name</td>
-            <td>{{$value->txtbeneficiaryname}}</td>
+            <td class="bold">ರೈತರ ಪೂರ್ಣ ಹೆಸರು ಮತ್ತು ವಿಳಾಸ</td>
+            <td>{{$value->txtbeneficiaryname}}, {{$value->txtbeneAddress}} - {{$value->intbenePinCode}} </td>
           </tr>
           <tr>
             <td>2.</td>
-            <td class="bold">Village / Hobli</td>
-            <td>{{$value->txtVillageName}} {{$value->txtHobliRSK}}</td>
+            <td class="bold">ಗ್ರಾಮ / ಹೋಬಳಿ</td>
+            <td>{{$value->txtVillageName}} / {{$value->txtHobliRSK}}</td>
           </tr>
           <tr>
             <td>3.</td>
@@ -42,7 +47,7 @@
               <table class="table table-bordered" style="margin-bottom: 0px;">
               <tbody>
                 <tr>
-                  <td class="bold">Category</td><td class="bold">Village</td>
+                  <td class="bold">ಹಿಡುವಳಿ ವಿವರ</td><td class="bold">ಗ್ರಾಮ</td>
                 </tr>
                 <tr>
                   <td>
@@ -59,7 +64,7 @@
                <table class="table table-bordered" style="margin-bottom: 0px;">
                 <tbody>
                 <tr>
-                  <td class="bold">Survey No</td><td class="bold">A</td>
+                  <td class="bold">ಸರ್ವೇ ನಂ</td><td class="bold">ಕ್ಷೇತ್ರ ಎ - ಗುಂ</td>
                 </tr>
                 <tr>
                   <td>{{$value->survey_no}}</td><td></td>
@@ -69,47 +74,53 @@
           </tr>
           <tr>
             <td>4.</td>
-            <td class="bold">Tax certificate</td>
-            <td></td>
+            <td class="bold">ಹಿಡುವಳಿ ಕುರಿತು ಕಂದಾಯ ಇಲಾಖೆಯ ಪತ್ರ</td>
+            <td>ಲಗತಿಸಿದೆ/ ಇಲ್ಲ</td>
           </tr>
           <tr>
-            <td>5.</td><td class="bold">Cash certificate</td><td></td>
+            <td>5.</td><td class="bold">ಜಾತಿ ಪ್ರಮಾಣ ಪತ್ರ</td>
+            <?php $cash_certificate = DB::table('trnbeneficiarydocuments')->where('intbeneID', $value->BeneID)
+                            ->where('intDocType', 4)->pluck('txtDocPath'); 
+            ?>
+            <td>@if($cash_certificate) ಲಗತಿಸಿದೆ
+              @else ಇಲ್ಲ / ಅನ್ವಯವಾಗುವುದಿಲ್ಲ
+              @endif</td>
           </tr>
           <tr>
             <td>6.</td>
-            <td class="bold">Ilage</td><td></td>
+            <td class="bold">ಇಲಾಖಾ ವಿವಿಧ ಯೋಜನೆಗಳಡಿ ಈಗಾಗಲೇ ಪಡೆದ ವಿವಿಧ ಸೌಲತ್ತುಗಳ ವಿವರ</td><td></td>
           </tr>
           <tr>
             <td>7.</td>
-            <td class="bold">Crops equipments</td><td></td>
+            <td class="bold">ಯಂತ್ರೋಪಕರಣ / ಕೃಷಿ ಉಪಕರಣಗಳನ್ನು ಹೊಂದಿರುವ ವಿವರಗಳು</td><td></td>
           </tr>
           <tr>
-            <td>8.</td><td class="bold">Bafullo</td><td></td>
+            <td>i.</td><td class="bold">ಎತ್ತುಗಳು</td><td></td>
           </tr>
           <tr>
-            <td>9.</td><td class="bold">Gaddi</td><td></td>
+            <td>ii.</td><td class="bold">ಎತ್ತಿನ ಗಾಡಿ</td><td></td>
           </tr>
           <tr>
-            <td>10.</td><td class="bold">Tractor</td><td></td>
+            <td>iii.</td><td class="bold">ಟ್ರ್ಯಾಕ್ಟರ್</td><td></td>
           </tr>
           <tr>
-            <td>11.</td><td class="bold">Power tiller</td><td></td>
+            <td>vi.</td><td class="bold">ಪವರ್ ಟಿಲ್ಲರ್</td><td></td>
           </tr>
           <tr>
-            <td>12.</td><td class="bold">Hitech</td><td></td>
+            <td>v.</td><td class="bold">ಹೈಟೆಕ್ ಕೃಷಿ ಯಂತ್ರೋಪಕರಣ</td><td></td>
           </tr>
           <tr>
-            <td>13.</td><td class="bold">Diesel</td><td></td>
+            <td>vi.</td><td class="bold">ಡೀಸೆಲ್ ಪಂಪ್ ಸೆಟ್ಟುಗಳು</td><td></td>
           </tr>
           <tr>
-            <td>14.</td><td class="bold">Greens</td><td></td>
+            <td>vii.</td><td class="bold">ಸಸ್ಯ ಸಂರಕ್ಷಣ ಉಪಕರಣಗಳು</td><td></td>
           </tr>
           <tr>
-            <td>15.</td><td class="bold">Irrigation</td><td></td>
+            <td>viii.</td><td class="bold">ನೀರಾವರಿ ಘಟಕಗಳು</td><td></td>
           </tr>
         @endforeach
       </tbody>
     </table>
-    <div>ppppppppppp ---------textttttttttttttttttttttttttttttttt</div>
+    <div>ಈ ಮೇಲೆ ಒದಗಿಸಿದ ವಿವರಗಳು ಸಂಪೂರ್ಣ ನನಗೆ ತಿಳಿದಿದ್ದು ಸರಿ ಇರುತ್ತದೆ ಎಂದು ಡ್ರುಧೀಕರಿಸುತ್ತೆನೆ ಮತ್ತು ..scheme name....................................... ಯೋಜನೆಯಡಿ................sub scheme name............................... ಗಾಗಿ ಸಹಾಯ ಧನ ಒದಗಿಸಲು ಕೊರುತ್ತೆನೆ. ನಾನು ಕೊಟ್ಟಿರುವ ಮಾಹಿತಿಯು ತಪ್ಪು ಎಂದು ಕಂಡು ಬಂದಲ್ಲಿ ನನಗೆ ನೀಡಿರುವ ರಿಯಾಯಿತಿ ಸೌಲಭ್ಯವನ್ನು ಹಿಂಪಡೆದು ಮತ್ತು ನೀಡಿದ ನಂತರ ಮಾರ್ಗಸೂಚಿ ಉಲ್ಲಂಘಿಸಿದಲ್ಲಿ ಅಗತ್ಯ ಕಾನೂನು ಕ್ರಮಕ್ಕೆ ಒಳಗಾಗಲು ಬದ್ಧನಿರುವೇನು ಎಂದು ಧ್ರುದಪದಿಸುತ್ತೇನೆ</div>
 </div>
 @stop

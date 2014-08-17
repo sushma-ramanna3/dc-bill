@@ -20,6 +20,21 @@
 	height: 130px;
 	width: 295px;
 }
+#tab-padding{
+	padding-bottom: 0px;
+	padding-top: 0px;
+}
+#tab_photo{
+	height:120px;
+	width:140px;
+	border-left: 1px #ddd solid;
+}
+.table-title{
+	font-weight: bold;
+	font-size: 17px;
+	margin-top: 46px;
+	text-align: center;
+}
 #coupon_submit, #franchise_coupon_submit{
 	font-size: 14px;
 	padding: 6px 12px;

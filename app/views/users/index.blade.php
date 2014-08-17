@@ -98,9 +98,9 @@
 			            </div>
 
 			            <div class="form-group">
-			              <label class="col-md-5 control-label" for="last_name">Father Name</label>  
+			              <label class="col-md-5 control-label" for="last_name">Father Name<span class="red font-bold"> *</span></label>  
 			              <div class="col-md-7">
-			              {{ Form::text('father_name', Input::old('father_name'), array('class'=>'form-control input-md city','placeholder'=>'enter father name')) }}  
+			              {{ Form::text('father_name', Input::old('father_name'), array('class'=>'form-control input-md city','required' => 'true','placeholder'=>'enter father name')) }}  
 			              </div>
 			            </div>
 
@@ -407,29 +407,29 @@
 				 	</div>
 		            <div class="col-md-6">
 	              		<div class="form-group">
-				            <label class="col-md-4 control-label" for="photo" required="true">Photo<span class="red font-bold"> *</span></label>
+				            <label class="col-md-4 control-label" for="photo" required="true">Photo</label>
 				            <div class="col-md-6">
-				              {{ Form::file('photo', array('class'=>'form-control input-md', 'required' => 'true')) }}
+				              {{ Form::file('photo', array('class'=>'form-control input-md')) }} 
 				            </div>
 			          	</div>
 			          	<div class="form-group">
 				            <label class="col-md-4 control-label" for="rtc">RTC</label>
 				            <div class="col-md-6">
-				              {{ Form::file('rtc', array('class'=>'form-control input-md', 'required' => 'true')) }}
+				              {{ Form::file('rtc', array('class'=>'form-control input-md')) }} 
 				            </div>
 			          	</div>
 
 			          	<div class="form-group">
 				            <label class="col-md-4 control-label" for="bank_passbook_copy" required="true">Bank Passbook Copy</label>
 				            <div class="col-md-6">
-				              {{ Form::file('bank_passbook_copy', array('class'=>'form-control input-md', 'required' => 'true')) }}
+				              {{ Form::file('bank_passbook_copy', array('class'=>'form-control input-md')) }}
 				            </div>
 			          	</div>
 
 			          	<div class="form-group">
 				            <label class="col-md-4 control-label" for="cash_certifcate" required="true">Cash Certifcate</label>
 				            <div class="col-md-6">
-				              {{ Form::file('cash_certifcate', array('class'=>'form-control input-md', 'required' => 'true')) }}
+				              {{ Form::file('cash_certifcate', array('class'=>'form-control input-md')) }}
 				            </div>
 			          	</div>
 
@@ -477,7 +477,7 @@
 		            	<div class="form-group">
 				            <label class="col-md-5 control-label" for="">Account No<span class="red font-bold"> *</span></label>  
 				            <div class="col-md-7">
-				              	{{ Form::text('account_number', Input::old('account_number'), array('class'=>'form-control input-md integer_field','placeholder'=>'', 'required' => 'true')) }}  
+				              	{{ Form::text('accountNo', Input::old('accountNo'), array('class'=>'form-control input-md integer_field','placeholder'=>'', 'required' => 'true')) }}  
               				</div>
 		            	</div>
 

@@ -23,7 +23,7 @@
           
           <div class="form-group col-md-3 dp">
             <label>From Date</label>
-            <div class="input-append date pull-right" id="dp2" data-date="" data-date-format="dd-mm-yyyy">
+            <div class="input-append date pull-right" id="dp2" data-date="" data-date-format="yyyy-mm-dd">
               <input name="from_date" class="span2" size="16" type="text" value="<?php echo Input::get('from_date'); ?>" readonly />
               <label class="add-on"><i class="icon-calendar"></i></label>
             </div>
@@ -31,7 +31,7 @@
 
           <div class="form-group col-md-3 dp">
             <label class=" pull-left">To Date</label>
-            <div class="input-append date" id="dp1" data-date="" data-date-format="dd-mm-yyyy">
+            <div class="input-append date" id="dp3" data-date="" data-date-format="yyyy-mm-dd">
               <input name="to_date" class="span2" size="16" type="text" value="<?php echo Input::get('to_date'); ?>" readonly />
               <label class="add-on"><i class="icon-calendar"></i></label>
             </div>
@@ -85,13 +85,18 @@
               <td>{{ $user->txtProdName }}</td>
               <td>{{ $user->intbeneAmtReceived }}</td>
               <td>{{ date('d-M-Y h.i.s', strtotime($user->created_at)) }}</td>
-              <td>@if($user->txtDocPath)
+              <?php $photo = DB::table('trnbeneficiarydocuments')->where('intbeneID', $user->BeneID)
+                             ->where('intDocType', 1)->pluck('txtDocPath'); 
+              ?>
+              <td>@if($photo)
                 {{ "<a href='/photodownload/".$user->BeneID."'>Photo download</a>" }}
                 @else
                 NA
                 @endif
               </td>
-              <td>{{ "<a href=\"/beneficiary?id=". $user->BeneID ."\" target=\"_blank\"><span class=\"glyphicon glyphicon-print\"></span></a>" }}</td>
+              <td>
+                {{ "<a href=\"/beneficiary?id=". $user->BeneID ."\" target=\"_blank\">View</span></a>" }}
+                {{ "<a href=\"/beneficiary?id=". $user->BeneID ."\" target=\"_blank\"><span class=\"glyphicon glyphicon-print\"></span></a>" }}</td>
               <!-- @if(Auth::user()->usertype == 'admin')
                 <td>{{ $user->usertype }}</td>
               @endif -->

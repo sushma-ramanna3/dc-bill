@@ -301,21 +301,32 @@ class UsersController extends BaseController {
 		
 	}
 
-	public function insertDocuments($beneficiary_id, $path, $inputFile, $docType) {
+	public function insertDocuments($beneficiary_id, $path, $inputFile, $docType, $update = null) {
 
-		$inputFile->move( app_path().'/views/documents/'.$path.'/', $beneficiary_id.'_'.time().'_'.$inputFile->getClientOriginalName() );
-		$doc_path = app_path().'/views/documents/'.$path.'/'.$beneficiary_id.'_'.time().'_'.$inputFile->getClientOriginalName();
+		$inputFile->move( public_path().'/documents/'.$path.'/', $beneficiary_id.'_'.time().'_'.$inputFile->getClientOriginalName() );
+		$doc_path = '/documents/'.$path.'/'.$beneficiary_id.'_'.time().'_'.$inputFile->getClientOriginalName();
 		$doc_path = isset($doc_path) ? $doc_path : '' ;
 
-		DB::table('trnbeneficiarydocuments')->insert(array(
-			'intbeneID' => Input::get('beneficiary_id'),
-			'intDocType' => $docType,
-			'flgDocUploaded' => 1,
-			'txtDocPath' => $doc_path,
-			'flgisActive' => 1,
-			'created_at' => new DateTime, 
-			'updated_at' => new DateTime 
-		));
+		if($update == 1){
+			DB::table('trnbeneficiarydocuments')
+				->where('intbeneID', $beneficiary_id)
+				->where('intDocType', $docType)
+				->update(array(
+				'flgDocUploaded' => 1,
+				'txtDocPath' => $doc_path
+			));
+		}
+		else{
+			DB::table('trnbeneficiarydocuments')->insert(array(
+				'intbeneID' => $beneficiary_id,
+				'intDocType' => $docType,
+				'flgDocUploaded' => 1,
+				'txtDocPath' => $doc_path,
+				'flgisActive' => 1,
+				'created_at' => new DateTime, 
+				'updated_at' => new DateTime 
+			));
+		}
 
 	}
 
@@ -402,15 +413,20 @@ class UsersController extends BaseController {
     	$irrigation_ids = explode(',', $crop->irrigation_id);
     	$item_ids = explode(',', $crop->item_id);
 
-    	$documents = Trnbeneficiarydocuments::where('intbeneID' , '=', $id)->first();
-    	dd($documents->txtDocPath);
+    	$photo = Trnbeneficiarydocuments::where('intbeneID', $id)->where('intDocType', 1)->pluck('txtDocPath');
+    	$rtc = Trnbeneficiarydocuments::where('intbeneID', $id)->where('intDocType', 2)->pluck('txtDocPath');
+    	$bank_passbook = Trnbeneficiarydocuments::where('intbeneID', $id)->where('intDocType', 3)->pluck('txtDocPath');
+    	$cash_certifcate = Trnbeneficiarydocuments::where('intbeneID', $id)->where('intDocType', 4)->pluck('txtDocPath');
+
+    	//dd($documents);
 
     	$details = array('applicationFor' => $applicationFor, 'villages' => $villages, 'holdings' => $holdings, 'irrigation_ids' => $irrigation_ids, 'recommendedFrom' => $recommendedFrom, 'holding_ids' => $holding_ids,
-    		'items' => $items, 'irrigationSources' => $irrigationSources, 'bank' => $bank, 'recommendedBy' => $recommendedBy, 'item_ids' => $item_ids, 'seniorMemberID' => $user->seniorMemberID);
+    		'items' => $items, 'irrigationSources' => $irrigationSources, 'bank' => $bank, 'recommendedBy' => $recommendedBy, 'item_ids' => $item_ids, 'seniorMemberID' => $user->seniorMemberID,
+    		'photo' => $photo, 'rtc' => $rtc, 'bank_passbook' => $bank_passbook, 'cash_certifcate' => $cash_certifcate);
 
 		return View::make('users.edit')->with('user', $user)->with('intProdID', $intProdID)->with('hoblis', $hoblis)->with('first_name', $first_name)->with('product', $product)
 			->with('districts', $districts)->with('uom', $uom)->with('id', $id)->with('taluks', $taluks)->with('category',$category)->with('last_name', $last_name)
-			->with('crop', $crop)->with('intManufacturerIDs', $intManufacturerIDs)->with('intModelIDs', $intModelIDs)->with('intSpecIDs', $intSpecIDs)->with('documents', $documents)
+			->with('crop', $crop)->with('intManufacturerIDs', $intManufacturerIDs)->with('intModelIDs', $intModelIDs)->with('intSpecIDs', $intSpecIDs)
 			->with('details', $details);
 	}
 
@@ -575,15 +591,15 @@ class UsersController extends BaseController {
 				elseif (Input::get('beneficiary_id') && Input::hasFile('photo')) {
 
 					if(Input::hasFile('rtc')) { 
-						$this->insertDocuments( Input::get('beneficiary_id'), 'rtc', Input::file('rtc'), $docType = 2);
+						$this->insertDocuments( Input::get('beneficiary_id'), 'rtc', Input::file('rtc'), $docType = 2, $update = 1);
 					}
 					if(Input::hasFile('bank_passbook_copy')) { 
-						$this->insertDocuments( Input::get('beneficiary_id'), 'bank_passbook', Input::file('bank_passbook_copy'), $docType = 3 );
+						$this->insertDocuments( Input::get('beneficiary_id'), 'bank_passbook', Input::file('bank_passbook_copy'), $docType = 3, $update = 1);
 					}
 					if(Input::hasFile('cash_certifcate')) { 
-						$this->insertDocuments( Input::get('beneficiary_id'), 'cash_certifcate', Input::file('cash_certifcate'), $docType = 4 );
+						$this->insertDocuments( Input::get('beneficiary_id'), 'cash_certifcate', Input::file('cash_certifcate'), $docType = 4, $update = 1);
 					}
-					$this->insertDocuments( Input::get('beneficiary_id'), 'photos', Input::file('photo'), $docType = 1 );
+					$this->insertDocuments( Input::get('beneficiary_id'), 'photos', Input::file('photo'), $docType = 1, $update = 1);
 									
 					return Redirect::to('users/'.$id.'/edit')->with('beneficiary_id', $id)->with('flag2', 1)
 					->with('beneficiary_name', Input::get('beneficiary_name'))->with('success', 'Documents uploaded successfully.');

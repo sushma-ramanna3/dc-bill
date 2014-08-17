@@ -73,9 +73,8 @@ Route::resource('sessions', 'SessionsController');
 Route::get('login-details-mail', 'HomeController@loginDetailsMail');
 
 Route::get('pdf', function(){
-
-        Fpdf::AddPage();
-        Fpdf::SetFont('Arial','B',16);
+        Fpdf::AddPage('P','','A4');
+        Fpdf::SetFont('Arial','B', 14);
         Fpdf::Cell(40,10,'Hello World!');
         Fpdf::Output();
         exit;
